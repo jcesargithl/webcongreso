@@ -83,7 +83,7 @@ export default function Home() {
           </div>
 
           <div className="hero-visual" aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Image src="/corgi.png" alt="Corgi astronauta en cohete" width={480} height={480} priority />
+            <Image src="/logosecu.png" alt="Logo SECU" width={480} height={480} priority style={{ objectFit: 'contain' }} />
           </div>
         </div>
       </section>
