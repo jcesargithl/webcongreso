@@ -17,6 +17,22 @@ const costs = [["Estudiante EPEP · asistente interno", "S/ 20.00"], ["Estudiant
 
 export default function Home() {
   const [modal, setModal] = useState<ModalKind>(null);
+
+  const renderMember = (member: string) => {
+    const parts = member.split('·');
+    const name = parts[0].trim();
+    const role = parts.length > 1 ? parts[1].trim() : 'Miembro';
+    const initials = name.replace(/(Dr\.|Dra\.|M\.Sc\.)/g, '').trim().split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase();
+    return (
+      <div className="member-card" key={member}>
+        <div className="member-avatar">{initials}</div>
+        <div className="member-info">
+          <h4>{name}</h4>
+          <span>{role}</span>
+        </div>
+      </div>
+    );
+  };
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDay, setActiveDay] = useState(0);
   const [activeTheme, setActiveTheme] = useState(0);
@@ -92,32 +108,53 @@ export default function Home() {
           <p>La Subdirección de Investigación de la Escuela Profesional de Educación Primaria coordina la actividad con estándares académicos, organizacionales y tecnológicos.</p>
         </div>
 
-        <div className="track-grid">
+        <div className="org-bento">
           {institutions.map((institution, index) => (
-            <article className="track-card" key={institution}>
-              <span className="track-number">0{index + 1}</span>
-              <Building2 size={19} />
-              <h3>{institution}</h3>
-              <p>Parte de la estructura institucional responsable del congreso 2026.</p>
+            <article className={`org-bento-card card-${index + 1}`} key={institution}>
+              <div className="org-bento-header">
+                <span className="org-bento-number">0{index + 1}</span>
+                <div className="org-bento-icon">
+                  <Building2 size={22} />
+                </div>
+              </div>
+              <div className="org-bento-content">
+                <h3>{institution}</h3>
+                <p>Parte de la estructura institucional responsable del congreso 2026.</p>
+              </div>
             </article>
           ))}
         </div>
 
         <div className="committee-panel">
-          <div>
-            <span className="kicker">Comité de honor</span>
-            <h3>Autoridades responsables</h3>
+          <div className="committee-group">
+            <div className="committee-header">
+              <span className="kicker">Comité de honor</span>
+              <h3>Autoridades responsables</h3>
+            </div>
+            <div className="committee-grid">
+              {honorCommittee.map(renderMember)}
+            </div>
           </div>
-          <ul>{honorCommittee.map((member) => <li key={member}>{member}</li>)}</ul>
-          <div>
-            <span className="kicker">Comité organizador</span>
-            <h3>Coordinaciones</h3>
+          
+          <div className="committee-group">
+            <div className="committee-header">
+              <span className="kicker">Comité organizador</span>
+              <h3>Coordinaciones</h3>
+            </div>
+            <div className="committee-grid">
+              {committee.map(renderMember)}
+            </div>
           </div>
-          <ul>{committee.map((member) => <li key={member}>{member}</li>)}</ul>
-          <div>
-            <span className="kicker">Miembros</span>
+          
+          <div className="committee-group">
+            <div className="committee-header">
+              <span className="kicker">Equipo</span>
+              <h3>Miembros</h3>
+            </div>
+            <div className="committee-grid">
+              {committeeMembers.map(renderMember)}
+            </div>
           </div>
-          <ul className="committee-members">{committeeMembers.map((member) => <li key={member}>{member}</li>)}</ul>
         </div>
       </section>
 
@@ -125,34 +162,42 @@ export default function Home() {
         <div className="showcase-panel">
           <div className="showcase-copy">
             <span className="kicker">Presentación</span>
-            <h2>Investigación, innovación e inteligencia artificial para educar mejor.</h2>
+            <h2>Investigación, innovación e IA para educar mejor.</h2>
             <p>
               El congreso fortalece la cultura investigativa, la producción científica y el intercambio de conocimientos entre investigadores, docentes, estudiantes y profesionales.
             </p>
           </div>
 
-          <div className="showcase-list">
-            <div>
-              <Sparkles size={18} />
-              <div>
+          <div className="showcase-features">
+            <article className="feature-card">
+              <div className="feature-icon">
+                <Sparkles size={28} />
+              </div>
+              <div className="feature-content">
                 <strong>Objetivo académico</strong>
-                <span>Coordinar actividades académicas, administrativas, logísticas y financieras con estándares de calidad verificables.</span>
+                <p>Coordinar actividades académicas, administrativas, logísticas y financieras con estándares de calidad verificables.</p>
               </div>
-            </div>
-            <div>
-              <GraduationCap size={18} />
-              <div>
+            </article>
+            
+            <article className="feature-card">
+              <div className="feature-icon">
+                <GraduationCap size={28} />
+              </div>
+              <div className="feature-content">
                 <strong>Modalidad híbrida</strong>
-                <span>Conferencias virtuales, ponencias presenciales y asistencia presencial o virtual con soporte técnico y transmisión.</span>
+                <p>Conferencias virtuales, ponencias presenciales y asistencia presencial o virtual con soporte técnico y transmisión.</p>
               </div>
-            </div>
-            <div>
-              <FileText size={18} />
-              <div>
+            </article>
+            
+            <article className="feature-card">
+              <div className="feature-icon">
+                <FileText size={28} />
+              </div>
+              <div className="feature-content">
                 <strong>Resultados esperados</strong>
-                <span>Producción académica evaluada, memoria del evento, certificados, medición de satisfacción e informe final.</span>
+                <p>Producción académica evaluada, memoria del evento, certificados, medición de satisfacción e informe final.</p>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       </section>
