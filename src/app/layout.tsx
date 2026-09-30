@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "I Congreso Internacional de Investigación Científica",
-  description: "I Congreso Internacional de Investigación Científica: Perspectivas, desafíos y políticas educativas.",
+  title: "IV Congreso Internacional de Investigación Científica",
+  description: "Transformando la educación: investigación, innovación e inteligencia artificial para los desafíos del siglo XXI.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
