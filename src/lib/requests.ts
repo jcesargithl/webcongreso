@@ -1,5 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { supabase } from "./supabase";
 
 export type RequestKind = "registration" | "paper";
 export type RequestStatus = "pending" | "reviewing" | "approved" | "rejected";
@@ -14,47 +13,73 @@ export type CongressRequest = {
   topic?: string;
   message?: string;
   status: RequestStatus;
-  createdAt: string;
+  created_at: string;
 };
 
-const dataDirectory = path.join(process.cwd(), "data");
-const dataFile = path.join(dataDirectory, "requests.json");
+/**
+ * Lista todas las solicitudes, ordenadas por fecha de creación descendente.
+ */
+export async function listRequests(): Promise<CongressRequest[]> {
+  const { data, error } = await supabase
+    .from("congress_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-async function readRequests(): Promise<CongressRequest[]> {
-  try {
-    return JSON.parse(await readFile(dataFile, "utf8")) as CongressRequest[];
-  } catch {
+  if (error) {
+    console.error("Error fetching requests:", error);
     return [];
   }
+
+  return data as CongressRequest[];
 }
 
-async function writeRequests(requests: CongressRequest[]) {
-  await mkdir(dataDirectory, { recursive: true });
-  await writeFile(dataFile, JSON.stringify(requests, null, 2), "utf8");
+/**
+ * Crea una nueva solicitud de registro o ponencia.
+ */
+export async function createRequest(
+  input: Omit<CongressRequest, "id" | "status" | "created_at">
+): Promise<CongressRequest | null> {
+  const { data, error } = await supabase
+    .from("congress_requests")
+    .insert({
+      kind: input.kind,
+      name: input.name,
+      email: input.email,
+      mode: input.mode,
+      institution: input.institution || null,
+      topic: input.topic || null,
+      message: input.message || null,
+      status: "pending",
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating request:", error);
+    return null;
+  }
+
+  return data as CongressRequest;
 }
 
-export async function listRequests() {
-  return (await readRequests()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-}
+/**
+ * Actualiza el estado de una solicitud existente.
+ */
+export async function updateRequestStatus(
+  id: string,
+  status: RequestStatus
+): Promise<CongressRequest | null> {
+  const { data, error } = await supabase
+    .from("congress_requests")
+    .update({ status })
+    .eq("id", id)
+    .select()
+    .single();
 
-export async function createRequest(input: Omit<CongressRequest, "id" | "status" | "createdAt">) {
-  const request: CongressRequest = {
-    ...input,
-    id: crypto.randomUUID(),
-    status: "pending",
-    createdAt: new Date().toISOString(),
-  };
-  const requests = await readRequests();
-  requests.push(request);
-  await writeRequests(requests);
-  return request;
-}
+  if (error) {
+    console.error("Error updating request:", error);
+    return null;
+  }
 
-export async function updateRequestStatus(id: string, status: RequestStatus) {
-  const requests = await readRequests();
-  const request = requests.find((item) => item.id === id);
-  if (!request) return null;
-  request.status = status;
-  await writeRequests(requests);
-  return request;
+  return data as CongressRequest;
 }

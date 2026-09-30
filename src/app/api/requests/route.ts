@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { createRequest, listRequests, updateRequestStatus, type RequestKind, type RequestStatus } from "@/lib/requests";
 
 export const runtime = "nodejs";
@@ -7,7 +6,8 @@ const allowedKinds: RequestKind[] = ["registration", "paper"];
 const allowedStatuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected"];
 
 export async function GET() {
-  return NextResponse.json(await listRequests());
+  const data = await listRequests();
+  return Response.json(data);
 }
 
 export async function POST(request: Request) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const kind = body.kind as RequestKind;
 
   if (!name || !email || !email.includes("@") || !allowedKinds.includes(kind)) {
-    return NextResponse.json({ error: "Completa los campos obligatorios." }, { status: 400 });
+    return Response.json({ error: "Completa los campos obligatorios." }, { status: 400 });
   }
 
   const created = await createRequest({
@@ -30,14 +30,20 @@ export async function POST(request: Request) {
     message: typeof body.message === "string" ? body.message.trim() : undefined,
   });
 
-  return NextResponse.json(created, { status: 201 });
+  if (!created) {
+    return Response.json({ error: "Error al crear la solicitud." }, { status: 500 });
+  }
+
+  return Response.json(created, { status: 201 });
 }
 
 export async function PATCH(request: Request) {
   const body = await request.json();
   if (typeof body.id !== "string" || !allowedStatuses.includes(body.status)) {
-    return NextResponse.json({ error: "Solicitud de actualización inválida." }, { status: 400 });
+    return Response.json({ error: "Solicitud de actualización inválida." }, { status: 400 });
   }
   const updated = await updateRequestStatus(body.id, body.status);
-  return updated ? NextResponse.json(updated) : NextResponse.json({ error: "Solicitud no encontrada." }, { status: 404 });
+  return updated
+    ? Response.json(updated)
+    : Response.json({ error: "Solicitud no encontrada." }, { status: 404 });
 }
