@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-container": "#00301e", "secondary-fixed-dim": "#c3c0ff", "secondary-fixed": "#e2dfff", "on-surface": "#0b1c30", "on-secondary-container": "#fffbff", "on-secondary-fixed-variant": "#3323cc", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#4edea3", "tertiary": "#00190e", "on-surface-variant": "#44464f", "primary": "#001238", "on-tertiary": "#ffffff", "surface-container-highest": "#d3e4fe", "on-background": "#0b1c30", "background": "#f8f9ff", "surface-dim": "#cbdbf5", "on-secondary-fixed": "#0f0069", "inverse-on-surface": "#eaf1ff", "primary-fixed": "#d9e2ff", "secondary": "#4b41e1", "on-error": "#ffffff", "surface-container-high": "#dce9ff", "outline": "#757780", "primary-container": "#0f2756", "surface-variant": "#d3e4fe", "on-error-container": "#93000a", "on-tertiary-container": "#00a472", "on-tertiary-fixed-variant": "#005236", "error-container": "#ffdad6", "inverse-surface": "#213145", "surface-tint": "#495d8f", "on-primary": "#ffffff", "surface-container-low": "#eff4ff", "surface": "#f8f9ff", "on-primary-fixed": "#001946", "on-secondary": "#ffffff", "secondary-container": "#645efb", "on-tertiary-fixed": "#002113", "on-primary-fixed-variant": "#314576", "surface-container": "#e5eeff", "outline-variant": "#c5c6d0", "on-primary-container": "#7b8fc5", "surface-bright": "#f8f9ff", "primary-fixed-dim": "#b1c6fe", "inverse-primary": "#b1c6fe", "error": "#ba1a1a", "tertiary-fixed": "#6ffbbe" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-md": "1rem", "gutter": "1.5rem", "margin-mobile": "1rem", "space-sm": "0.5rem", "margin": "2rem", "space-xl": "2.5rem", "space-2xl": "4rem", "space-xs": "0.25rem", "gutter-mobile": "1rem", "space-lg": "1.5rem" }, "fontFamily": { "body-lg": ["Inter"], "caption": ["Inter"], "body-sm": ["Inter"], "headline-md": ["Inter"], "label-sm": ["Inter"], "display": ["Inter"], "headline-lg-mobile": ["Inter"], "body-md": ["Inter"], "headline-sm": ["Inter"], "headline-lg": ["Inter"], "display-mobile": ["Inter"], "label-md": ["Inter"] }, "fontSize": { "body-lg": ["1.125rem", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }], "caption": ["0.75rem", { "lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-sm": ["0.875rem", { "lineHeight": "1.5", "letterSpacing": "0.005em", "fontWeight": "400" }], "headline-md": ["1.5rem", { "lineHeight": "1.35", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-sm": ["0.75rem", { "lineHeight": "1.2", "letterSpacing": "0.04em", "fontWeight": "600" }], "display": ["3rem", { "lineHeight": "1.15", "letterSpacing": "-0.025em", "fontWeight": "800" }], "headline-lg-mobile": ["1.75rem", { "lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-md": ["1rem", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["1.25rem", { "lineHeight": "1.4", "letterSpacing": "-0.005em", "fontWeight": "600" }], "headline-lg": ["2.25rem", { "lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display-mobile": ["2rem", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-md": ["0.875rem", { "lineHeight": "1.25", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(15,39,86,0.06)]"><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md flex-shrink-0"><img alt="Logo IV Congreso Científico EPEP" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv6ryu7EiUqf2ITbhga8_f7uTonTuvC1kMac6vU5rc3Uu8zCIfzm1ei30cJnTL8dN3FoxM2uBYu0DfVjPf_7TSAITcPJi4-UM_MYVZuH0mxQUBlYT5cnvJeVphyJ4ER-90AoQzJTiwnCD0Jb39U04CqrRcYgJrMxXH5OhQQ82xFrZ4wc_a6q-LEawEgedUYu5kLbkwvjx2N48_Ck4f2aknRORS30YbK5DWEqPyOGZmSeyba4jRaJs1hQ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">IV Congreso Científico</span><span class="font-caption text-caption text-on-surface-variant font-medium tracking-wide">Escuela Profesional de Educación Primaria (EPEP)</span></div></div><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="bg-surface-container text-primary font-semibold rounded-lg"><a aria-current="page" class="px-space-sm py-space-xs transition-colors bg-surface-container text-primary font-semibold rounded-lg" data-path="inicio" href="#">Inicio</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="ejes-tematicos" href="#">Ejes Temáticos</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="programa" href="#">Programa</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="call-for-papers" href="#">Call for Papers</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="tarifas" href="#">Tarifas</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="comite" href="#">Comité</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="contacto" href="#">Contacto</a></nav><div class="flex items-center gap-space-md flex-shrink-0"><a class="hidden sm:inline-flex items-center justify-center bg-secondary hover:bg-secondary-container text-on-secondary px-space-md py-space-sm rounded-lg font-label-md text-label-md transition-colors shadow-sm" data-path="inscripcion" href="#">Inscribirme al Congreso</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]"><div class="flex flex-col w-full">
+<style>
+  :root { --ink: #0b1c30; --line: #dbe4ef; --accent: #4b41e1; }
+  html { scroll-behavior: smooth; }
+  body { letter-spacing: 0; }
+  a, button { outline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); }
+  .site-modal[hidden], .mobile-panel[hidden] { display: none; }
+  .site-modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 1rem; background: rgb(11 28 48 / 65%); }
+  .site-modal__dialog { width: min(100%, 36rem); max-height: min(42rem, 90vh); overflow: auto; background: #fff; border-radius: .75rem; box-shadow: 0 24px 80px rgb(11 28 48 / 25%); }
+  .mobile-panel { position: fixed; top: 5rem; left: 1rem; right: 1rem; z-index: 60; padding: .75rem; background: #fff; border: 1px solid var(--line); border-radius: .75rem; box-shadow: 0 16px 40px rgb(11 28 48 / 14%); }
+  .mobile-panel a { display: block; padding: .7rem .8rem; color: var(--ink); border-radius: .5rem; }
+  .mobile-panel a:hover { background: #eff4ff; }
+  @media (max-width: 1279px) { header > div { padding-left: 1rem; padding-right: 1rem; } }
+  @media (max-width: 640px) { .font-display { font-size: 2rem; } .font-headline-lg { font-size: 1.75rem; } }
+</style>
+<div class="site-modal" id="action-modal" role="dialog" aria-modal="true" aria-labelledby="action-modal-title" hidden>
+  <div class="site-modal__dialog">
+    <div class="flex items-center justify-between gap-4 border-b border-slate-200 px-6 py-4">
+      <h2 class="text-lg font-bold text-primary" id="action-modal-title">Inscripción al Congreso</h2>
+      <button aria-label="Cerrar ventana" class="grid h-9 w-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" data-close-modal type="button"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form class="space-y-4 p-6" id="registration-form">
+      <p class="text-sm text-slate-600" id="action-modal-copy">Completa tus datos y la Secretaría del Congreso se pondrá en contacto contigo.</p>
+      <label class="block text-sm font-semibold text-primary">Nombre completo<input class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" name="name" required type="text"></label>
+      <label class="block text-sm font-semibold text-primary">Correo electrónico<input class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" name="email" required type="email"></label>
+      <label class="block text-sm font-semibold text-primary">Modalidad<select class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" name="mode"><option>Presencial</option><option>Virtual</option></select></label>
+      <button class="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-3 font-semibold text-white hover:bg-secondary-container" type="submit"><span class="material-symbols-outlined text-[18px]">send</span>Enviar solicitud</button>
+      <p aria-live="polite" class="text-sm font-semibold text-tertiary-container" id="form-status"></p>
+    </form>
+  </div>
+</div>
+<!-- HERO SECTION -->
+<section class="relative overflow-hidden bg-primary text-on-primary py-space-2xl md:py-32">
+<!-- Subtle architectural and grid overlay -->
+<div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#d9e2ff_1px,transparent_1px)] [background-size:24px_24px]"></div>
+<div class="absolute -right-32 -top-32 w-96 h-96 rounded-full bg-secondary/20 blur-3xl pointer-events-none"></div>
+<div class="absolute -left-20 bottom-0 w-80 h-80 rounded-full bg-tertiary-fixed-dim/10 blur-3xl pointer-events-none"></div>
+<div class="relative max-w-7xl mx-auto px-margin flex flex-col items-center text-center">
+<!-- Super Badge -->
+<div class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-primary-container/80 text-primary-fixed shadow-sm backdrop-blur-md mb-space-lg">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-md text-label-md tracking-wide font-semibold">Modalidad Híbrida (Presencial & Virtual) • 25, 26 y 27 de Noviembre de 2026</span>
+</div>
+<!-- Main Title -->
+<h1 class="font-display text-display max-w-5xl leading-tight font-extrabold tracking-tight text-white mb-space-md">
+        IV Congreso Internacional de Investigación Científica
+      </h1>
+<!-- Slogan -->
+<p class="font-headline-md text-headline-md text-primary-fixed max-w-4xl font-normal mb-space-sm">
+        "Transformando la educación: investigación, innovación e inteligencia artificial para los desafíos del siglo XXI"
+      </p>
+<!-- Organizer -->
+<div class="flex items-center justify-center gap-space-xs text-outline-variant font-label-md text-label-md mb-space-xl">
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed">school</span>
+<span>Organiza: <strong>Subdirección de Investigación – Escuela Profesional de Educación Primaria (EPEP)</strong></span>
+</div>
+<!-- Venue & Date Badges -->
+<div class="flex flex-wrap items-center justify-center gap-space-sm mb-space-xl">
+<div class="flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-lowest/10 backdrop-blur-sm rounded-lg text-surface-container-lowest">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-[20px]">pin_drop</span>
+<span class="font-label-md text-label-md">Auditorio Central & Transmisión Global</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-lowest/10 backdrop-blur-sm rounded-lg text-surface-container-lowest">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[20px]">calendar_month</span>
+<span class="font-label-md text-label-md">25, 26 y 27 de Noviembre de 2026</span>
+</div>
+</div>
+<!-- COUNTDOWN TIMER -->
+<div class="w-full max-w-2xl bg-surface-container-lowest/5 backdrop-blur-md rounded-xl p-space-lg mb-space-xl shadow-lg">
+<p class="font-caption text-caption uppercase tracking-wider text-outline-variant text-center mb-space-sm font-semibold">Cuenta Regresiva Para la Gran Apertura</p>
+<div class="grid grid-cols-4 gap-space-sm text-center" id="countdown-timer">
+<div class="bg-primary-container p-space-sm rounded-lg shadow-sm">
+<span class="font-display text-display leading-none text-white block font-bold" id="cd-days">00</span>
+<span class="font-caption text-caption text-primary-fixed-dim uppercase tracking-wider mt-1 block">Días</span>
+</div>
+<div class="bg-primary-container p-space-sm rounded-lg shadow-sm">
+<span class="font-display text-display leading-none text-white block font-bold" id="cd-hours">00</span>
+<span class="font-caption text-caption text-primary-fixed-dim uppercase tracking-wider mt-1 block">Horas</span>
+</div>
+<div class="bg-primary-container p-space-sm rounded-lg shadow-sm">
+<span class="font-display text-display leading-none text-white block font-bold" id="cd-minutes">00</span>
+<span class="font-caption text-caption text-primary-fixed-dim uppercase tracking-wider mt-1 block">Minutos</span>
+</div>
+<div class="bg-primary-container p-space-sm rounded-lg shadow-sm">
+<span class="font-display text-display leading-none text-tertiary-fixed-dim block font-bold" id="cd-seconds">00</span>
+<span class="font-caption text-caption text-primary-fixed-dim uppercase tracking-wider mt-1 block">Segundos</span>
+</div>
+</div>
+</div>
+<!-- Call to Actions -->
+<div class="flex flex-col sm:flex-row items-center gap-space-md w-full sm:w-auto mb-space-2xl">
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs px-space-xl py-space-md bg-secondary hover:bg-secondary-container text-on-secondary font-label-md text-label-md rounded-lg shadow-md transition-all" href="#tarifas">
+<span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+<span>Registrar Asistencia</span>
+</a>
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs px-space-xl py-space-md bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 text-white font-label-md text-label-md rounded-lg transition-all backdrop-blur-sm" data-action="paper" href="#call-for-papers">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+<span>Enviar Trabajo / Ponencia</span>
+</a>
+</div>
+<!-- Quick Highlights Bar -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md w-full max-w-5xl pt-space-lg text-left">
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest/5 rounded-lg">
+<span class="material-symbols-outlined text-secondary-fixed text-[26px]">library_books</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-white">Indexación Oficial</p>
+<p class="font-caption text-caption text-outline-variant">Memorias con ISBN e ISSN</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest/5 rounded-lg">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[26px]">verified</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-white">120 Horas</p>
+<p class="font-caption text-caption text-outline-variant">Certificación Pedagógica</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest/5 rounded-lg">
+<span class="material-symbols-outlined text-secondary-fixed text-[26px]">public</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-white">+15 Ponentes Int.</p>
+<p class="font-caption text-caption text-outline-variant">América Latina y Europa</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest/5 rounded-lg">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[26px]">cast_connected</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-white">Mesas Híbridas</p>
+<p class="font-caption text-caption text-outline-variant">Transmisión Interactiva</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CALL FOR PAPERS BANNER & GUIDELINES -->
+<section class="py-space-2xl bg-surface-container-low" id="call-for-papers">
+<div class="max-w-7xl mx-auto px-margin">
+<!-- High-Contrast Urgent Alert -->
+<div class="bg-primary text-on-primary rounded-xl p-space-lg shadow-lg flex flex-col lg:flex-row items-center justify-between gap-space-lg mb-space-2xl">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[28px]">notification_important</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm bg-error/20 text-error-container px-space-xs py-0.5 rounded uppercase font-bold tracking-wider">Convocatoria Científica Abierta</span>
+<h2 class="font-headline-md text-headline-md text-white font-bold mt-1">
+              Fecha Límite para Recepción de Trabajos y Resúmenes: 30 de Octubre de 2026
+            </h2>
+<p class="font-body-sm text-body-sm text-surface-container-highest mt-1">
+              Invitamos a investigadores, académicos, docentes de posgrado y estudiantes a enviar sus resúmenes de investigaciones concluidas o en curso riguroso.
+            </p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-space-sm shrink-0 w-full lg:w-auto">
+<a class="inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm bg-secondary hover:bg-secondary-container text-on-secondary rounded-lg font-label-md text-label-md transition-all shadow-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">publish</span>
+<span>Subir al Portal EasyChair</span>
+</a>
+<a class="inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 text-white rounded-lg font-label-md text-label-md transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Descargar Guía Oficial (PDF)</span>
+</a>
+</div>
+</div>
+<!-- Guidelines Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="space-y-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">description</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Estructura y Normas APA</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Los manuscritos y resúmenes deben cumplir estrictamente el formato <strong>APA 7ma edición</strong>. Incluir: Introducción, Objetivos, Metodología, Resultados preliminares/conclusiones y Palabras Clave (tesauro UNESCO).
+            </p>
+</div>
+<div class="pt-space-md mt-space-md bg-surface-container-low p-space-sm rounded-lg font-caption text-caption text-on-surface-variant">
+            Extensión: <strong>250 - 300 palabras</strong> (en español o inglés con resumen bilingüe).
+          </div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="space-y-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">policy</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Evaluación por Pares Ciegos</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Todo trabajo será sometido a arbitraje por el <strong>Comité Científico Internacional</strong> mediante el método <em>doble ciego (double-blind peer review)</em>, asegurando originalidad, rigor y relevancia temática.
+            </p>
+</div>
+<div class="pt-space-md mt-space-md bg-surface-container-low p-space-sm rounded-lg font-caption text-caption text-on-surface-variant">
+            Originalidad requerida: Menor al <strong>12% de similitud</strong> en Turnitin.
+          </div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="space-y-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-tertiary-container">
+<span class="material-symbols-outlined text-[24px]">event_repeat</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Cronograma de Aceptación</h3>
+<ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-center justify-between">
+<span>Cierre de recepción:</span>
+<strong class="text-on-surface">30 Oct 2026</strong>
+</li>
+<li class="flex items-center justify-between">
+<span>Dictamen arbitral:</span>
+<strong class="text-on-surface">08 Nov 2026</strong>
+</li>
+<li class="flex items-center justify-between">
+<span>Versión final corregida:</span>
+<strong class="text-on-surface">15 Nov 2026</strong>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md bg-surface-container-low p-space-sm rounded-lg font-caption text-caption text-on-surface-variant">
+            Publicación en el Libro de Actas con <strong>Depósito Legal e ISBN</strong>.
+          </div>
+</div>
+</div>
+</div>
+</section>
+<!-- EJES TEMÁTICOS SECTION -->
+<section class="py-space-2xl bg-surface" id="ejes-tematicos">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="text-center max-w-3xl mx-auto mb-space-2xl">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Líneas de Investigación EPEP</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">Ejes Temáticos del Congreso</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+          Espacios multidisciplinarios de debate académico, estructurados para abordar con profundidad empírica y metodológica los desafíos prioritarios de la educación contemporánea.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Eje 1 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="px-space-sm py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">Eje Temático 01</span>
+<span class="material-symbols-outlined text-primary text-[28px]">query_stats</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Investigación Educativa y Producción Científica</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Metodologías emergentes mixtas y cualitativas, epistemología pedagógica, ética en la investigación social, desarrollo de tesis doctorales y de maestría, y modelos de difusión en revistas científicas indexadas (Scopus / WoS / SciELO).
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-space-sm rounded-lg text-on-surface font-caption text-caption">
+            Descriptores: Epistemología • Diseños Experimentales • Bibliometría • Publicaciones de Impacto
+          </div>
+</div>
+<!-- Eje 2 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="px-space-sm py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">Eje Temático 02</span>
+<span class="material-symbols-outlined text-secondary text-[28px]">psychology</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Inteligencia Artificial, Tecnologías Digitales y Educación</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Aplicación ética de modelos de IA generativa (LLMs) en el aula escolar y universitaria, analítica del aprendizaje adaptativo, entornos virtuales inmersivos, metaversos educativos y alfabetización algorítmica crítica.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-space-sm rounded-lg text-on-surface font-caption text-caption">
+            Descriptores: GenAI en el Aula • Learning Analytics • Prompt Engineering • Brecha Tecnológica
+          </div>
+</div>
+<!-- Eje 3 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm font-bold">Eje Temático 03</span>
+<span class="material-symbols-outlined text-primary-container text-[28px]">menu_book</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Innovación Pedagógica, Currículo y Evaluación</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Metodologías activas (ABP, Aula Invertida, STEAM), Design Thinking aplicado al diseño curricular, gamificación profunda y nuevos enfoques para la evaluación formativa auténtica por competencias en la etapa escolar primaria.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-space-sm rounded-lg text-on-surface font-caption text-caption">
+            Descriptores: STEAM • Rúbricas Auténticas • ABP • Pensamiento de Diseño Curricular
+          </div>
+</div>
+<!-- Eje 4 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="px-space-sm py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Eje Temático 04</span>
+<span class="material-symbols-outlined text-tertiary-container text-[28px]">diversity_3</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Formación Docente, Inclusión e Interculturalidad</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Desarrollo profesional y competencias del profesorado del siglo XXI, pedagogías inclusivas para la neurodiversidad (DUA), Educación Intercultural Bilingüe (EIB), saberes ancestrales y equidad formativa en escuelas rurales.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-space-sm rounded-lg text-on-surface font-caption text-caption">
+            Descriptores: DUA Neuroeducación • Educación Bilingüe • Ruralidad • Identidad Docente
+          </div>
+</div>
+<!-- Eje 5 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between lg:col-span-2">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="px-space-sm py-0.5 rounded-full bg-primary-fixed-dim text-on-primary-fixed font-label-sm text-label-sm font-bold">Eje Temático 05</span>
+<span class="material-symbols-outlined text-primary text-[28px]">nature_people</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Gestión Educativa, Bienestar y Desarrollo Sostenible</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Liderazgo pedagógico transformacional, procesos de licenciamiento y acreditación de la calidad universitaria, salud mental comunitaria y convivencia pacífica post-pandemia, articulación de la educación con los Objetivos de Desarrollo Sostenible (ODS 4).
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-space-sm rounded-lg text-on-surface font-caption text-caption">
+            Descriptores: Liderazgo Escolar • Aseguramiento de Calidad • Clima Institucional • ODS 4 UNESCO
+          </div>
+</div>
+</div>
+</div>
+</section>
+<!-- PROGRAMA ACADÉMICO SECTION (INTERACTIVE TABS) -->
+<section class="py-space-2xl bg-surface-container-low" id="programa">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="text-center max-w-3xl mx-auto mb-space-xl">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Cronograma de Sesiones</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">Programa Académico Oficial</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+          Tres jornadas intensivas de plenarias magistrales, mesas de debate, talleres metodológicos aplicados y sustentaciones orales.
+        </p>
+</div>
+<!-- Tab Buttons -->
+<div class="flex flex-wrap items-center justify-center gap-space-xs p-space-xs bg-surface-container rounded-xl max-w-2xl mx-auto mb-space-xl">
+<button class="flex-1 py-space-sm px-space-md rounded-lg font-label-md text-label-md text-primary bg-surface-container-lowest shadow-sm font-bold transition-all" id="prog-tab-btn-1" onclick="switchProgramTab(1)">
+          Día 1: Miércoles 25 Nov
+        </button>
+<button class="flex-1 py-space-sm px-space-md rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all" id="prog-tab-btn-2" onclick="switchProgramTab(2)">
+          Día 2: Jueves 26 Nov
+        </button>
+<button class="flex-1 py-space-sm px-space-md rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all" id="prog-tab-btn-3" onclick="switchProgramTab(3)">
+          Día 3: Viernes 27 Nov
+        </button>
+</div>
+<!-- TAB CONTENT 1 -->
+<div class="space-y-space-md" id="prog-tab-1">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">08:00 - 09:30</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface font-caption text-caption font-semibold">Registro Institucional</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Acreditación y Entrega de Credenciales</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Recepción de delegaciones presenciales, kits del congreso y validación de accesos virtuales a la sala Zoom.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">badge</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">09:30 - 10:30</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-caption text-caption font-semibold">Ceremonia de Honor</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Solemne Ceremonia Inaugural</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Palabras de apertura a cargo del Señor Decano de la Facultad y de la Directora de la Escuela Profesional de Educación Primaria (EPEP).</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">campaign</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">10:30 - 12:30</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-caption text-caption font-semibold">Conferencia Magistral 01</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">El Futuro de la Educación frente a la Inteligencia Artificial Generativa</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Conferencista Internacional Invitado. Auditorio Central con retransmisión global en vivo.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-[28px] hidden md:block">psychology_alt</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">14:00 - 17:30</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface font-caption text-caption font-semibold">Salas Paralelas</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Mesas de Ponencias de Investigadores (Ejes 1 y 2)</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Defensa y disertación oral de artículos aprobados por el comité de pares ciegos (15 minutos por ponencia + 5 min de réplica).</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">co_present</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">17:30 - 19:00</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-caption text-caption font-semibold">Confraternidad</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Sesión de Networking Académico y Cóctel de Bienvenida</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Espacio de vinculación para redes de investigación docente, grupos de estudio e intercambio interuniversitario.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">local_bar</span>
+</div>
+</div>
+<!-- TAB CONTENT 2 -->
+<div class="hidden space-y-space-md" id="prog-tab-2">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">09:00 - 11:00</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-caption text-caption font-semibold">Conferencia Magistral 02</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Paradigmas de la Inclusión, Neurodiversidad e Interculturalidad</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Análisis profundo sobre el Diseño Universal para el Aprendizaje (DUA) en entornos iberoamericanos.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-[28px] hidden md:block">diversity_1</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">11:15 - 13:00</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-caption text-caption font-semibold">Panel Plenario</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Foro Internacional: Políticas Públicas para la Investigación Educativa</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Con la participación de representantes ministeriales, directores de institutos de investigación y decanos de educación.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">forum</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">14:30 - 16:30</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-caption text-caption font-semibold">Talleres Prácticos Simultáneos</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Uso de Herramientas de IA en Investigación y Escritura Científica</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Capacitación aplicada en laboratorios de cómputo y aulas híbridas en software bibliométrico y asistencia de análisis cualitativo.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-tertiary-container text-[28px] hidden md:block">terminal</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">16:45 - 19:00</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface font-caption text-caption font-semibold">Salas Paralelas</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Ponencias de Investigación (Ejes 3, 4 y 5)</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Exposiciones orales y sustentación de experiencias pedagógicas innovadoras en simultáneo.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">groups</span>
+</div>
+</div>
+<!-- TAB CONTENT 3 -->
+<div class="hidden space-y-space-md" id="prog-tab-3">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">09:00 - 11:00</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-caption text-caption font-semibold">Conferencias de Síntesis</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Prospectiva Pedagógica 2030: Nuevos Horizontes de la Escuela</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Evaluación prospectiva y epistemológica sobre el futuro de la educación primaria y la infancia.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">insights</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">11:15 - 12:45</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-caption text-caption font-semibold">Documento Oficial</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Presentación de Conclusiones y Declaración del IV Congreso</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lectura del manifiesto científico y pedagógico con recomendaciones de política para la educación primaria.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[28px] hidden md:block">contract</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">14:00 - 15:30</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-caption text-caption font-semibold">Reconocimiento</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Premiación a las Mejores Investigaciones y Ponencias</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Entrega de distinciones de honor por eje temático y reconocimientos a semilleros de investigación.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-tertiary-container text-[28px] hidden md:block">military_tech</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold min-w-[120px]">15:30 - 17:00</span>
+<div>
+<span class="px-space-xs py-0.5 rounded bg-primary text-on-primary font-caption text-caption font-semibold">Clausura Oficial</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Ceremonia Solemne de Clausura y Brindis de Honor</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cierre formal por las altas autoridades universitarias e inicio del proceso de emisión digital de certificados.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[28px] hidden md:block">celebration</span>
+</div>
+</div>
+</div>
+</section>
+<!-- TARIFAS E INVERSIÓN (5 PRICING CARDS) -->
+<section class="py-space-2xl bg-surface" id="tarifas">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="text-center max-w-3xl mx-auto mb-space-2xl">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Inversión Transparente</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">Tarifas de Inscripción y Participación</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+          Todas las categorías incluyen certificación oficial por <strong>120 horas académicas</strong> válidas para escalafón, acceso a grabaciones y memorias en línea.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-md items-stretch">
+<!-- Tarjeta 1: Estudiante EPEP -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<span class="font-caption text-caption font-semibold text-primary uppercase">Asistente Interno</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Estudiante EPEP</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1">Pregrado de la Escuela Profesional de Educación Primaria.</p>
+<div class="my-space-md">
+<span class="font-display text-display text-primary font-extrabold">S/ 20</span>
+<span class="font-caption text-caption text-on-surface-variant">.00 PEN</span>
+</div>
+<ul class="space-y-space-xs font-caption text-caption text-on-surface-variant">
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Acceso a todas las plenarias</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Certificado por 120 horas</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Materiales digitales del evento</li>
+</ul>
+</div>
+<a class="mt-space-lg w-full text-center py-space-xs px-space-sm bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md rounded-lg transition-colors" href="#">Inscribirse</a>
+</div>
+<!-- Tarjeta 2: Estudiante Externo -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<span class="font-caption text-caption font-semibold text-primary uppercase">Asistente Universitario</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Estudiante Externo</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1">Estudiantes de otras universidades o facultades.</p>
+<div class="my-space-md">
+<span class="font-display text-display text-primary font-extrabold">S/ 30</span>
+<span class="font-caption text-caption text-on-surface-variant">.00 PEN</span>
+</div>
+<ul class="space-y-space-xs font-caption text-caption text-on-surface-variant">
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Acceso Presencial o Virtual</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Certificado por 120 horas</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Acceso a talleres prácticos</li>
+</ul>
+</div>
+<a class="mt-space-lg w-full text-center py-space-xs px-space-sm bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md rounded-lg transition-colors" href="#">Inscribirse</a>
+</div>
+<!-- Tarjeta 3: Asistente Externo -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<span class="font-caption text-caption font-semibold text-primary uppercase">Profesionales & Docentes</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Asistente Externo</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1">Docentes de carrera, directores y profesionales de la educación.</p>
+<div class="my-space-md">
+<span class="font-display text-display text-primary font-extrabold">S/ 70</span>
+<span class="font-caption text-caption text-on-surface-variant">.00 PEN</span>
+</div>
+<ul class="space-y-space-xs font-caption text-caption text-on-surface-variant">
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Participación plena presencial</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Certificado escalafonario (120h)</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">check_circle</span>Kit de participante y memorias</li>
+</ul>
+</div>
+<a class="mt-space-lg w-full text-center py-space-xs px-space-sm bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md rounded-lg transition-colors" href="#">Inscribirse</a>
+</div>
+<!-- Tarjeta 4: Ponente Externo -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<span class="font-caption text-caption font-semibold text-secondary uppercase">Investigador Externo</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Ponente Externo</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1">Autores con ponencia aceptada por revisión de pares ciegos.</p>
+<div class="my-space-md">
+<span class="font-display text-display text-secondary font-extrabold">S/ 100</span>
+<span class="font-caption text-caption text-on-surface-variant">.00 PEN</span>
+</div>
+<ul class="space-y-space-xs font-caption text-caption text-on-surface-variant">
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span>Revisión arbitral doble ciego</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span>Certificado oficial de Ponente</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span>Publicación con ISBN / ISSN</li>
+</ul>
+</div>
+<a class="mt-space-lg w-full text-center py-space-xs px-space-sm bg-secondary hover:bg-secondary-container text-on-secondary font-label-md text-label-md rounded-lg transition-colors shadow-sm" href="#">Postular</a>
+</div>
+<!-- Tarjeta 5: DESTACADA Ponente EPEP -->
+<div class="bg-primary text-on-primary p-space-md rounded-xl shadow-md flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-2 right-2">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm px-space-xs py-0.5 rounded font-bold">Fomento I+D</span>
+</div>
+<div>
+<span class="font-caption text-caption font-semibold text-tertiary-fixed uppercase">Comunidad EPEP</span>
+<h3 class="font-headline-sm text-headline-sm text-white font-bold mt-1">Ponente EPEP</h3>
+<p class="font-caption text-caption text-surface-container-highest mt-1">Docentes ordinarios/contratados y estudiantes EPEP.</p>
+<div class="my-space-md">
+<span class="font-display text-display text-tertiary-fixed-dim font-extrabold">S/ 0</span>
+<span class="font-caption text-caption text-surface-container-highest">.00 PEN (Gratuito)</span>
+</div>
+<ul class="space-y-space-xs font-caption text-caption text-surface-container-highest">
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]">check_circle</span>Incentivo total a la producción</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]">check_circle</span>Certificado de Ponente</li>
+<li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]">check_circle</span>Publicación en Libro de Actas</li>
+</ul>
+</div>
+<a class="mt-space-lg w-full text-center py-space-xs px-space-sm bg-tertiary-fixed text-on-tertiary-fixed hover:bg-tertiary-fixed-dim font-label-md text-label-md rounded-lg transition-colors font-bold shadow-sm" href="#">Postular Gratis</a>
+</div>
+</div>
+<!-- Payment details box -->
+<div class="mt-space-xl p-space-lg bg-surface-container-low rounded-xl flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="space-y-space-xs">
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold">Medios de Pago Autorizados</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Banco de la Nación (Tasa de evento académico en agencias o Págalo.pe), Transferencias Interbancarias (CCI), billeteras digitales (Yape / Plin) y pasarela para tarjetas de débito/crédito.
+          </p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<span class="px-space-sm py-space-xs bg-surface-container-lowest rounded-lg font-caption text-caption text-primary font-bold shadow-sm">Banco de la Nación</span>
+<span class="px-space-sm py-space-xs bg-surface-container-lowest rounded-lg font-caption text-caption text-secondary font-bold shadow-sm">Yape / Plin</span>
+<span class="px-space-sm py-space-xs bg-surface-container-lowest rounded-lg font-caption text-caption text-on-surface font-bold shadow-sm">VISA / Mastercard</span>
+</div>
+</div>
+</div>
+</section>
+<!-- MODALIDAD HÍBRIDA & PLATAFORMAS DE TRANSMISIÓN -->
+<section class="py-space-2xl bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="text-center max-w-3xl mx-auto mb-space-2xl">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Cobertura y Experiencia</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">Modalidad Híbrida de Clase Mundial</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+          Integramos la calidez y el diálogo presencial con la accesibilidad de una transmisión digital global interactiva y sincrónica.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Presencial -->
+<div class="bg-surface-container-lowest p-space-xl rounded-xl shadow-sm space-y-space-md">
+<div class="w-12 h-12 rounded-lg bg-primary-fixed text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[30px]">apartment</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary font-bold">Experiencia Presencial (En Campus)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Ubicado en el imponente <strong>Auditorio Central</strong> de la universidad. Cuenta con acústica de precisión, pantallas LED de alta resolución, zonas de networking, stands de divulgación científica y entrega de credenciales físicas personalizadas.
+          </p>
+<ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+<li class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-secondary text-[20px]">check</span>Kit físico de congresista con credencial institucional</li>
+<li class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-secondary text-[20px]">check</span>Coffee breaks académicos y cóctel de confraternidad</li>
+<li class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-secondary text-[20px]">check</span>Interacción directa e intercambio cara a cara con ponentes</li>
+</ul>
+</div>
+<!-- Virtual -->
+<div class="bg-surface-container-lowest p-space-xl rounded-xl shadow-sm space-y-space-md">
+<div class="w-12 h-12 rounded-lg bg-secondary-fixed text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[30px]">podcasts</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary font-bold">Experiencia Virtual Sincrónica</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Salas dedicadas de <strong>Zoom Webinars Pro</strong> con moderación activa, traducción simultánea para conferencias en lenguas extranjeras y soporte multicanal mediante <strong>YouTube Live</strong> y <strong>Facebook Live</strong> en 1080p.
+          </p>
+<ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+<li class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-secondary text-[20px]">check</span>Salas interactivas con sesión de preguntas y respuestas (Q&A)</li>
+<li class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-secondary text-[20px]">check</span>Grabaciones de alta calidad disponibles on-demand por 90 días</li>
+<li class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-secondary text-[20px]">check</span>Certificado digital verificable mediante código QR y blockchain</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- COMITÉ ORGANIZADOR Y DE HONOR -->
+<section class="py-space-2xl bg-surface" id="comite">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="text-center max-w-3xl mx-auto mb-space-2xl">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Liderazgo Académico</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">Comité Organizador y Científico</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+          Un selecto equipo de autoridades, investigadores certificados Renacyt y evaluadores internacionales garantizan el rigor del evento.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Comité de Honor -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[28px]">shield</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Comité de Honor</h3>
+</div>
+<ul class="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant">
+<li>
+<strong class="text-on-surface block">Rectorado Universitario</strong>
+<span>Presidencia Honoraria del Congreso</span>
+</li>
+<li>
+<strong class="text-on-surface block">Decanato de la Facultad de Educación</strong>
+<span>Auspicio Académico e Institucional</span>
+</li>
+<li>
+<strong class="text-on-surface block">Dirección de Escuela EPEP</strong>
+<span>Dirección General de Coordinación Curricular</span>
+</li>
+</ul>
+</div>
+<!-- Comité Científico -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[28px]">biotech</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Comité Científico</h3>
+</div>
+<ul class="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant">
+<li>
+<strong class="text-on-surface block">Panel de Investigadores Renacyt</strong>
+<span>Especialistas en Ciencias de la Educación</span>
+</li>
+<li>
+<strong class="text-on-surface block">Árbitros Internacionales</strong>
+<span>Universidades de Chile, España, México y Colombia</span>
+</li>
+<li>
+<strong class="text-on-surface block">Equipo Editorial EPEP</strong>
+<span>Revisión de actas y cumplimiento de normas éticas COPE</span>
+</li>
+</ul>
+</div>
+<!-- Comité Ejecutivo -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[28px]">hub</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Comité Ejecutivo</h3>
+</div>
+<ul class="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant">
+<li>
+<strong class="text-on-surface block">Subdirección de Investigación EPEP</strong>
+<span>Presidencia Ejecutiva y Gestión Científica</span>
+</li>
+<li>
+<strong class="text-on-surface block">Coordinación de Tecnologías</strong>
+<span>Infraestructura Híbrida y Transmisión Audiovisual</span>
+</li>
+<li>
+<strong class="text-on-surface block">Comisión de Registro y Certificación</strong>
+<span>Atención a participantes y secretaría general</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQS & CONTACTO -->
+<section class="py-space-2xl bg-surface-container-low" id="contacto">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-start">
+<!-- FAQS -->
+<div class="space-y-space-md">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Dudas Frecuentes</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold">Preguntas Frecuentes</h2>
+<div class="space-y-space-sm">
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold">¿Cómo obtendré mi certificado de 120 horas?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Al concluir el evento y verificar un mínimo del 80% de asistencia o visualizaciones registradas, se enviará el certificado digital con código QR de verificación a su correo electrónico institucional en formato PDF de alta resolución.
+              </p>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold">¿Puedo participar como ponente de manera virtual?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Sí. Contamos con salas interactivas sincrónicas para expositores nacionales y del extranjero que no puedan viajar de forma física. La validez de la certificación como ponente es exactamente la misma.
+              </p>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold">¿Se publicarán las memorias del congreso?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Absolutamente. Los resúmenes aceptados y sustentados formarán parte del Libro Oficial de Actas del IV Congreso con ISBN institucional y depósito legal en la Biblioteca Nacional.
+              </p>
+</div>
+</div>
+</div>
+<!-- Contact Box -->
+<div class="bg-surface-container-lowest p-space-xl rounded-xl shadow-sm space-y-space-lg">
+<div class="space-y-space-xs">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Mesa de Ayuda</span>
+<h3 class="font-headline-md text-headline-md text-primary font-bold">Secretaría del Congreso</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              ¿Tiene dudas con respecto a la inscripción, el envío de su ponencia o los convenios institucionales? Contáctenos de inmediato.
+            </p>
+</div>
+<div class="space-y-space-md font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex items-center gap-space-md p-space-sm bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-secondary text-[24px]">mail</span>
+<div>
+<strong class="text-on-surface block">Correo Electrónico Oficial</strong>
+<span>investigacion.epep@universidad.edu.pe</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md p-space-sm bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-tertiary-container text-[24px]">chat</span>
+<div>
+<strong class="text-on-surface block">Atención Rápida por WhatsApp</strong>
+<span>+51 987 654 321 (Lunes a Viernes 08:00 - 18:00)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md p-space-sm bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary text-[24px]">location_on</span>
+<div>
+<strong class="text-on-surface block">Sede Presencial</strong>
+<span>Facultad de Educación – Escuela Profesional de Educación Primaria (EPEP), Ciudad Universitaria</span>
+</div>
+</div>
+</div>
+<div class="pt-space-sm">
+<a class="w-full inline-flex items-center justify-center gap-space-xs px-space-lg py-space-md bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md rounded-lg transition-colors shadow-sm" href="mailto:investigacion.epep@universidad.edu.pe">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Escribir a la Subdirección de Investigación</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+  // Countdown Timer Script targeting November 25, 2026
+  (function initCountdown() {
+    const targetDate = new Date('2026-11-25T08:00:00').getTime();
+
+    function updateTimer() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        const dEl = document.getElementById('cd-days');
+        const hEl = document.getElementById('cd-hours');
+        const mEl = document.getElementById('cd-minutes');
+        const sEl = document.getElementById('cd-seconds');
+
+        if (dEl) dEl.textContent = String(days).padStart(2, '0');
+        if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+        if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+        if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
+      }
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  })();
+
+  const modal = document.getElementById('action-modal');
+  const form = document.getElementById('registration-form');
+  const modalTitle = document.getElementById('action-modal-title');
+  const modalCopy = document.getElementById('action-modal-copy');
+  const formStatus = document.getElementById('form-status');
+  let lastFocusedElement;
+
+  function openActionModal(type) {
+    lastFocusedElement = document.activeElement;
+    const isPaper = type === 'paper';
+    modalTitle.textContent = isPaper ? 'Envío de trabajo o ponencia' : 'Inscripción al Congreso';
+    modalCopy.textContent = isPaper
+      ? 'Registra tus datos para recibir las instrucciones de envío y revisión de tu propuesta.'
+      : 'Completa tus datos y la Secretaría del Congreso se pondrá en contacto contigo.';
+    formStatus.textContent = '';
+    modal.hidden = false;
+    modal.querySelector('input').focus();
+  }
+
+  function closeActionModal() {
+    modal.hidden = true;
+    if (lastFocusedElement) lastFocusedElement.focus();
+  }
+
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-action]');
+    if (trigger) {
+      event.preventDefault();
+      openActionModal(trigger.dataset.action);
+    }
+    if (event.target === modal || event.target.closest('[data-close-modal]')) closeActionModal();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !modal.hidden) closeActionModal();
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    formStatus.textContent = 'Solicitud registrada. Revisa tu correo para continuar.';
+    form.reset();
+  });
+
+  const sectionMap = {
+    inicio: 'top',
+    'ejes-tematicos': 'ejes-tematicos',
+    programa: 'programa',
+    'call-for-papers': 'call-for-papers',
+    tarifas: 'tarifas',
+    comite: 'comite',
+    contacto: 'contacto'
+  };
+
+  document.querySelectorAll('[data-path]').forEach((link) => {
+    const sectionId = sectionMap[link.dataset.path];
+    if (sectionId) link.href = '#' + sectionId;
+    if (link.dataset.path === 'inscripcion') {
+      link.dataset.action = 'register';
+      link.href = '#';
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach((link) => {
+    const label = link.textContent.toLowerCase();
+    if (label.includes('enviar') || label.includes('subir') || label.includes('postular')) link.dataset.action = 'paper';
+    else if (label.includes('inscrib')) link.dataset.action = 'register';
+    if (link.dataset.action) link.setAttribute('aria-haspopup', 'dialog');
+  });
+
+  const mobilePanel = document.createElement('nav');
+  mobilePanel.className = 'mobile-panel';
+  mobilePanel.hidden = true;
+  mobilePanel.setAttribute('aria-label', 'Navegación móvil');
+  document.querySelectorAll('nav a[data-path]').forEach((link) => mobilePanel.append(link.cloneNode(true)));
+  document.body.append(mobilePanel);
+  const menuButton = document.createElement('button');
+  menuButton.className = 'xl:hidden grid h-9 w-9 place-items-center rounded-lg text-primary hover:bg-surface-container';
+  menuButton.type = 'button';
+  menuButton.setAttribute('aria-label', 'Abrir menú');
+  menuButton.innerHTML = '<span class="material-symbols-outlined">menu</span>';
+  document.querySelector('header .flex.items-center.gap-space-md.flex-shrink-0')?.prepend(menuButton);
+  menuButton.addEventListener('click', () => { mobilePanel.hidden = !mobilePanel.hidden; });
+  mobilePanel.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => { mobilePanel.hidden = true; }));
+
+  // Academic Program Tab Switcher
+  function switchProgramTab(tabIndex) {
+    for (let i = 1; i <= 3; i++) {
+      const content = document.getElementById('prog-tab-' + i);
+      const btn = document.getElementById('prog-tab-btn-' + i);
+
+      if (i === tabIndex) {
+        if (content) content.classList.remove('hidden');
+        if (btn) {
+          btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+          btn.classList.remove('text-on-surface-variant');
+        }
+      } else {
+        if (content) content.classList.add('hidden');
+        if (btn) {
+          btn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+          btn.classList.add('text-on-surface-variant');
+        }
+      }
+    }
+  }
+</script></main><footer class="w-full bg-surface-container-low shadow-[0_-1px_6px_rgba(15,39,86,0.04)]"><div class="max-w-7xl mx-auto px-margin py-space-2xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-space-2xl"><div class="space-y-space-md"><div class="flex items-center gap-space-sm"><img alt="Logo IV Congreso Científico EPEP" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv6ryu7EiUqf2ITbhga8_f7uTonTuvC1kMac6vU5rc3Uu8zCIfzm1ei30cJnTL8dN3FoxM2uBYu0DfVjPf_7TSAITcPJi4-UM_MYVZuH0mxQUBlYT5cnvJeVphyJ4ER-90AoQzJTiwnCD0Jb39U04CqrRcYgJrMxXH5OhQQ82xFrZ4wc_a6q-LEawEgedUYu5kLbkwvjx2N48_Ck4f2aknRORS30YbK5DWEqPyOGZmSeyba4jRaJs1hQ"/><span class="font-headline-sm text-headline-sm text-primary font-bold">IV Congreso Científico</span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Organizado por la Subdirección de Investigación – Escuela Profesional de Educación Primaria (EPEP). Impulsando la excelencia académica, la pedagogía crítica y la divulgación científica internacional.</p><div class="flex items-center gap-space-xs"><span class="px-space-sm py-space-xs bg-surface-container text-on-surface font-caption text-caption rounded-lg font-medium">ISSN 2709-5479</span><span class="px-space-sm py-space-xs bg-surface-container text-on-surface font-caption text-caption rounded-lg font-medium">Edición 2025</span></div></div><div class="space-y-space-sm"><h4 class="font-headline-sm text-headline-sm text-primary">Enlaces Principales</h4><ul class="space-y-space-xs"><li class="leading-none"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="inicio" href="#">Inicio del Evento</a></li><li class="leading-none"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="ejes-tematicos" href="#">Líneas de Investigación</a></li><li class="leading-none"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="programa" href="#">Cronograma y Ponencias</a></li><li class="leading-none"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="call-for-papers" href="#">Envío de Resúmenes (CFP)</a></li><li class="leading-none"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="comite" href="#">Comité Científico y Editorial</a></li></ul></div><div class="space-y-space-sm"><h4 class="font-headline-sm text-headline-sm text-primary">Transmisión en Vivo</h4><p class="font-caption text-caption text-on-surface-variant">Sesiones plenarias y simposios transmitidos en tiempo real por nuestras plataformas oficiales:</p><div class="space-y-space-xs"><div class="flex items-center gap-space-sm p-space-xs bg-surface-container-lowest rounded-lg"><span class="material-symbols-outlined text-secondary text-[20px]">videocam</span><div><p class="font-label-md text-label-md text-on-surface">Zoom Pro Room (Plenarias)</p><p class="font-caption text-caption text-on-surface-variant">Acceso exclusivo registrados</p></div></div><div class="flex items-center gap-space-sm p-space-xs bg-surface-container-lowest rounded-lg"><span class="material-symbols-outlined text-error text-[20px]">play_circle</span><div><p class="font-label-md text-label-md text-on-surface">YouTube Live Oficial</p><p class="font-caption text-caption text-on-surface-variant">Canal Institucional EPEP</p></div></div><div class="flex items-center gap-space-sm p-space-xs bg-surface-container-lowest rounded-lg"><span class="material-symbols-outlined text-primary-container text-[20px]">podcasts</span><div><p class="font-label-md text-label-md text-on-surface">Facebook Live Stream</p><p class="font-caption text-caption text-on-surface-variant">Comunidad Académica Virtual</p></div></div></div></div><div class="space-y-space-sm"><h4 class="font-headline-sm text-headline-sm text-primary">Secretaría del Congreso</h4><div class="space-y-space-xs text-on-surface-variant font-body-sm text-body-sm"><div class="flex items-start gap-space-sm"><span class="material-symbols-outlined text-[18px] text-primary mt-1">mail</span><span>investigacion.epep@universidad.edu.pe</span></div><div class="flex items-start gap-space-sm"><span class="material-symbols-outlined text-[18px] text-primary mt-1">phone</span><span>+51 (01) 489-2200 Anexo 3412</span></div><div class="flex items-start gap-space-sm"><span class="material-symbols-outlined text-[18px] text-primary mt-1">location_on</span><span>Av. Universitaria s/n, Pabellón de Educación</span></div></div><div class="pt-space-xs"><a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-secondary hover:text-secondary-container transition-colors" data-path="normas-eticas" href="#"><span class="material-symbols-outlined text-[16px]">policy</span>Normas de Ética y Publicación COPE</a></div></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md font-caption text-caption text-on-surface-variant"><p>© 2025 Subdirección de Investigación - Escuela Profesional de Educación Primaria (EPEP). Todos los derechos reservados.</p><div class="flex items-center gap-space-md"><a class="hover:text-primary transition-colors" data-path="terminos-congreso" href="#">Términos y Condiciones</a><a class="hover:text-primary transition-colors" data-path="privacidad" href="#">Política de Privacidad</a><a class="hover:text-primary transition-colors" data-path="contacto" href="#">Mesa de Ayuda</a></div></div></div></footer></body></html>
