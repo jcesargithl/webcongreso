@@ -175,22 +175,52 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section speakers-section" id="ponentes">
+        <div className="section-heading">
+          <div>
+            <span className="kicker">Ponentes Magistrales</span>
+            <h2>Voces expertas que<br /><em>inspiran el cambio.</em></h2>
+          </div>
+          <p>Conoce a los investigadores y educadores que liderarán las conferencias magistrales.</p>
+        </div>
+        <div className="speakers-grid">
+          {[
+            ["Dr. Alejandro Silva", "Inteligencia Artificial y Educación del Futuro", "Investigador principal en tecnologías emergentes para el aula. Explorará cómo las herramientas de IA están redefiniendo el rol del docente."],
+            ["Dra. Carmen Rosa", "Innovación en el Currículo Escolar", "Especialista en políticas públicas. Abordará las estrategias de adaptación curricular para las nuevas generaciones."],
+            ["Mg. Fernando Valle", "Metodologías Activas e Inclusivas", "Docente e investigador. Presentará casos de éxito en la implementación de aprendizaje basado en proyectos en comunidades rurales."]
+          ].map(([name, topic, desc]) => (
+            <div className="speaker-card" key={name}>
+              <div className="speaker-avatar"></div>
+              <div className="speaker-info">
+                <h3>{name}</h3>
+                <strong>{topic}</strong>
+                <p>{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="section themes-section" id="ejes">
         <div className="section-heading">
           <div>
             <span className="kicker">Ejes temáticos</span>
             <h2>Cinco rutas para<br /><em>transformar la educación.</em></h2>
           </div>
-          <p>Selecciona un eje para consultar las líneas de trabajo incluidas en la convocatoria.</p>
+          <p>Explora las líneas de investigación que estructuran nuestra convocatoria para ponencias.</p>
         </div>
-        <div className="theme-selector">
-          {themes.map(([number, title], index) => <button className={activeTheme === index ? "theme-button active" : "theme-button"} key={number} onClick={() => setActiveTheme(index)} aria-pressed={activeTheme === index}><span>{number}</span>{title}<ChevronDown size={16} /></button>)}
+        <div className="themes-grid-new">
+          {themes.map(([number, title, desc]) => (
+            <div className="theme-card-new" key={number}>
+              <div className="theme-card-bg"></div>
+              <div className="theme-card-content">
+                <span className="theme-number-new">{number}</span>
+                <h3 className="theme-title-new">{title}</h3>
+                <p className="theme-desc-new">{desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
-        <article className="theme-detail">
-          <span className="track-number">EJE {themes[activeTheme][0]}</span>
-          <h3>{themes[activeTheme][1]}</h3>
-          <p>{themes[activeTheme][2]}</p>
-        </article>
       </section>
 
       <section className="section planning-section" id="planificacion">
@@ -201,22 +231,62 @@ export default function Home() {
           </div>
           <p>Explora las actividades, recursos e indicadores previstos para el evento.</p>
         </div>
-        <div className="planning-tabs" role="tablist" aria-label="Información del plan">
-          {(Object.keys(planningPanels) as Array<keyof typeof planningPanels>).map((panel) => <button className={activePanel === panel ? "planning-tab active" : "planning-tab"} key={panel} onClick={() => setActivePanel(panel)} role="tab" aria-selected={activePanel === panel}>{panel === "actividades" ? "Actividades" : panel === "recursos" ? "Recursos" : panel === "calidad" ? "Calidad" : panel === "gestion" ? "Gestión" : "Riesgos"}</button>)}
+        <div className="planning-split">
+          <div className="planning-sidebar" role="tablist" aria-label="Información del plan">
+            {(Object.keys(planningPanels) as Array<keyof typeof planningPanels>).map((panel) => (
+              <button 
+                className={activePanel === panel ? "planning-nav-btn active" : "planning-nav-btn"} 
+                key={panel} 
+                onClick={() => setActivePanel(panel)} 
+                role="tab" 
+                aria-selected={activePanel === panel}
+              >
+                {panel === "actividades" ? "Actividades" : panel === "recursos" ? "Recursos" : panel === "calidad" ? "Calidad" : panel === "gestion" ? "Gestión" : "Riesgos"}
+              </button>
+            ))}
+          </div>
+          <div className="planning-content-area">
+            <div className="planning-content-card" key={activePanel}>
+              {planningPanels[activePanel].map((item, index) => (
+                <div className="planning-item" key={item}>
+                  <div className="planning-index">{String(index + 1).padStart(2, "0")}</div>
+                  <p>{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="planning-list">{planningPanels[activePanel].map((item, index) => <div key={item}><strong>{String(index + 1).padStart(2, "0")}</strong><span>{item}</span></div>)}</div>
       </section>
 
-      <section className="section investment" id="inscripciones">
-        <div className="investment-copy">
-          <span className="kicker">Inscripciones oficiales</span>
-          <h2>Participa en el<br /><em>encuentro académico.</em></h2>
-          <p>La recepción de trabajos estará abierta hasta el 30 de octubre de 2026. Los costos se determinaron en acta por acuerdo de los docentes organizadores.</p>
-          <button className="button button-dark" onClick={() => setModal("registration")}><ExternalLink size={18} /> Solicitar inscripción</button>
+      <section className="section investment-new" id="inscripciones">
+        <div className="section-heading" style={{ justifyContent: 'center', textAlign: 'center', alignItems: 'center', marginBottom: '50px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <span className="kicker">Inscripciones oficiales</span>
+            <h2 style={{ textAlign: 'center' }}>Participa en el<br /><em>encuentro académico.</em></h2>
+            <p style={{ maxWidth: '600px', marginTop: '20px', textAlign: 'center' }}>
+              La recepción de trabajos estará abierta hasta el 30 de octubre de 2026. 
+              Selecciona tu categoría para iniciar la inscripción.
+            </p>
+          </div>
         </div>
 
-        <div className="price-list registration-links">
-          {costs.map(([category, cost]) => <div key={category}><span>{category}</span><strong>{cost}</strong></div>)}
+        <div className="tickets-grid">
+          {costs.map(([category, cost]) => (
+            <div className="ticket-card" key={category} onClick={() => setModal("registration")}>
+               <div className="ticket-content">
+                  <span className="ticket-category">{category}</span>
+                  <strong className="ticket-price">{cost}</strong>
+               </div>
+               <div className="ticket-divider">
+                 <div className="ticket-notch left"></div>
+                 <div className="ticket-notch right"></div>
+               </div>
+               <div className="ticket-action">
+                  <span>Adquirir entrada</span>
+                  <ArrowUpRight size={18} />
+               </div>
+            </div>
+          ))}
         </div>
       </section>
 
