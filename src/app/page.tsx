@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowUpRight, Building2, CalendarDays, Check, ChevronDown, CircleHelp, ExternalLink, FileText, GraduationCap, MapPin, Menu, Send, Sparkles, Users, X } from "lucide-react";
 
 type ModalKind = "registration" | "paper" | null;
@@ -65,13 +65,15 @@ export default function Home() {
             </p>
 
             <div className="hero-actions">
-              <button className="button button-light" onClick={() => setModal("registration")}>
+              <button className="button button-dark" style={{ background: 'var(--coral)', color: 'white', border: '2px solid white' }} onClick={() => setModal("registration")}>
                 <CalendarDays size={18} /> Ver inscripciones
               </button>
-              <button className="button button-ghost" onClick={() => setModal("paper")}>
+              <button className="button button-ghost" style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }} onClick={() => setModal("paper")}>
                 <Send size={18} /> Presentar una ponencia
               </button>
             </div>
+
+            <Countdown />
 
             <div className="hero-meta">
               <span><Users size={16} /> Ponentes nacionales e internacionales</span>
@@ -80,42 +82,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-visual" aria-hidden="true">
-            <div className="hero-card">
-              <Image className="hero-logo" src="/logosecu.png" alt="" width={94} height={94} priority />
-              <span className="card-chip">Subdirección de Investigación</span>
-              <div className="date-stack">
-                <span>25</span>
-                <small>NOV<br />2026</small>
-              </div>
-
-              <div className="mini-stats">
-                <div>
-                  <strong>03</strong>
-                  <span>Jornadas</span>
-                </div>
-                <div>
-                  <strong>05</strong>
-                  <span>Ejes</span>
-                </div>
-                <div>
-                  <strong>HÍBRIDO</strong>
-                  <span>Modalidad</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="floating-panel">
-              <div className="floating-header">
-                <span>Agenda destacada</span>
-                <small>25—27 NOV</small>
-              </div>
-              <ul>
-                <li>Conferencias virtuales</li>
-                <li>Ponencias presenciales</li>
-                <li>Memoria y certificación</li>
-              </ul>
-            </div>
+          <div className="hero-visual" aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Image src="/corgi.jpg" alt="Corgi astronauta en cohete" width={480} height={480} priority />
           </div>
         </div>
       </section>
@@ -298,4 +266,64 @@ function RequestModal({ kind, onClose }: { kind: Exclude<ModalKind, null>; onClo
   const [sent, setSent] = useState(false); const [error, setError] = useState(""); const isPaper = kind === "paper";
   async function submit(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); setError(""); const form = new FormData(event.currentTarget); const response = await fetch("/api/requests", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind, name: form.get("name"), email: form.get("email"), mode: form.get("mode"), institution: form.get("institution"), topic: form.get("topic"), message: form.get("message") }) }); if (!response.ok) { setError("No pudimos registrar la solicitud. Revisa tus datos."); return; } setSent(true); }
   return <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button className="icon-button modal-close" title="Cerrar" aria-label="Cerrar" onClick={onClose}><X size={20} /></button>{sent ? <div className="success"><span><Check size={28} /></span><h2>Solicitud recibida</h2><p>La Secretaría revisará tus datos y te contactará pronto en el correo indicado.</p><button className="button button-dark" onClick={onClose}>Cerrar</button></div> : <><span className="kicker">{isPaper ? "Call for papers" : "Registro"}</span><h2 id="modal-title">{isPaper ? "Presenta tu investigación." : "Reserva tu lugar."}</h2><p className="modal-intro">{isPaper ? "Cuéntanos brevemente sobre tu propuesta para iniciar la revisión." : "Déjanos tus datos y te enviaremos los pasos para completar tu inscripción."}</p><form onSubmit={submit}><label>Nombre completo<input name="name" required /></label><label>Correo electrónico<input name="email" type="email" required /></label><label>Institución<input name="institution" /></label>{isPaper && <label>Título o eje de la ponencia<input name="topic" required /></label>}<label>Modalidad<select name="mode"><option>Presencial</option><option>Virtual</option></select></label>{isPaper && <label>Resumen breve<textarea name="message" rows={3} /></label>}<button className="button button-dark full" type="submit"><Send size={17} /> Enviar solicitud</button>{error && <p className="form-error">{error}</p>}</form></>}</div></div>;
+}
+
+function Countdown() {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const target = new Date("2026-11-25T09:00:00").getTime();
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = target - now;
+      if (distance < 0) {
+        clearInterval(interval);
+        return;
+      }
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="countdown-container">
+      <div className="countdown-item">
+        <svg className="countdown-svg" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" className="bg-circle" />
+          <circle cx="50" cy="50" r="45" className="progress-circle" style={{ strokeDashoffset: 283 - (283 * timeLeft.days) / 365 }} />
+        </svg>
+        <div className="countdown-value">{timeLeft.days}</div>
+        <div className="countdown-label">Días</div>
+      </div>
+      <div className="countdown-item">
+        <svg className="countdown-svg" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" className="bg-circle" />
+          <circle cx="50" cy="50" r="45" className="progress-circle" style={{ strokeDashoffset: 283 - (283 * timeLeft.hours) / 24 }} />
+        </svg>
+        <div className="countdown-value">{timeLeft.hours}</div>
+        <div className="countdown-label">Horas</div>
+      </div>
+      <div className="countdown-item">
+        <svg className="countdown-svg" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" className="bg-circle" />
+          <circle cx="50" cy="50" r="45" className="progress-circle" style={{ strokeDashoffset: 283 - (283 * timeLeft.minutes) / 60 }} />
+        </svg>
+        <div className="countdown-value">{timeLeft.minutes}</div>
+        <div className="countdown-label">Min</div>
+      </div>
+      <div className="countdown-item">
+        <svg className="countdown-svg" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" className="bg-circle" />
+          <circle cx="50" cy="50" r="45" className="progress-circle" style={{ strokeDashoffset: 283 - (283 * timeLeft.seconds) / 60 }} />
+        </svg>
+        <div className="countdown-value">{timeLeft.seconds}</div>
+        <div className="countdown-label">Seg</div>
+      </div>
+    </div>
+  );
 }
