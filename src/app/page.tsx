@@ -265,38 +265,47 @@ export default function Home() {
 
       {/* ─── SHOWCASE / PRESENTACIÓN ─── */}
       <section className="section showcase" id="programa">
-        <div className="showcase-inner">
-          <div className="showcase-headline">
+        <div className="showcase-inner showcase-split">
+          <div className="showcase-content">
             <span className="kicker">Presentación</span>
             <h2>Investigación, innovación e IA<br />para educar <em>mejor</em></h2>
             <p>
               El congreso fortalece la cultura investigativa, la producción científica y el
               intercambio de conocimientos entre investigadores, docentes, estudiantes y profesionales.
             </p>
+            <div className="features-list">
+              <article className="feature-list-item">
+                <div className="feature-icon"><Sparkles size={20} /></div>
+                <div>
+                  <strong>Objetivo académico</strong>
+                  <p>Coordinar actividades con estándares de calidad verificables.</p>
+                </div>
+              </article>
+              <article className="feature-list-item">
+                <div className="feature-icon"><GraduationCap size={20} /></div>
+                <div>
+                  <strong>Modalidad híbrida</strong>
+                  <p>Conferencias y ponencias presenciales y virtuales con soporte.</p>
+                </div>
+              </article>
+              <article className="feature-list-item">
+                <div className="feature-icon"><FileText size={20} /></div>
+                <div>
+                  <strong>Resultados esperados</strong>
+                  <p>Producción evaluada, memoria, certificados e informe final.</p>
+                </div>
+              </article>
+            </div>
           </div>
-
-          <div className="features-grid">
-            <article className="feature-card">
-              <div className="feature-icon"><Sparkles size={24} /></div>
-              <div className="feature-content">
-                <strong>Objetivo académico</strong>
-                <p>Coordinar actividades académicas, administrativas, logísticas y financieras con estándares de calidad verificables.</p>
+          
+          <div className="showcase-visual">
+            <div className="showcase-image-wrapper">
+              <Image src="/congreso.png" alt="Presentación Congreso" fill className="object-cover" />
+              <div className="showcase-badge">
+                <span className="dot"></span>
+                <span>Innovación Educativa</span>
               </div>
-            </article>
-            <article className="feature-card">
-              <div className="feature-icon"><GraduationCap size={24} /></div>
-              <div className="feature-content">
-                <strong>Modalidad híbrida</strong>
-                <p>Conferencias virtuales, ponencias presenciales y asistencia presencial o virtual con soporte técnico y transmisión.</p>
-              </div>
-            </article>
-            <article className="feature-card">
-              <div className="feature-icon"><FileText size={24} /></div>
-              <div className="feature-content">
-                <strong>Resultados esperados</strong>
-                <p>Producción académica evaluada, memoria del evento, certificados, medición de satisfacción e informe final.</p>
-              </div>
-            </article>
+            </div>
           </div>
         </div>
       </section>
@@ -311,17 +320,51 @@ export default function Home() {
           <p>La Subdirección de Investigación de la EPEP coordina la actividad con estándares académicos, organizacionales y tecnológicos.</p>
         </div>
 
-        <div className="org-grid">
-          {institutions.map((inst, i) => (
-            <article className={`org-card org-card-${i + 1}`} key={inst}>
-              <span className="org-num">0{i + 1}</span>
-              <div className="org-icon"><Building2 size={22} /></div>
+        <div className="org-bento-grid">
+          {/* Card 1: EPEP with anniversary image */}
+          <article className="org-card-featured">
+            <Image src="/aniversario_educacion.jpg" alt="Escuela Profesional de Educación Primaria" fill className="object-cover" />
+            <div className="org-card-overlay">
+              <span className="org-num-light">01</span>
               <div>
-                <h3>{inst}</h3>
-                <p>Parte de la estructura institucional responsable del congreso 2026.</p>
+                <h3>Escuela Profesional de Educación Primaria</h3>
+                <p>Nuestra escuela, comprometida con la excelencia y la formación integral, es la sede principal de este magno evento. Juntos hacia la acreditación y la innovación constante.</p>
+              </div>
+            </div>
+          </article>
+          
+          <div className="org-cards-stack">
+            {/* Card 2: UNAP Logo */}
+            <article className="org-card-simple org-card-unap">
+              <span className="org-num">02</span>
+              <div className="org-logo">
+                <Image src="/Logo_UNAP.png" alt="UNAP" width={85} height={85} className="object-contain" />
+              </div>
+              <div className="org-card-text">
+                <h3>Universidad Nacional del Altiplano</h3>
+                <p>Nuestra casa superior de estudios impulsando la investigación y el desarrollo de la región sur del país.</p>
               </div>
             </article>
-          ))}
+
+            <div className="org-cards-row">
+              <article className="org-card-simple">
+                <span className="org-num">03</span>
+                <div className="org-icon"><Building2 size={24} /></div>
+                <div className="org-card-text">
+                  <h3>Facultad de Ciencias de la Educación</h3>
+                  <p>Fomentando la producción científica e intelectual.</p>
+                </div>
+              </article>
+              <article className="org-card-simple">
+                <span className="org-num">04</span>
+                <div className="org-icon"><Sparkles size={24} /></div>
+                <div className="org-card-text">
+                  <h3>Subdirección de Investigación</h3>
+                  <p>Coordinación ejecutiva y académica de la actividad investigativa.</p>
+                </div>
+              </article>
+            </div>
+          </div>
         </div>
 
         <div className="committee-section">
