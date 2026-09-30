@@ -51,39 +51,34 @@ export default function Home() {
         </div>
       </header>
 
+      <div className="marquee-container">
+        <div className="marquee-content">
+          EL CONGRESO DE INVESTIGACIÓN MÁS GRANDE · IV CONGRESO INTERNACIONAL DE INVESTIGACIÓN CIENTÍFICA · EL CONGRESO DE INVESTIGACIÓN MÁS GRANDE · IV CONGRESO INTERNACIONAL DE INVESTIGACIÓN CIENTÍFICA
+        </div>
+      </div>
+
       <section className="hero" id="inicio">
-        <div className="hero-grid" />
         <div className="hero-inner">
-          <div className="hero-copy">
-            <div className="eyebrow">
-              <span className="live-dot" /> 25—27 NOV 2026 · MODALIDAD HÍBRIDA
-            </div>
-            <h1>Transformando la educación.</h1>
-            <p className="hero-lead">IV Congreso Internacional de Investigación Científica</p>
-            <p className="hero-text">
-              Investigación, innovación e inteligencia artificial para los desafíos del siglo XXI. Un encuentro académico para investigadores, docentes, estudiantes, egresados y profesionales.
-            </p>
-
-            <div className="hero-actions">
-              <button className="button button-dark" style={{ background: 'var(--coral)', color: 'white', border: '2px solid white' }} onClick={() => setModal("registration")}>
-                <CalendarDays size={18} /> Ver inscripciones
-              </button>
-              <button className="button button-ghost" style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }} onClick={() => setModal("paper")}>
-                <Send size={18} /> Presentar una ponencia
-              </button>
-            </div>
-
-            <Countdown />
-
-            <div className="hero-meta">
-              <span><Users size={16} /> Ponentes nacionales e internacionales</span>
-              <span><MapPin size={16} /> EPEP · UNA Puno</span>
-              <span><Check size={16} /> Asistencia presencial y virtual</span>
-            </div>
+          <button className="red-btn" onClick={() => setModal("registration")}>
+            Descargar Programa Final aquí
+          </button>
+          
+          <div className="badge-circle">
+            95%<span>Inscritos</span>
           </div>
 
-          <div className="hero-visual" aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Image src="/logosecu.png" alt="Logo SECU" width={480} height={480} priority style={{ objectFit: 'contain' }} />
+          <h1>IV CONGRESO<br/>INTERNACIONAL<br/>DE INVESTIGACIÓN</h1>
+          
+          <Sparkles className="fleur-icon" />
+
+          <div className="hero-location">
+            Puno, Perú<br/>
+            Universidad Nacional del Altiplano<br/>
+            Agosto 10-14, 2026
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <Image src="/logosecu.png" alt="Logo SECU" width={100} height={100} style={{ objectFit: 'contain' }} />
           </div>
         </div>
       </section>
