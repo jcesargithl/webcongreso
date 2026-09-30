@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowUpRight, CalendarDays, Check, ChevronRight, CircleHelp, FileText, GraduationCap, Layers3, Menu, Monitor, Send, Sparkles, Users, X } from "lucide-react";
+import { ArrowUpRight, Building2, CalendarDays, Check, CircleHelp, ExternalLink, FileText, GraduationCap, MapPin, Menu, Send, Sparkles, Users, X } from "lucide-react";
 
 type ModalKind = "registration" | "paper" | null;
-const tracks = [["01", "Investigación educativa", "Metodologías mixtas, epistemología pedagógica y publicaciones científicas."], ["02", "IA y tecnologías digitales", "IA generativa, analítica del aprendizaje y alfabetización algorítmica."], ["03", "Innovación pedagógica", "ABP, STEAM, gamificación y evaluación auténtica por competencias."], ["04", "Inclusión e interculturalidad", "DUA, educación bilingüe, ruralidad e identidad docente."], ["05", "Gestión y bienestar", "Liderazgo pedagógico, convivencia y desarrollo sostenible."]];
+const institutions = ["Universidad Nacional del Altiplano de Puno", "Facultad de Ciencias de la Educación", "Escuela Profesional de Educación Primaria", "Comité de Calidad de la Escuela Profesional de Educación Primaria"];
+const committee = ["Dr. Wido Willam Condori Castillo · Presidente", "Dr. Vidnay Noel Valero Ancco · Coordinador general", "M.Sc. Ruth Mery Cruz Huisa · Secretaria", "Lic. Milciades Conrado Suaña Calsin · Tesorero", "Lic. Blademir Cusi Arisaca · Coordinador de ponencias"];
+const schedule = [["DÍA 01 · 06 JUL", "Inauguración", "16:00 registro · 16:30 inauguración · 17:00 conferencias · 18:30 ponencias"], ["DÍA 02 · 07 JUL", "Conferencias y ponencias", "17:00 conferencias · 18:30 ponencias · 21:30 cierre"], ["DÍA 03 · 08 JUL", "Ponencias y clausura", "17:00 ponencias · 19:40 conferencias · 21:00 clausura"]];
+const committeeMembers = ["Dr. Henry Mark Vilca Apaza", "Dra. Erika Marcia Georgina Jaén Tejada", "Lic. Milciades Conrado Suaña Calsin", "M.Sc. Juan Alexander Condori Palomino", "M.Sc. Ofelia Marleny Mamani Luque", "M.Sc. Nilton César Mayta Jara", "Dra. Zaida Esther Callata Gallegos", "M.Sc. Estanislao Pacompía Cari", "Dra. Damiana Flores Mamani", "Dra. Danitza Luisa Sardón Ari", "Dr. Fredy Sosa Gutiérrez", "Dra. Katia Pérez Argollo", "Dra. Lesy Berly Leon Hancco", "M.Sc. José Antonio Supo Gutiérrez", "Mg. Miryam Pari Orihuela", "M.Sc. Yobana Milagros Calsín Chambilla", "M.Sc. José Marcial Mamani Condori", "M.Sc. Humberto Mamani Coaquira", "Dra. Juana Violeta Chaiña Apaza", "M.Sc. Kleiber Rosendo Vargas Pacosonco", "Lic. Edith Rizalazo Incacutipa", "Lic. Erika Sanches Gomez", "Lic. Marice Melisa Condori Gordillo", "M.Sc. Klidy Mercedes Contreras", "Sra. Nery Marlene Valencia Sanchez", "Sra. Chabuca Palero Velasquez"];
 
 export default function Home() {
   const [modal, setModal] = useState<ModalKind>(null);
@@ -17,15 +20,15 @@ export default function Home() {
         <a className="brand" href="#inicio" onClick={() => setMenuOpen(false)}>
           <span className="brand-mark"><Image src="/logosecu.png" alt="Escudo de la Facultad de Educación Primaria" width={42} height={42} /></span>
           <span>
-            <strong>IV Congreso</strong>
-            <small>EPEP · Investigación científica</small>
+            <strong>I Congreso</strong>
+            <small>EPEP UNA Puno · Investigación científica</small>
           </span>
         </a>
 
         <nav className={menuOpen ? "nav-links open" : "nav-links"}>
-          <a href="#ejes" onClick={() => setMenuOpen(false)}>Ejes</a>
+          <a href="#organizadores" onClick={() => setMenuOpen(false)}>Organización</a>
           <a href="#programa" onClick={() => setMenuOpen(false)}>Programa</a>
-          <a href="#tarifas" onClick={() => setMenuOpen(false)}>Tarifas</a>
+          <a href="#inscripciones" onClick={() => setMenuOpen(false)}>Inscripciones</a>
           <a href="#contacto" onClick={() => setMenuOpen(false)}>Contacto</a>
         </nav>
 
@@ -44,17 +47,17 @@ export default function Home() {
         <div className="hero-inner">
           <div className="hero-copy">
             <div className="eyebrow">
-              <span className="live-dot" /> Modalidad híbrida · 25—27 NOV 2026
+              <span className="live-dot" /> 06—08 JUL 2022 · PUNO
             </div>
-            <h1>Investigación que transforma la educación.</h1>
-            <p className="hero-lead">IV Congreso Internacional de Investigación Científica</p>
+            <h1>Perspectivas, desafíos y políticas educativas.</h1>
+            <p className="hero-lead">I Congreso Internacional de Investigación Científica</p>
             <p className="hero-text">
-              Tres jornadas para compartir evidencia, innovación e inteligencia artificial al servicio de los desafíos educativos del siglo XXI.
+              Un encuentro académico de la Escuela Profesional de Educación Primaria para compartir investigaciones, conferencias y ponencias sobre educación.
             </p>
 
             <div className="hero-actions">
               <button className="button button-light" onClick={() => setModal("registration")}>
-                <CalendarDays size={18} /> Reservar mi lugar
+                <CalendarDays size={18} /> Ver inscripciones
               </button>
               <button className="button button-ghost" onClick={() => setModal("paper")}>
                 <Send size={18} /> Presentar una ponencia
@@ -62,33 +65,33 @@ export default function Home() {
             </div>
 
             <div className="hero-meta">
-              <span><Users size={16} /> +15 ponentes internacionales</span>
-              <span><Monitor size={16} /> Presencial + virtual</span>
-              <span><Check size={16} /> 120 horas certificadas</span>
+              <span><Users size={16} /> Conferencias y ponencias</span>
+              <span><MapPin size={16} /> Av. Floral 1153 · Puno</span>
+              <span><Check size={16} /> Certificación</span>
             </div>
           </div>
 
           <div className="hero-visual" aria-hidden="true">
             <div className="hero-card">
               <Image className="hero-logo" src="/logosecu.png" alt="" width={94} height={94} priority />
-              <span className="card-chip">Congreso internacional</span>
+              <span className="card-chip">EPEP · UNA Puno</span>
               <div className="date-stack">
-                <span>25</span>
-                <small>NOV<br />2026</small>
+                <span>06</span>
+                <small>JUL<br />2022</small>
               </div>
 
               <div className="mini-stats">
-                <div>
-                  <strong>05</strong>
-                  <span>Ejes</span>
-                </div>
                 <div>
                   <strong>03</strong>
                   <span>Días</span>
                 </div>
                 <div>
-                  <strong>120h</strong>
-                  <span>Certif.</span>
+                  <strong>02</strong>
+                  <span>Conferencias/día</span>
+                </div>
+                <div>
+                  <strong>PUNO</strong>
+                  <span>Sede</span>
                 </div>
               </div>
             </div>
@@ -96,12 +99,12 @@ export default function Home() {
             <div className="floating-panel">
               <div className="floating-header">
                 <span>Agenda destacada</span>
-                <small>3 días</small>
+                <small>06—08 JUL</small>
               </div>
               <ul>
-                <li>Plenaria inaugural</li>
-                <li>Mesas de investigación</li>
-                <li>Innovación y IA</li>
+                <li>Conferencias magistrales</li>
+                <li>Ponencias de investigación</li>
+                <li>Clausura y certificación</li>
               </ul>
             </div>
           </div>
@@ -109,33 +112,42 @@ export default function Home() {
       </section>
 
       <section className="signal-row" aria-label="Datos destacados">
-        <div><strong>01</strong><span>Convocatoria abierta<br /><small>Hasta el 30 de octubre</small></span></div>
-        <div><strong>120</strong><span>Horas académicas<br /><small>Certificación oficial</small></span></div>
-        <div><strong>05</strong><span>Ejes temáticos<br /><small>Una agenda transversal</small></span></div>
-        <div><strong>03</strong><span>Días de encuentro<br /><small>Debate y conexión</small></span></div>
+        <div><strong>06</strong><span>Inicio<br /><small>Julio de 2022</small></span></div>
+        <div><strong>03</strong><span>Días de congreso<br /><small>06 al 08 de julio</small></span></div>
+        <div><strong>25/05</strong><span>Resúmenes<br /><small>Inicio de postulación</small></span></div>
+        <div><strong>08/07</strong><span>Libro de resúmenes<br /><small>Publicación programada</small></span></div>
       </section>
 
-      <section className="section tracks" id="ejes">
+      <section className="section organization-section" id="organizadores">
         <div className="section-heading">
           <div>
-            <span className="kicker">Líneas EPEP</span>
-            <h2>Una conversación,<br /><em>cinco perspectivas.</em></h2>
+            <span className="kicker">Instituciones responsables</span>
+            <h2>Una comunidad que<br /><em>investiga y educa.</em></h2>
           </div>
-          <p>Un programa construido para cruzar investigación, práctica docente y tecnología con una mirada rigurosa y humana.</p>
+          <p>El congreso fue organizado por la Universidad Nacional del Altiplano, su Facultad de Ciencias de la Educación y la Escuela Profesional de Educación Primaria.</p>
         </div>
 
         <div className="track-grid">
-          {tracks.map(([number, title, description]) => (
-            <article className="track-card" key={number}>
-              <span className="track-number">{number}</span>
-              <Layers3 size={19} />
-              <h3>{title}</h3>
-              <p>{description}</p>
-              <a href="#programa" aria-label={`Ver programa de ${title}`}>
-                <ChevronRight size={18} />
-              </a>
+          {institutions.map((institution, index) => (
+            <article className="track-card" key={institution}>
+              <span className="track-number">0{index + 1}</span>
+              <Building2 size={19} />
+              <h3>{institution}</h3>
+              <p>Institución responsable de la organización y desarrollo del encuentro académico.</p>
             </article>
           ))}
+        </div>
+
+        <div className="committee-panel">
+          <div>
+            <span className="kicker">Comité organizador</span>
+            <h3>Equipo responsable</h3>
+          </div>
+          <ul>{committee.map((member) => <li key={member}>{member}</li>)}</ul>
+          <div>
+            <span className="kicker">Miembros</span>
+          </div>
+          <ul className="committee-members">{committeeMembers.map((member) => <li key={member}>{member}</li>)}</ul>
         </div>
       </section>
 
@@ -143,9 +155,9 @@ export default function Home() {
         <div className="showcase-panel">
           <div className="showcase-copy">
             <span className="kicker">¿Por qué participar?</span>
-            <h2>Un espacio para visibilizar ideas, metodologías y soluciones.</h2>
+            <h2>Un espacio para compartir investigación y pensamiento educativo.</h2>
             <p>
-              En tres jornadas combinamos ponencias magistrales, talleres y mesas de discusión para conectar evidencia, práctica y transformación educativa.
+              El programa reúne conferencias, ponencias y experiencias de investigadores de Perú, Cuba, España y Chile.
             </p>
           </div>
 
@@ -153,22 +165,22 @@ export default function Home() {
             <div>
               <Sparkles size={18} />
               <div>
-                <strong>Agenda internacional</strong>
-                <span>Expertos, investigadores y docentes de distintos contextos.</span>
+                <strong>Ponentes invitados</strong>
+                <span>Participación académica de la Universidad de Oriente, Cuba; Universidad de Granada, España; Universidad Católica del Maule, Chile; y la UNA Puno.</span>
               </div>
             </div>
             <div>
               <GraduationCap size={18} />
               <div>
-                <strong>Red de colaboración</strong>
-                <span>Espacios de networking, conexión y proyectos entre equipos.</span>
+                <strong>Temas educativos</strong>
+                <span>Psicología educativa, educación matemática, didáctica de las ciencias y formación docente.</span>
               </div>
             </div>
             <div>
               <FileText size={18} />
               <div>
-                <strong>Memorias y evidencia</strong>
-                <span>Publicación, impacto académico y aprendizaje aplicable.</span>
+                <strong>Libro de resúmenes</strong>
+                <span>La publicación de resúmenes aptos y del libro estuvo contemplada en el calendario oficial.</span>
               </div>
             </div>
           </div>
@@ -179,72 +191,55 @@ export default function Home() {
         <div className="section-heading">
           <div>
             <span className="kicker">Agenda oficial</span>
-            <h2>Tres días para<br /><em>mover ideas.</em></h2>
+            <h2>Tres días para<br /><em>compartir saberes.</em></h2>
           </div>
-          <p>Plenarias, talleres, mesas de ponencias y espacios de networking académico.</p>
+          <p>El cronograma oficial combina inauguración, conferencias, ponencias y clausura en la sede de la Escuela Profesional de Educación Primaria.</p>
         </div>
 
         <div className="schedule">
-          <div className="schedule-day active">
-            <span>DÍA 01</span>
-            <strong>Miércoles 25 NOV</strong>
-            <small>Inauguración · IA · Ponencias</small>
-          </div>
-          <div className="schedule-day">
-            <span>DÍA 02</span>
-            <strong>Jueves 26 NOV</strong>
-            <small>Inclusión · Políticas · Talleres</small>
-          </div>
-          <div className="schedule-day">
-            <span>DÍA 03</span>
-            <strong>Viernes 27 NOV</strong>
-            <small>Prospectiva · Reconocimientos</small>
-          </div>
+          {schedule.map(([day, title, detail], index) => <div className={index === 0 ? "schedule-day active" : "schedule-day"} key={day}><span>{day}</span><strong>{title}</strong><small>{detail}</small></div>)}
         </div>
 
         <div className="agenda-list">
           <div>
-            <time>08:00</time>
+            <time>16:00</time>
             <span>
-              <b>Acreditación y entrega de credenciales</b>
-              <small>Registro institucional · Auditorio Central</small>
+              <b>Registro e inauguración del congreso</b>
+              <small>Día 01 · 06 de julio · Puno</small>
             </span>
             <Users size={18} />
           </div>
           <div>
-            <time>10:30</time>
+            <time>17:00</time>
             <span>
-              <b>El futuro de la educación frente a la IA generativa</b>
-              <small>Conferencia magistral internacional</small>
+              <b>Conferencias 1 y 2</b>
+              <small>17:00–18:20 · Días 01 y 02</small>
             </span>
             <Sparkles size={18} />
           </div>
           <div>
-            <time>14:00</time>
+            <time>18:30</time>
             <span>
-              <b>Mesas de ponencias de investigadores</b>
-              <small>Ejes 01 y 02 · Salas paralelas</small>
+              <b>Ponencias de investigación</b>
+              <small>18:30–21:30 · Días 01 y 02</small>
             </span>
             <FileText size={18} />
           </div>
         </div>
       </section>
 
-      <section className="section investment" id="tarifas">
+      <section className="section investment" id="inscripciones">
         <div className="investment-copy">
-          <span className="kicker">Participación</span>
-          <h2>Encuentra tu<br /><em>forma de estar.</em></h2>
-          <p>Accede a las plenarias, talleres y memorias digitales. La comunidad EPEP cuenta con tarifas especiales.</p>
-          <button className="button button-dark" onClick={() => setModal("registration")}>
-            <ArrowUpRight size={18} /> Ver opciones de inscripción
-          </button>
+          <span className="kicker">Inscripciones oficiales</span>
+          <h2>Participa en el<br /><em>encuentro académico.</em></h2>
+          <p>La página oficial separa el registro para estudiantes de la UNA Puno, participantes externos y ponentes. También ofrece el formato de resúmenes.</p>
+          <a className="button button-dark" href="https://sites.google.com/view/congresoepep/inscripciones" target="_blank" rel="noreferrer"><ExternalLink size={18} /> Abrir página oficial</a>
         </div>
 
-        <div className="price-list">
-          <div><span>Estudiante EPEP</span><strong>S/ 20</strong><small>Acceso completo · 120 horas</small></div>
-          <div><span>Estudiante externo</span><strong>S/ 30</strong><small>Presencial o virtual</small></div>
-          <div><span>Profesional / docente</span><strong>S/ 70</strong><small>Certificado escalafonario</small></div>
-          <div className="featured"><span>Ponente EPEP</span><strong>Gratis</strong><small>Publicación en libro de actas</small></div>
+        <div className="price-list registration-links">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfNW1Zo6JkT78xhWpAYI2XFL1mf8MCQA9PWJRdNasciMwnT2A/viewform" target="_blank" rel="noreferrer"><span>Estudiantes UNA Puno</span><ExternalLink size={16} /></a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeB46kCKugAOrmtAhbSdnHwP1g0sFvaGZTxcxeJJuiib6T19g/viewform" target="_blank" rel="noreferrer"><span>Participantes externos</span><ExternalLink size={16} /></a>
+          <a href="https://docs.google.com/document/d/1a5T4RR5YOEdJMba1j8aLAOhxBEEsGHJR/edit" target="_blank" rel="noreferrer"><span>Ponentes y formato de resúmenes</span><ExternalLink size={16} /></a>
         </div>
       </section>
 
@@ -252,22 +247,25 @@ export default function Home() {
         <div>
           <span className="kicker">Mesa de ayuda</span>
           <h2>¿Conversamos?</h2>
-          <p>La Secretaría del Congreso responde consultas sobre registro, ponencias y convenios.</p>
+          <p>Informes, contactos y enlaces institucionales del I Congreso Internacional de Investigación Científica.</p>
         </div>
 
         <div className="contact-actions">
-          <a className="contact-link" href="mailto:investigacion.epep@universidad.edu.pe">
-            <CircleHelp size={19} /> investigacion.epep@universidad.edu.pe <ArrowUpRight size={16} />
+          <a className="contact-link" href="https://www.facebook.com/I-Congreso-de-Investigaci%C3%B3n-Cient%C3%ADfica-102841899107874/" target="_blank" rel="noreferrer">
+            <CircleHelp size={19} /> Página de Facebook del Congreso <ArrowUpRight size={16} />
           </a>
-          <a className="contact-link" href="https://wa.me/51987654321" target="_blank" rel="noreferrer">
-            <Send size={19} /> WhatsApp de la Secretaría <ArrowUpRight size={16} />
+          <a className="contact-link" href="https://primaria.unap.edu.pe/" target="_blank" rel="noreferrer">
+            <Building2 size={19} /> Web oficial de Educación Primaria <ArrowUpRight size={16} />
+          </a>
+          <a className="contact-link" href="https://sites.google.com/view/congresoepep/informes" target="_blank" rel="noreferrer">
+            <Send size={19} /> Contactos y WhatsApp oficiales <ArrowUpRight size={16} />
           </a>
         </div>
       </section>
 
       <footer>
-        <span>© 2026 EPEP · IV Congreso Internacional de Investigación Científica</span>
-        <span>Auditorio Central · Ciudad Universitaria</span>
+        <span>© 2022 EPEP UNA Puno · I Congreso Internacional de Investigación Científica</span>
+        <span>Av. Floral 1153 · Puno</span>
       </footer>
 
       {modal && <RequestModal kind={modal} onClose={() => setModal(null)} />}

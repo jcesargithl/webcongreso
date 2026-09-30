@@ -102,3 +102,13 @@ h1, h2, h3, strong { font-family: "Space Grotesk", sans-serif; }
 .section-heading em, .investment em { color: var(--blue); }
 .schedule-section { background: linear-gradient(180deg, #eef4ff 0%, #eef8e9 100%); }
 .price-list .featured { background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%); }
+.committee-panel { background: linear-gradient(135deg, #eef4ff 0%, #eef8e9 100%); border: 1px solid var(--line); border-radius: 18px; display: grid; gap: 18px; margin-top: 28px; padding: 28px; }
+.committee-panel h3 { font-size: 24px; margin-top: 8px; }
+.committee-panel ul { display: grid; gap: 9px; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
+.committee-panel li { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.committee-members { border-top: 1px solid var(--line); padding-top: 18px !important; }
+.registration-links { display: grid; }
+.registration-links a { align-items: center; border-bottom: 1px solid rgba(11, 28, 48, 0.08); display: flex; justify-content: space-between; padding: 20px 23px; }
+.registration-links a:last-child { border-bottom: 0; }
+.registration-links a:hover { background: rgba(255, 255, 255, 0.7); color: var(--blue); }
+@media (max-width: 640px) { .committee-panel ul { grid-template-columns: 1fr; } }
