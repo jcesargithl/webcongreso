@@ -58,27 +58,20 @@ export default function Home() {
       </div>
 
       <section className="hero" id="inicio">
-        <div className="hero-inner">
-          <button className="red-btn" onClick={() => setModal("registration")}>
-            Descargar Programa Final aquí
-          </button>
+        <div className="hero-inner" style={{ alignItems: 'center', textAlign: 'center', marginTop: '40px' }}>
+          <h1 style={{ textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>IV CONGRESO INTERNACIONAL<br/>DE INVESTIGACIÓN</h1>
           
-          <div className="badge-circle">
-            95%<span>Inscritos</span>
-          </div>
-
-          <h1>IV CONGRESO<br/>INTERNACIONAL<br/>DE INVESTIGACIÓN</h1>
-          
-          <Sparkles className="fleur-icon" />
-
-          <div className="hero-location">
+          <div className="hero-location" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.8)' }}>
             Puno, Perú<br/>
             Universidad Nacional del Altiplano<br/>
             Agosto 10-14, 2026
           </div>
 
-          <div style={{ marginTop: '20px' }}>
-            <Image src="/logosecu.png" alt="Logo SECU" width={100} height={100} style={{ objectFit: 'contain' }} />
+          <div style={{ display: 'flex', gap: '30px', alignItems: 'center', marginTop: '30px' }}>
+            <Image src="/logosecu.png" alt="Logo SECU" width={140} height={140} style={{ objectFit: 'contain' }} />
+            <button className="red-btn large" onClick={() => setModal("registration")}>
+              Ver Programa Final
+            </button>
           </div>
         </div>
       </section>
