@@ -66,9 +66,9 @@ const committeeMembers = [
 ];
 
 const schedule = [
-  ["DÍA 01 · 25 NOV", "Apertura y conferencia magistral", "Acreditación · ceremonia inaugural · panel de investigadores · ponencias paralelas"],
-  ["DÍA 02 · 26 NOV", "Investigación e innovación", "Conferencias magistrales · mesas temáticas · simposios · talleres · foro internacional"],
-  ["DÍA 03 · 27 NOV", "Conclusiones y clausura", "Conferencias finales · premiación de investigaciones · clausura · fotografía oficial"],
+  ["DÍA 01 · 25 NOV", "Apertura y conferencia magistral", "Acreditación · ceremonia inaugural · panel de investigadores · ponencias paralelas", "/dia 1.png"],
+  ["DÍA 02 · 26 NOV", "Investigación e innovación", "Conferencias magistrales · mesas temáticas · simposios · talleres · foro internacional", "/dia 2.png"],
+  ["DÍA 03 · 27 NOV", "Conclusiones y clausura", "Conferencias finales · premiación de investigaciones · clausura · fotografía oficial", "/dia 3.png"],
 ];
 
 const agendaDetails = [
@@ -109,19 +109,37 @@ const costs: [string, string][] = [
 ];
 
 const speakers = [
-  ["Dr. Alejandro Silva", "Inteligencia Artificial y Educación del Futuro", "Investigador principal en tecnologías emergentes para el aula. Explorará cómo las herramientas de IA están redefiniendo el rol del docente."],
-  ["Dra. Carmen Rosa", "Innovación en el Currículo Escolar", "Especialista en políticas públicas. Abordará las estrategias de adaptación curricular para las nuevas generaciones."],
-  ["Mg. Fernando Valle", "Metodologías Activas e Inclusivas", "Docente e investigador. Presentará casos de éxito en la implementación de aprendizaje basado en proyectos en comunidades rurales."],
+  [
+    "Dr. Alejandro Silva", 
+    "Doctor en Tecnologías Educativas, Universidad de Barcelona.", 
+    "Investigador principal en tecnologías emergentes para el aula. Explorará cómo las herramientas de IA están redefiniendo el rol del docente.",
+    "/speaker_1.jpg",
+    "Inteligencia Artificial y Educación del Futuro"
+  ],
+  [
+    "Dra. Elena Vargas", 
+    "Especialista en Innovación Pedagógica, Tecnológico de Monterrey.", 
+    "Experta en políticas públicas y adaptación curricular para las nuevas generaciones. Presentará estrategias clave para la inclusión.",
+    "/speaker_2.jpg",
+    "Innovación en el Currículo Escolar"
+  ],
+  [
+    "Ph.D. Fernando Valle", 
+    "Catedrático e Investigador Senior, Universidad de Buenos Aires.", 
+    "Reconocido educador con más de 30 años de experiencia. Compartirá casos de éxito en la implementación de aprendizaje basado en proyectos.",
+    "/speaker_3.jpg",
+    "Metodologías Activas e Inclusivas"
+  ]
 ];
 
-type ModalKind = "registration" | "paper" | null;
+type ModalState = { kind: "registration" | "paper"; category?: string } | null;
 
 /* ────────────────────────────────────────────────
    MAIN PAGE
    ──────────────────────────────────────────────── */
 
 export default function Home() {
-  const [modal, setModal] = useState<ModalKind>(null);
+  const [modal, setModal] = useState<ModalState>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDay, setActiveDay] = useState(0);
   const [activePanel, setActivePanel] = useState<keyof typeof planningPanels>("actividades");
@@ -138,25 +156,14 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const renderMember = (member: string) => {
+  const renderListMember = (member: string) => {
     const parts = member.split("·");
     const name = parts[0].trim();
     const role = parts.length > 1 ? parts[1].trim() : "Miembro";
-    const initials = name
-      .replace(/(Dr\.|Dra\.|M\.Sc\.)/g, "")
-      .trim()
-      .split(" ")
-      .map((n: string) => n[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase();
     return (
-      <div className="member-card" key={member}>
-        <div className="member-avatar">{initials}</div>
-        <div className="member-info">
-          <h4>{name}</h4>
-          <span>{role}</span>
-        </div>
+      <div className="directory-item" key={member}>
+        <h4>{name}</h4>
+        <span>{role}</span>
       </div>
     );
   };
@@ -192,7 +199,7 @@ export default function Home() {
           >
             <Menu size={20} />
           </button>
-          <button className="btn btn-primary btn-compact" onClick={() => setModal("registration")}>
+          <button className="btn btn-primary btn-compact" onClick={() => setModal({ kind: "registration" })}>
             <ArrowUpRight size={16} />
             <span>Inscribirme</span>
           </button>
@@ -221,10 +228,10 @@ export default function Home() {
           <Countdown />
 
           <div className="hero-actions">
-            <button className="btn btn-primary" onClick={() => setModal("registration")}>
+            <button className="btn btn-primary" onClick={() => setModal({ kind: "registration" })}>
               <Send size={16} /> Inscribirme ahora
             </button>
-            <button className="btn btn-outline" onClick={() => setModal("paper")}>
+            <button className="btn btn-outline" onClick={() => setModal({ kind: "paper" })}>
               <FileText size={16} /> Enviar ponencia
             </button>
           </div>
@@ -367,105 +374,126 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="committee-section">
-          <div className="committee-group">
-            <div className="committee-group-header">
-              <div>
-                <span className="kicker">Comité de honor</span>
-                <h3>Autoridades responsables</h3>
-              </div>
-            </div>
-            <div className="committee-grid">
-              {honorCommittee.map(renderMember)}
-            </div>
+        <section className="team-section glass-team-section" id="equipo">
+          <div className="team-mesh-bg" />
+          
+          <div className="section-header" style={{ alignItems: "center", textAlign: "center", marginBottom: "40px", position: "relative", zIndex: 10 }}>
+            <span className="kicker">Nuestro Equipo</span>
+            <h2>Autoridades y Coordinación</h2>
           </div>
+          
+          <div className="glass-team-layout">
+             {/* Panel Izquierdo */}
+             <div className="glass-panel left-panel">
+                <h3 className="glass-title">Comité Organizador</h3>
+                <div className="glass-list">
+                   {committee.map(renderListMember)}
+                </div>
+             </div>
 
-          <div className="committee-group">
-            <div className="committee-group-header">
-              <div>
-                <span className="kicker">Comité organizador</span>
-                <h3>Coordinaciones</h3>
-              </div>
-            </div>
-            <div className="committee-grid">
-              {committee.map(renderMember)}
-            </div>
-          </div>
+             {/* Centro: Decano */}
+             <div className="glass-center-portrait">
+                <div className="dean-glass-avatar">
+                   <Image src="/autoridades/efrain_yupanqui.jpg" alt="Dr. Efraín Humberto Yupanqui Pino" fill className="object-cover object-top" />
+                </div>
+                <div className="dean-glass-info">
+                   <span className="kicker" style={{ color: "var(--teal)" }}>Presidencia Honoraria</span>
+                   <h2>Dr. Efraín Humberto Yupanqui Pino</h2>
+                   <p>Decano de la Facultad</p>
+                </div>
+             </div>
 
-          <div className="committee-group">
-            <div className="committee-group-header">
-              <div>
-                <span className="kicker">Equipo</span>
-                <h3>Miembros</h3>
-              </div>
-            </div>
-            <div className="committee-grid">
-              {committeeMembers.map(renderMember)}
-            </div>
+             {/* Panel Derecho */}
+             <div className="glass-panel right-panel">
+                <h3 className="glass-title">Equipo y Comité de Honor</h3>
+                <div className="glass-list">
+                   {honorCommittee.slice(1).map(renderListMember)}
+                   {committeeMembers.map(renderListMember)}
+                </div>
+             </div>
           </div>
-        </div>
+        </section>
       </section>
 
-      {/* ─── AGENDA ─── */}
-      <section className="section schedule-section">
-        <div className="section-header">
-          <div>
-            <span className="kicker">Agenda oficial</span>
-            <h2>Tres días para<br />compartir <em>saberes</em></h2>
-          </div>
-          <p>El cronograma oficial combina inauguración, conferencias, ponencias y clausura en la sede de la EPEP.</p>
+      {/* ─── AGENDA (CARRUSEL) ─── */}
+      <section className="section schedule-carousel-section" id="programa">
+        <div className="section-header" style={{ alignItems: "center", textAlign: "center", marginBottom: "48px" }}>
+          <span className="kicker">Agenda oficial</span>
+          <h2>Tres días para compartir <em>saberes</em></h2>
+          <p style={{ maxWidth: "600px", marginTop: "16px" }}>El cronograma oficial combina inauguración, conferencias, ponencias y clausura en la sede de la EPEP.</p>
         </div>
 
-        <div className="schedule-tabs">
-          {schedule.map(([day, title, detail], i) => (
-            <button
-              className={i === activeDay ? "schedule-tab active" : "schedule-tab"}
-              key={day}
-              onClick={() => setActiveDay(i)}
-              aria-pressed={i === activeDay}
-            >
-              <span>{day}</span>
-              <strong>{title}</strong>
-              <small>{detail}</small>
-            </button>
-          ))}
-        </div>
-
-        <div className="timeline">
-          {agendaDetails[activeDay].map(([time, title, detail], i) => (
-            <div className="timeline-item" key={`${activeDay}-${time}`}>
-              <span className="timeline-time">{time}</span>
-              <div className="timeline-body">
-                <b>{title}</b>
-                <small>{detail}</small>
+        <div className="carousel-container">
+          <div className="carousel-slide">
+            <div className="carousel-image">
+              <Image 
+                key={`img-${activeDay}`} 
+                src={schedule[activeDay][3] as string} 
+                alt="Día del Congreso" 
+                fill 
+                className="object-cover fade-in" 
+              />
+              <div className="day-overlay-gradient" />
+              
+              {/* Navigation overlaying the image */}
+              <div className="carousel-nav-overlay">
+                {schedule.map(([dayStr], i) => (
+                  <button 
+                    key={`nav-${i}`} 
+                    className={`carousel-dot ${i === activeDay ? 'active' : ''}`}
+                    onClick={() => setActiveDay(i)}
+                  >
+                    {dayStr.toString().split("·")[0].trim()}
+                  </button>
+                ))}
               </div>
-              {i === 0 ? <Users size={18} /> : i === 1 ? <Sparkles size={18} /> : <FileText size={18} />}
             </div>
-          ))}
+            
+            <div className="carousel-details fade-in" key={`det-${activeDay}`}>
+              <span className="slide-date">{schedule[activeDay][0]}</span>
+              <h3 className="slide-title">{schedule[activeDay][1]}</h3>
+              <p className="slide-desc">{schedule[activeDay][2]}</p>
+              
+              <div className="slide-timeline">
+                {agendaDetails[activeDay].map(([time, title, detail]) => (
+                  <div className="slide-timeline-item" key={time as string}>
+                    <span className="slide-time">{time}</span>
+                    <div className="slide-timeline-content">
+                      <strong>{title}</strong>
+                      <small>{detail}</small>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ─── PONENTES ─── */}
       <section className="section" id="ponentes">
-        <div className="section-header">
-          <div>
-            <span className="kicker">Ponentes magistrales</span>
-            <h2>Voces expertas que<br />inspiran el <em>cambio</em></h2>
-          </div>
-          <p>Conoce a los investigadores y educadores que liderarán las conferencias magistrales.</p>
+        <div className="section-header" style={{ marginBottom: "60px", textAlign: "center", alignItems: "center" }}>
+          <span className="kicker">Ponentes magistrales</span>
+          <h2>Voces expertas que<br />inspiran el <em>cambio</em></h2>
+          <p style={{ maxWidth: "600px", marginTop: "16px" }}>Conoce a los investigadores y educadores internacionales que liderarán las conferencias magistrales del congreso.</p>
         </div>
 
-        <div className="speakers-grid">
-          {speakers.map(([name, topic, desc]) => (
-            <div className="speaker-card" key={name}>
-              <div className="speaker-avatar" />
-              <div className="speaker-info">
-                <h3>{name}</h3>
-                <strong>{topic}</strong>
-                <p>{desc}</p>
+        <div className="speakers-marquee-container">
+          <div className="speakers-marquee-track">
+            {[...speakers, ...speakers].map(([name, role, desc, img, topic], idx) => (
+              <div className="speaker-runway-card" key={`${name}-${idx}`}>
+                <div className="speaker-runway-image">
+                  <Image src={img as string} alt={name as string} fill className="object-cover" />
+                </div>
+                <div className="speaker-runway-info">
+                  <span className="speaker-topic">{topic as string}</span>
+                  <h3>{name as string}</h3>
+                  <strong className="speaker-role">{role as string}</strong>
+                  <p className="speaker-desc">{desc as string}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -538,7 +566,7 @@ export default function Home() {
 
         <div className="tickets-grid">
           {costs.map(([category, cost]) => (
-            <div className="ticket-card" key={category} onClick={() => setModal("registration")}>
+            <div className="ticket-card" key={category} onClick={() => setModal({ kind: "registration", category })}>
               <div className="ticket-top">
                 <span className="ticket-category">{category}</span>
                 <strong className="ticket-price">{cost}</strong>
@@ -586,7 +614,7 @@ export default function Home() {
       </footer>
 
       {/* ─── MODAL ─── */}
-      {modal && <RequestModal kind={modal} onClose={() => setModal(null)} />}
+      {modal && <RequestModal modal={modal} onClose={() => setModal(null)} />}
     </main>
   );
 }
@@ -637,32 +665,28 @@ function Countdown() {
    REGISTRATION MODAL
    ──────────────────────────────────────────────── */
 
-function RequestModal({ kind, onClose }: { kind: Exclude<ModalKind, null>; onClose: () => void }) {
+function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onClose: () => void }) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
-  const isPaper = kind === "paper";
+  const isPaper = modal.kind === "paper";
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    const form = new FormData(event.currentTarget);
+    
+    const formElement = event.currentTarget;
+    const formData = new FormData(formElement);
+    formData.append("kind", modal.kind);
+    if (modal.category) formData.append("category", modal.category);
 
     const response = await fetch("/api/requests", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        kind,
-        name: form.get("name"),
-        email: form.get("email"),
-        mode: form.get("mode"),
-        institution: form.get("institution"),
-        topic: form.get("topic"),
-        message: form.get("message"),
-      }),
+      body: formData, // Enviar FormData directamente (browser pone el boundary)
     });
 
     if (!response.ok) {
-      setError("No pudimos registrar la solicitud. Revisa tus datos.");
+      const resData = await response.json().catch(() => ({}));
+      setError(resData.error || "No pudimos registrar la solicitud. Revisa tus datos y el archivo (PDF).");
       return;
     }
     setSent(true);
@@ -688,9 +712,14 @@ function RequestModal({ kind, onClose }: { kind: Exclude<ModalKind, null>; onClo
             <h2 id="modal-title">{isPaper ? "Presenta tu investigación." : "Reserva tu lugar."}</h2>
             <p className="modal-intro">
               {isPaper
-                ? "Cuéntanos brevemente sobre tu propuesta para iniciar la revisión."
+                ? "Cuéntanos brevemente sobre tu propuesta y sube tu investigación (PDF)."
                 : "Déjanos tus datos y te enviaremos los pasos para completar tu inscripción."}
             </p>
+            {modal.category && (
+               <div style={{ marginBottom: "16px", padding: "12px", background: "var(--primary-dim)", borderRadius: "var(--radius-sm)", color: "var(--primary)", fontSize: "14px", fontWeight: "600", border: "1px solid rgba(15,39,86,0.1)" }}>
+                 Entrada: {modal.category}
+               </div>
+            )}
             <form onSubmit={submit}>
               <label>Nombre completo<input name="name" required /></label>
               <label>Correo electrónico<input name="email" type="email" required /></label>
@@ -703,7 +732,15 @@ function RequestModal({ kind, onClose }: { kind: Exclude<ModalKind, null>; onClo
                   <option>Virtual</option>
                 </select>
               </label>
-              {isPaper && <label>Resumen breve<textarea name="message" rows={3} /></label>}
+              {isPaper && (
+                <>
+                  <label>Resumen breve<textarea name="message" rows={3} /></label>
+                  <label>
+                    Sube tu investigación (PDF)
+                    <input type="file" name="file" accept=".pdf" required style={{ border: "none", padding: "12px 0" }} />
+                  </label>
+                </>
+              )}
               <button className="btn btn-primary btn-full" type="submit">
                 <Send size={16} /> Enviar solicitud
               </button>

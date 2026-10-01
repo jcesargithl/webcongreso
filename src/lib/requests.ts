@@ -6,12 +6,14 @@ export type RequestStatus = "pending" | "reviewing" | "approved" | "rejected";
 export type CongressRequest = {
   id: string;
   kind: RequestKind;
+  category?: string;
   name: string;
   email: string;
   mode: "Presencial" | "Virtual";
   institution?: string;
   topic?: string;
   message?: string;
+  file_url?: string;
   status: RequestStatus;
   created_at: string;
 };
@@ -43,12 +45,14 @@ export async function createRequest(
     .from("congress_requests")
     .insert({
       kind: input.kind,
+      category: input.category || null,
       name: input.name,
       email: input.email,
       mode: input.mode,
       institution: input.institution || null,
       topic: input.topic || null,
       message: input.message || null,
+      file_url: input.file_url || null,
       status: "pending",
     })
     .select()
