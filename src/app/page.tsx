@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { speakers } from "@/lib/speakers";
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowUpRight,
@@ -109,29 +111,7 @@ const costs: [string, string, string[], string][] = [
   ["Estudiante EPEP", "S/ 0.00", ["Derecho a ponencia", "Certificado de ponente", "Mentoría académica"], "Ponente Interno"],
 ];
 
-const speakers = [
-  [
-    "Dr. Alejandro Silva", 
-    "Doctor en Tecnologías Educativas, Universidad de Barcelona.", 
-    "Investigador principal en tecnologías emergentes para el aula. Explorará cómo las herramientas de IA están redefiniendo el rol del docente.",
-    "/speaker_1.jpg",
-    "Inteligencia Artificial y Educación del Futuro"
-  ],
-  [
-    "Dra. Elena Vargas", 
-    "Especialista en Innovación Pedagógica, Tecnológico de Monterrey.", 
-    "Experta en políticas públicas y adaptación curricular para las nuevas generaciones. Presentará estrategias clave para la inclusión.",
-    "/speaker_2.jpg",
-    "Innovación en el Currículo Escolar"
-  ],
-  [
-    "Ph.D. Fernando Valle", 
-    "Catedrático e Investigador Senior, Universidad de Buenos Aires.", 
-    "Reconocido educador con más de 30 años de experiencia. Compartirá casos de éxito en la implementación de aprendizaje basado en proyectos.",
-    "/speaker_3.jpg",
-    "Metodologías Activas e Inclusivas"
-  ]
-];
+
 
 type ModalState = { kind: "registration" | "paper"; category?: string } | null;
 
@@ -172,81 +152,82 @@ export default function Home() {
   return (
     <main>
       {/* ─── NAVBAR ─── */}
-      <header className="topbar" ref={headerRef}>
-        <a className="brand" href="#inicio" onClick={() => setMenuOpen(false)}>
-          <span className="brand-mark">
-            <Image src="/logosecu.png" alt="Escudo EPEP" width={36} height={36} />
-          </span>
-          <span className="brand-text">
-            <strong>IV Congreso Internacional</strong>
-            <small>EPEP · Investigación Científica</small>
-          </span>
-        </a>
+      <header className={`topbar ${menuOpen ? "menu-open" : ""}`} ref={headerRef}>
+        <div className="topbar-main">
+          <a className="brand-center" href="#inicio" onClick={() => setMenuOpen(false)}>
+            <Image src="/logosecu.png" alt="Escudo EPEP" width={60} height={60} className="brand-logo" />
+            <span className="brand-center-text">
+              <strong>IV Congreso Internacional</strong>
+              <small>EPEP · Investigación Científica</small>
+            </span>
+          </a>
 
-        <nav className={menuOpen ? "nav-links open" : "nav-links"}>
-          <a href="#organizadores" onClick={() => setMenuOpen(false)}>Organización</a>
-          <a href="#programa" onClick={() => setMenuOpen(false)}>Programa</a>
-          <a href="#ejes" onClick={() => setMenuOpen(false)}>Ejes</a>
-          <a href="#inscripciones" onClick={() => setMenuOpen(false)}>Inscripciones</a>
-          <a href="#contacto" onClick={() => setMenuOpen(false)}>Contacto</a>
-        </nav>
+          <nav className={menuOpen ? "nav-links-center open" : "nav-links-center"}>
+            <a href="#inicio" onClick={() => setMenuOpen(false)}>Inicio</a>
+            <a href="#organizadores" onClick={() => setMenuOpen(false)}>Organización</a>
+            <a href="#programa" onClick={() => setMenuOpen(false)}>Programa</a>
+            <a href="#ejes" onClick={() => setMenuOpen(false)}>Ejes</a>
+            <a href="#inscripciones" onClick={() => setMenuOpen(false)}>Inscripciones</a>
+            <a href="#contacto" onClick={() => setMenuOpen(false)}>Contacto</a>
+          </nav>
+        </div>
 
-        <div className="top-actions">
+        <div className="top-actions-absolute">
           <button
             className="icon-button mobile-menu"
             title="Abrir menú"
             aria-label="Abrir menú"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <Menu size={20} />
+            <Menu size={24} color="var(--primary)" />
           </button>
-          <button className="btn btn-primary btn-compact" onClick={() => setModal({ kind: "registration" })}>
+          <button className="btn btn-primary btn-compact desktop-only" onClick={() => setModal({ kind: "registration" })}>
             <ArrowUpRight size={16} />
             <span>Inscribirme</span>
           </button>
+        </div>
+
+        <div className="marquee-banner">
+          <div className="marquee-content">
+            <span>EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp;</span>
+          </div>
         </div>
       </header>
 
       {/* ─── HERO ─── */}
       <section className="hero" id="inicio">
-        <div className="mesh-grid" />
         <div className="hero-content">
-          <div className="hero-badge">
-            <span className="dot" />
-            <span>Convocatoria abierta · 2026</span>
+          <div className="hero-title-container">
+            <div>
+              <span style={{ display: 'block', fontSize: 'clamp(20px, 3vw, 28px)', color: '#E8A317', letterSpacing: '0.1em', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '15px' }}>
+                ¡Bienvenidos al evento académico del año!
+              </span>
+              <h1>
+                IV CONGRESO INTERNACIONAL<br />
+                <span className="hero-title-highlight">DE INVESTIGACIÓN E INNOVACIÓN</span>
+              </h1>
+            </div>
           </div>
 
-          <h1>
-            IV Congreso Internacional<br />
-            de <em>Investigación Científica</em>
-          </h1>
-
-          <p className="hero-subtitle">
-            Transformando la educación: investigación, innovación e inteligencia artificial
-            para los desafíos del siglo XXI.
-          </p>
-
-          <Countdown />
+          <div className="hero-meta-clean">
+            <span className="hero-meta-item-clean">
+              <CalendarDays size={18} /> 25–27 Noviembre, 2026
+            </span>
+            <span className="hero-meta-item-clean">
+              <MapPin size={18} /> UNA Puno, Perú
+            </span>
+            <span className="hero-meta-item-clean">
+              <Users size={18} /> Modalidad Híbrida
+            </span>
+          </div>
 
           <div className="hero-actions">
             <button className="btn btn-primary" onClick={() => setModal({ kind: "registration" })}>
               <Send size={16} /> Inscribirme ahora
             </button>
-            <button className="btn btn-outline" onClick={() => setModal({ kind: "paper" })}>
+            <button className="btn btn-outline-light" onClick={() => setModal({ kind: "paper" })}>
               <FileText size={16} /> Enviar ponencia
             </button>
-          </div>
-
-          <div className="hero-meta">
-            <span className="hero-meta-item">
-              <CalendarDays size={15} /> 25–27 noviembre 2026
-            </span>
-            <span className="hero-meta-item">
-              <MapPin size={15} /> UNA Puno, Perú
-            </span>
-            <span className="hero-meta-item">
-              <Users size={15} /> Modalidad híbrida
-            </span>
           </div>
         </div>
       </section>
@@ -271,52 +252,118 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── SHOWCASE / PRESENTACIÓN ─── */}
-      <section className="section showcase" id="programa">
-        <div className="showcase-inner showcase-split">
-          <div className="showcase-content">
-            <span className="kicker">Presentación</span>
-            <h2>Investigación, innovación e IA<br />para educar <em>mejor</em></h2>
-            <p>
-              El congreso fortalece la cultura investigativa, la producción científica y el
-              intercambio de conocimientos entre investigadores, docentes, estudiantes y profesionales.
-            </p>
-            <div className="features-list">
-              <article className="feature-list-item">
-                <div className="feature-icon"><Sparkles size={20} /></div>
-                <div>
-                  <strong>Objetivo académico</strong>
-                  <p>Coordinar actividades con estándares de calidad verificables.</p>
-                </div>
-              </article>
-              <article className="feature-list-item">
-                <div className="feature-icon"><GraduationCap size={20} /></div>
-                <div>
-                  <strong>Modalidad híbrida</strong>
-                  <p>Conferencias y ponencias presenciales y virtuales con soporte.</p>
-                </div>
-              </article>
-              <article className="feature-list-item">
-                <div className="feature-icon"><FileText size={20} /></div>
-                <div>
-                  <strong>Resultados esperados</strong>
-                  <p>Producción evaluada, memoria, certificados e informe final.</p>
-                </div>
-              </article>
-            </div>
-          </div>
+      {/* ─── PONENTES MAGISTRALES ─── */}
+      <section className="section" id="ponentes" style={{ backgroundColor: '#F0F0F0', padding: '60px clamp(20px, 5vw, 80px)' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '32px', color: '#B38600', fontWeight: 400, marginBottom: '50px' }}>Ponentes Magistrales</h2>
           
-          <div className="showcase-visual">
-            <div className="showcase-image-wrapper">
-              <Image src="/congreso.png" alt="Presentación Congreso" fill className="object-cover" />
-              <div className="showcase-badge">
-                <span className="dot"></span>
-                <span>Innovación Educativa</span>
-              </div>
-            </div>
+          <div className="speakers-grid">
+            {speakers.map((speaker, idx) => (
+              <Link href={`/ponentes/${speaker.slug}`} className="speaker-card" key={`${speaker.name}-${idx}`}>
+                <div className="speaker-image">
+                  <Image src={speaker.img} alt={speaker.name} fill className="object-cover" />
+                </div>
+                <div className="speaker-name-badge">
+                  {speaker.name}
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
+      {/* ─── EVENT HIGHLIGHTS ─── */}
+      <section className="section" id="destacados" style={{ backgroundColor: '#F0F0F0', padding: '0 clamp(20px, 5vw, 80px) 80px' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '36px', color: '#B38600', fontWeight: 400, marginBottom: '60px' }}>Aspectos Destacados</h2>
+
+          <div className="highlights-list">
+            
+            <div className="highlight-row">
+              <div className="highlight-left">
+                <h3>Programa Integral</h3>
+                <a href="#programa">Ver Programa &rarr;</a>
+              </div>
+              <div className="highlight-right">
+                <p>Participa en una amplia gama de sesiones, incluyendo conferencias magistrales, presentaciones de investigaciones y talleres prácticos en la sede de la Escuela Profesional de Educación Primaria.</p>
+              </div>
+            </div>
+
+            <div className="highlight-row">
+              <div className="highlight-left">
+                <h3>Ejes de Investigación</h3>
+                <a href="#ejes">Ver Ejes &rarr;</a>
+                <div className="badge-spot-left">
+                  <span>5</span>
+                  EJES
+                </div>
+              </div>
+              <div className="highlight-right">
+                <p>Participa en nuestras líneas de investigación centradas en innovación, inteligencia artificial y metodologías activas con expertos internacionales como <strong>Dr. Alejandro Silva y Dra. Elena Vargas</strong>.</p>
+                <div className="highlight-images">
+                  <Image src="/speaker_1.jpg" width={120} height={120} alt="Dr. Alejandro Silva" />
+                  <Image src="/speaker_2.jpg" width={120} height={120} alt="Dra. Elena Vargas" />
+                  <Image src="/theme_1_v2.jpg" width={120} height={120} alt="Eje 1" />
+                  <Image src="/theme_2_v2.jpg" width={120} height={120} alt="Eje 2" />
+                </div>
+              </div>
+            </div>
+
+            <div className="highlight-row">
+              <div className="highlight-left">
+                <h3>Modalidad Híbrida y Talleres</h3>
+                <a href="#inscripciones">Sobre la modalidad &rarr;</a>
+              </div>
+              <div className="highlight-right">
+                <p>Mejora tus competencias a través de sesiones presenciales y virtuales, con salas interactivas para fomentar la colaboración y el debate científico.</p>
+                <div className="highlight-images tall">
+                  <Image src="/speaker_3.jpg" width={120} height={180} alt="Ph.D. Fernando Valle" />
+                  <Image src="/theme_3_v2.jpg" width={120} height={180} alt="Eje 3" />
+                  <Image src="/theme_4_v2.jpg" width={120} height={180} alt="Eje 4" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ─── MENSAJE DEL DECANO ─── */}
+      <section style={{ display: 'flex', flexWrap: 'wrap', minHeight: '500px' }}>
+        {/* Left Side: Message */}
+        <div style={{ flex: '1 1 60%', backgroundColor: '#EBEBEB', padding: '80px clamp(30px, 8vw, 100px)', color: '#444', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <h2 style={{ fontSize: '38px', color: '#B38600', fontWeight: 400, marginBottom: '40px' }}>Mensaje de Presidencia</h2>
+          
+          <div style={{ fontSize: '17px', lineHeight: '1.8', color: '#333' }}>
+            <p style={{ marginBottom: '25px', color: '#B38600' }}>Estimados colegas y estudiantes,</p>
+            <p style={{ marginBottom: '25px' }}>
+              Al asumir este rol como Decano de la Facultad, me emociona extenderles una cordial invitación para unirse a nosotros en el IV Congreso Internacional de Investigación e Innovación, que tendrá lugar en noviembre de 2026. Este extraordinario evento es un testimonio de nuestra pasión colectiva por avanzar en la comprensión de la educación y su profundo impacto en el desarrollo de la sociedad.
+            </p>
+            <p style={{ marginBottom: '25px' }}>
+              Nuestro congreso siempre ha sido un faro de colaboración e innovación, reuniendo a una diversa comunidad de investigadores, educadores y profesionales de cada rincón de la región. Este año, estamos comprometidos a crear una experiencia aún más inclusiva y dinámica. Nuestro programa contará con un rico tapiz de presentaciones, talleres y discusiones, mostrando los últimos avances en la investigación educativa y sus aplicaciones prácticas.
+            </p>
+            <p style={{ marginBottom: '40px' }}>
+              Este evento es más que una simple conferencia académica; es una celebración de nuestra pasión compartida por el descubrimiento y nuestro compromiso de mejorar la educación a través de la ciencia. ¡Espero darles la bienvenida a cada uno de ustedes para conectar, colaborar y forjar juntos el futuro de la investigación!
+            </p>
+            
+            <p style={{ marginBottom: '0', color: '#555' }}>Atentamente,</p>
+            <p style={{ fontWeight: 'bold', color: '#B38600', marginBottom: '0', fontSize: '18px' }}>Dr. Efraín Humberto Yupanqui Pino</p>
+            <p style={{ marginBottom: '0', color: '#555' }}>Decano</p>
+            <p style={{ marginBottom: '0', color: '#555' }}>Facultad de Ciencias de la Educación - UNAP</p>
+          </div>
+        </div>
+        
+        {/* Right Side: Portrait */}
+        <div style={{ flex: '1 1 40%', backgroundColor: '#D6AE47', padding: '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '400px' }}>
+          <div style={{ width: '250px', height: '250px', borderRadius: '50%', position: 'relative', overflow: 'hidden', border: '5px solid rgba(255,255,255,0.2)', marginBottom: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+            <Image src="/autoridades/efrain_yupanqui.jpg" alt="Dr. Efraín Humberto Yupanqui Pino" fill style={{ objectFit: 'cover', objectPosition: 'top' }} />
+          </div>
+          <h3 style={{ color: '#FFF', fontSize: '26px', fontWeight: 'bold', marginBottom: '5px' }}>Dr. Efraín Yupanqui</h3>
+          <p style={{ color: '#FFF', fontSize: '20px', margin: '0 0 5px 0' }}>Decano FCE</p>
+          <p style={{ color: '#FFF', fontSize: '20px', margin: 0 }}>Universidad Nacional del Altiplano</p>
+        </div>
+      </section>
+
+
 
       {/* ─── ORGANIZACIÓN ─── */}
       <section className="section" id="organizadores">
@@ -375,93 +422,67 @@ export default function Home() {
           </div>
         </div>
 
-        <section className="team-section glass-team-section" id="equipo">
-          <div className="team-mesh-bg" />
-          
-          <div className="section-header" style={{ alignItems: "center", textAlign: "center", marginBottom: "40px", position: "relative", zIndex: 10 }}>
-            <span className="kicker">Nuestro Equipo</span>
-            <h2>Autoridades y Coordinación</h2>
-          </div>
-          
-          <div className="glass-team-layout">
-             {/* Panel Izquierdo */}
-             <div className="glass-panel left-panel">
-                <h3 className="glass-title">Comité Organizador</h3>
-                <div className="glass-list">
-                   {committee.map(renderListMember)}
-                </div>
-             </div>
 
-             {/* Centro: Decano */}
-             <div className="glass-center-portrait">
-                <div className="dean-glass-avatar">
-                   <Image src="/autoridades/efrain_yupanqui.jpg" alt="Dr. Efraín Humberto Yupanqui Pino" fill className="object-cover object-top" />
-                </div>
-                <div className="dean-glass-info">
-                   <span className="kicker" style={{ color: "var(--teal)" }}>Presidencia Honoraria</span>
-                   <h2>Dr. Efraín Humberto Yupanqui Pino</h2>
-                   <p>Decano de la Facultad</p>
-                </div>
-             </div>
-
-             {/* Panel Derecho */}
-             <div className="glass-panel right-panel">
-                <h3 className="glass-title">Equipo y Comité de Honor</h3>
-                <div className="glass-list">
-                   {honorCommittee.slice(1).map(renderListMember)}
-                   {committeeMembers.map(renderListMember)}
-                </div>
-             </div>
-          </div>
-        </section>
       </section>
 
-      {/* ─── AGENDA (CARRUSEL) ─── */}
-      <section className="section schedule-carousel-section" id="programa">
-        <div className="section-header" style={{ alignItems: "center", textAlign: "center", marginBottom: "48px" }}>
-          <span className="kicker">Agenda oficial</span>
-          <h2>Tres días para compartir <em>saberes</em></h2>
-          <p style={{ maxWidth: "600px", marginTop: "16px" }}>El cronograma oficial combina inauguración, conferencias, ponencias y clausura en la sede de la EPEP.</p>
-        </div>
-
-        <div className="carousel-container">
-          <div className="carousel-slide">
-            <div className="carousel-image">
-              <Image 
-                key={`img-${activeDay}`} 
-                src={schedule[activeDay][3] as string} 
-                alt="Día del Congreso" 
-                fill 
-                className="object-cover fade-in" 
-              />
-              <div className="day-overlay-gradient" />
-              
-              {/* Navigation overlaying the image */}
-              <div className="carousel-nav-overlay">
-                {schedule.map(([dayStr], i) => (
-                  <button 
-                    key={`nav-${i}`} 
-                    className={`carousel-dot ${i === activeDay ? 'active' : ''}`}
+      {/* ─── PROGRAMA (TABS) ─── */}
+      <section style={{ backgroundColor: '#FDF7E2', padding: '80px clamp(20px, 5vw, 80px)' }} id="programa">
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '42px', color: '#3B0099', fontWeight: 'bold', fontFamily: 'serif', letterSpacing: '0.05em', marginBottom: '40px', textTransform: 'uppercase', textAlign: 'left' }}>
+            PROGRAMA
+          </h2>
+          
+          <div style={{ backgroundColor: '#FFF', padding: '0' }}>
+            {/* TABS */}
+            <div style={{ display: 'flex', borderBottom: '1px solid #EAEAEA', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              {schedule.map(([dayStr], i) => {
+                const parts = dayStr.toString().split(" · ");
+                const dayLabel = parts[0]; 
+                const dateLabel = parts[1];
+                return (
+                  <button
+                    key={i}
                     onClick={() => setActiveDay(i)}
+                    style={{
+                      flex: 1,
+                      padding: '20px 10px',
+                      fontSize: '15px',
+                      fontWeight: 'bold',
+                      color: activeDay === i ? '#B38600' : '#D4AF37',
+                      borderBottom: activeDay === i ? '3px solid #B38600' : '3px solid transparent',
+                      backgroundColor: 'transparent',
+                      borderTop: 'none', borderLeft: 'none', borderRight: 'none',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s',
+                      textAlign: 'center'
+                    }}
                   >
-                    {dayStr.toString().split("·")[0].trim()}
+                    {dayLabel} <span style={{ opacity: 0.8, fontSize: '13px' }}>({dateLabel})</span>
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-            
-            <div className="carousel-details fade-in" key={`det-${activeDay}`}>
-              <span className="slide-date">{schedule[activeDay][0]}</span>
-              <h3 className="slide-title">{schedule[activeDay][1]}</h3>
-              <p className="slide-desc">{schedule[activeDay][2]}</p>
-              
-              <div className="slide-timeline">
-                {agendaDetails[activeDay].map(([time, title, detail]) => (
-                  <div className="slide-timeline-item" key={time as string}>
-                    <span className="slide-time">{time}</span>
-                    <div className="slide-timeline-content">
-                      <strong>{title}</strong>
-                      <small>{detail}</small>
+
+            {/* CONTENT */}
+            <div style={{ padding: 'clamp(20px, 5vw, 50px)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                {agendaDetails[activeDay].map(([time, title, detail], idx) => (
+                  <div key={idx} style={{ display: 'flex', border: '1px solid #A8B2C1', padding: '30px', flexWrap: 'wrap', gap: '20px' }}>
+                    <div style={{ flex: '0 0 150px', borderRight: '1px solid #A8B2C1', paddingRight: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+                      <span style={{ color: '#B38600', fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>{time}</span>
+                      <span style={{ color: '#B38600', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>SEDE EPEP</span>
+                    </div>
+                    <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                      <span style={{ color: '#444', fontSize: '18px', marginBottom: '10px' }}>{title}</span>
+                      <span style={{ color: '#B38600', fontSize: '15px', fontWeight: 'bold', lineHeight: '1.5', marginBottom: '15px', textTransform: 'uppercase' }}>{detail}</span>
+                      <button 
+                        onClick={() => setModal({ kind: "registration" })}
+                        style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#666', textDecoration: 'underline', padding: 0, cursor: 'pointer', fontSize: '14px' }}
+                      >
+                        Más Información
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -471,32 +492,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── PONENTES ─── */}
-      <section className="section" id="ponentes">
-        <div className="section-header" style={{ marginBottom: "60px", textAlign: "center", alignItems: "center" }}>
-          <span className="kicker">Ponentes magistrales</span>
-          <h2>Voces expertas que<br />inspiran el <em>cambio</em></h2>
-          <p style={{ maxWidth: "600px", marginTop: "16px" }}>Conoce a los investigadores y educadores internacionales que liderarán las conferencias magistrales del congreso.</p>
-        </div>
 
-        <div className="speakers-marquee-container">
-          <div className="speakers-marquee-track">
-            {[...speakers, ...speakers].map(([name, role, desc, img, topic], idx) => (
-              <div className="speaker-runway-card" key={`${name}-${idx}`}>
-                <div className="speaker-runway-image">
-                  <Image src={img as string} alt={name as string} fill className="object-cover" />
-                </div>
-                <div className="speaker-runway-info">
-                  <span className="speaker-topic">{topic as string}</span>
-                  <h3>{name as string}</h3>
-                  <strong className="speaker-role">{role as string}</strong>
-                  <p className="speaker-desc">{desc as string}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ─── EJES TEMÁTICOS ─── */}
       <section className="section" id="ejes">
@@ -530,73 +526,72 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── PLAN DEL CONGRESO ─── */}
-      <section className="section planning-section" id="planificacion">
-        <div className="section-header">
-          <div>
-            <span className="kicker">Plan del congreso</span>
-            <h2>Una gestión que se<br />puede <em>verificar</em></h2>
-          </div>
-          <p>Explora las actividades, recursos e indicadores previstos para el evento.</p>
-        </div>
 
-        <div className="planning-layout">
-          <div className="planning-nav" role="tablist" aria-label="Información del plan">
-            {(Object.keys(planningPanels) as Array<keyof typeof planningPanels>).map((panel) => (
-              <button
-                className={activePanel === panel ? "planning-nav-btn active" : "planning-nav-btn"}
-                key={panel}
-                onClick={() => setActivePanel(panel)}
-                role="tab"
-                aria-selected={activePanel === panel}
-              >
-                {panel === "actividades" ? "Actividades" : panel === "recursos" ? "Recursos" : panel === "calidad" ? "Calidad" : panel === "gestion" ? "Gestión" : "Riesgos"}
-              </button>
-            ))}
-          </div>
-          <div className="planning-items" key={activePanel}>
-            {planningPanels[activePanel].map((item, i) => (
-              <div className="planning-item" key={item}>
-                <span className="planning-idx">{String(i + 1).padStart(2, "0")}</span>
-                <p>{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ─── INSCRIPCIONES ─── */}
-      <section className="section pricing-section" id="inscripciones">
-        <div className="pricing-header">
-          <span className="kicker">Inscripciones oficiales</span>
-          <h2>Participa en el<br />encuentro <em>académico</em></h2>
-          <p>
-            La recepción de trabajos estará abierta hasta el 30 de octubre de 2026.
-            Selecciona tu categoría para iniciar la inscripción.
-          </p>
-        </div>
 
-        <div className="pricing-plans-grid">
-          {costs.map(([title, price, features, badge], idx) => (
-            <div className="pricing-plan-card" key={`${title}-${idx}`} onClick={() => setModal({ kind: "registration", category: title })}>
-              <div className="pricing-plan-header">
-                <span className="pricing-plan-badge">{badge}</span>
-                <h3 className="pricing-plan-title">{title}</h3>
-                <div className="pricing-plan-price">
-                  <span className="currency">S/</span>
-                  <span className="amount">{price.replace("S/ ", "")}</span>
+      {/* ─── TARIFAS DE INSCRIPCIÓN (CARDS) ─── */}
+      <section style={{ backgroundColor: '#EBEBEB', padding: '80px clamp(20px, 5vw, 80px)', textAlign: 'center' }} id="inscripciones">
+        <h2 style={{ fontSize: '38px', color: '#3B0099', fontWeight: 'bold', fontFamily: 'serif', letterSpacing: '0.05em', marginBottom: '50px', textTransform: 'uppercase' }}>
+          TARIFAS DE INSCRIPCIÓN
+        </h2>
+        
+        <div className="registration-cards-grid">
+          
+          {costs.map(([title, price, features, badge], idx) => {
+            const cardImages = [
+              "/facu_educacion.jpg",
+              "/theme_3_v2.jpg",
+              "/theme_1_v2.jpg",
+              "/theme_2_v2.jpg",
+              "/theme_4_v2.jpg",
+              "/congreso.png"
+            ];
+            const img = cardImages[idx % cardImages.length];
+            return (
+              <div key={idx} style={{ backgroundColor: '#FFF', padding: '30px 20px', display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ color: '#B38600', fontSize: '18px', fontWeight: 'bold', minHeight: '50px', marginBottom: '10px', textTransform: 'uppercase' }}>
+                  {title}
+                </h3>
+                
+                <p style={{ color: '#D4AF37', fontWeight: 'bold', fontSize: '14px', marginBottom: '20px', minHeight: '20px' }}>{badge}</p>
+
+                <div style={{ flex: 1, position: 'relative', minHeight: '180px', marginBottom: '25px' }}>
+                  <Image src={img} alt={title as string} fill style={{ objectFit: 'cover' }} />
                 </div>
+                
+                <div style={{ marginBottom: '15px', textAlign: 'left', minHeight: '100px' }}>
+                  {features.map((feat, i) => (
+                    <p key={i} style={{ color: '#444', fontSize: '14px', marginBottom: '8px', lineHeight: '1.4', display: 'flex', gap: '8px' }}>
+                      <span style={{ color: '#B38600' }}>•</span> <span>{feat}</span>
+                    </p>
+                  ))}
+                </div>
+
+                <p style={{ color: '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 20px' }}>{price}</p>
+                <button 
+                  onClick={() => setModal({ kind: "registration", category: title as string })}
+                  style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#FFF'; e.currentTarget.style.color = '#B38600'; }}
+                >
+                  Más Información
+                </button>
               </div>
-              <ul className="pricing-plan-features">
-                {features.map((feat, i) => (
-                  <li key={i}><CheckCircle2 size={18} className="feature-icon" /> {feat}</li>
-                ))}
-              </ul>
-              <button className="pricing-plan-btn">
-                Inscribirse ahora <ArrowUpRight size={18} />
-              </button>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+
+        {/* Footer Text and Buttons */}
+        <div style={{ maxWidth: '850px', margin: '60px auto 0' }}>
+          <p style={{ fontSize: '19px', color: '#B38600', lineHeight: '1.6', marginBottom: '40px' }}>
+            Las entradas son extremadamente limitadas y se espera una alta demanda para estas modalidades. Reserva tu entrada ahora para asegurar tu participación en el congreso y acceder a todas las sesiones, ponencias y networking.
+          </p>
+
+          <button style={{ backgroundColor: '#D4AF37', color: '#FFF', border: 'none', padding: '20px', width: '100%', fontSize: '22px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '50px' }} onClick={() => setModal({ kind: "registration" })}>
+            Inscribirse Ahora
+          </button>
+
+
         </div>
       </section>
 
@@ -635,48 +630,6 @@ export default function Home() {
       {/* ─── MODAL ─── */}
       {modal && <RequestModal modal={modal} onClose={() => setModal(null)} />}
     </main>
-  );
-}
-
-/* ────────────────────────────────────────────────
-   COUNTDOWN
-   ──────────────────────────────────────────────── */
-
-function Countdown() {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const target = new Date("2026-11-25T09:00:00").getTime();
-    const update = () => {
-      const now = Date.now();
-      const distance = target - now;
-      if (distance < 0) return;
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      });
-    };
-    update();
-    const interval = setInterval(update, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="countdown">
-      {[
-        [timeLeft.days, "Días"],
-        [timeLeft.hours, "Horas"],
-        [timeLeft.minutes, "Min"],
-        [timeLeft.seconds, "Seg"],
-      ].map(([value, label]) => (
-        <div className="countdown-unit" key={label as string}>
-          <div className="value">{String(value).padStart(2, "0")}</div>
-          <span className="label">{label as string}</span>
-        </div>
-      ))}
-    </div>
   );
 }
 

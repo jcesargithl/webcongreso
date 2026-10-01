@@ -41,20 +41,25 @@ export async function listRequests(): Promise<CongressRequest[]> {
 export async function createRequest(
   input: Omit<CongressRequest, "id" | "status" | "created_at">
 ): Promise<CongressRequest | null> {
+  const payload: any = {
+    kind: input.kind,
+    category: input.category || null,
+    name: input.name,
+    email: input.email,
+    mode: input.mode,
+    institution: input.institution || null,
+    topic: input.topic || null,
+    message: input.message || null,
+    status: "pending",
+  };
+
+  if (input.file_url !== undefined) {
+    payload.file_url = input.file_url;
+  }
+
   const { data, error } = await supabase
     .from("congress_requests")
-    .insert({
-      kind: input.kind,
-      category: input.category || null,
-      name: input.name,
-      email: input.email,
-      mode: input.mode,
-      institution: input.institution || null,
-      topic: input.topic || null,
-      message: input.message || null,
-      file_url: input.file_url || null,
-      status: "pending",
-    })
+    .insert(payload)
     .select()
     .single();
 
