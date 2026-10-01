@@ -100,7 +100,7 @@ h1, h2, h3 {
 
 /* ── KICKER / LABEL ── */
 .kicker {
-  color: var(--accent);
+  color: var(--primary);
   font-family: "DM Mono", monospace;
   font-size: 11px;
   font-weight: 500;
@@ -114,7 +114,7 @@ h1, h2, h3 {
   content: "";
   width: 28px;
   height: 1.5px;
-  background: linear-gradient(90deg, var(--accent), var(--teal));
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
   display: inline-block;
   border-radius: 2px;
 }
@@ -164,7 +164,7 @@ h1, h2, h3 {
 
 .brand-center-text strong {
   font-family: "Outfit", system-ui, sans-serif;
-  font-size: clamp(20px, 3vw, 28px);
+  font-size: clamp(24px, 4vw, 34px);
   font-weight: 700;
   color: var(--primary);
   line-height: 1.1;
@@ -174,7 +174,7 @@ h1, h2, h3 {
 
 .brand-center-text small {
   font-family: "DM Mono", monospace;
-  font-size: clamp(10px, 1.5vw, 13px);
+  font-size: clamp(12px, 2vw, 16px);
   color: var(--text-secondary);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -190,9 +190,9 @@ h1, h2, h3 {
 
 .nav-links-center a {
   color: var(--primary);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
-  padding: 8px 12px;
+  padding: 10px 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: all 0.25s var(--ease-out);
@@ -376,7 +376,7 @@ h1, h2, h3 {
 
 .hero h1 {
   font-family: "Outfit", system-ui, sans-serif;
-  font-size: clamp(60px, 9vw, 110px);
+  font-size: clamp(40px, 6vw, 80px);
   line-height: 1.05;
   letter-spacing: 0.02em;
   color: #E9DCC9; /* Golden/Beige color */
@@ -387,7 +387,7 @@ h1, h2, h3 {
 }
 
 .hero-title-highlight {
-  font-size: clamp(45px, 7vw, 85px);
+  font-size: clamp(30px, 4.5vw, 60px);
   font-weight: 400;
 }
 
@@ -485,52 +485,73 @@ h1, h2, h3 {
     top: 100px;
   }
   .hero h1 {
-    font-size: clamp(32px, 8vw, 45px);
+    font-size: clamp(24px, 6vw, 36px);
   }
   .hero-title-highlight {
-    font-size: clamp(24px, 6vw, 32px);
+    font-size: clamp(18px, 4.5vw, 26px);
   }
 }
 
 /* ══════════════════════════════════════════════
-   STATS / SIGNAL ROW
+   STATS / SIGNAL ROW (NOW IN HERO)
    ══════════════════════════════════════════════ */
-.stats-row {
+.hero-stats-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-card);
+  background: rgba(15, 39, 86, 0.65);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  z-index: 10;
 }
-.stats-row > div {
+.hero-stat-item {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 28px clamp(16px, 3vw, 40px);
-  border-right: 1px solid var(--border);
+  padding: 24px clamp(16px, 3vw, 40px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   transition: background 0.3s;
 }
-.stats-row > div:last-child { border-right: none; }
-.stats-row > div:hover { background: var(--accent-dim); }
-.stat-number {
+.hero-stat-item:last-child { border-right: none; }
+.hero-stat-item:hover { background: rgba(255, 255, 255, 0.1); }
+.hero-stat-item .stat-number {
   font-family: "DM Mono", monospace;
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 500;
-  color: var(--accent);
+  color: #E8A317;
   line-height: 1;
 }
-.stat-label {
-  font-size: 13px;
+.hero-stat-item .stat-label {
+  font-size: 14px;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
   line-height: 1.3;
 }
-.stat-label small {
+.hero-stat-item .stat-label small {
   display: block;
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 400;
   margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .hero-stats-overlay {
+    position: relative;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(15, 39, 86, 0.85);
+  }
+  .hero-stat-item {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .hero-stat-item:nth-child(even) {
+    border-right: none;
+  }
 }
 
 /* ══════════════════════════════════════════════
@@ -549,11 +570,11 @@ h1, h2, h3 {
 }
 .section-header h2 {
   font-size: clamp(38px, 5vw, 64px);
-  color: var(--primary);
+  color: #0F2756;
 }
 .section-header h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--primary);
 }
 .section-header > p {
   color: var(--text-secondary);

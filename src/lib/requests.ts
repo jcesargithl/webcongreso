@@ -9,6 +9,8 @@ export type CongressRequest = {
   category?: string;
   name: string;
   email: string;
+  doc_type?: string;
+  doc_number?: string;
   mode: "Presencial" | "Virtual";
   institution?: string;
   topic?: string;
@@ -46,6 +48,8 @@ export async function createRequest(
     category: input.category || null,
     name: input.name,
     email: input.email,
+    doc_type: input.doc_type || null,
+    doc_number: input.doc_number || null,
     mode: input.mode,
     institution: input.institution || null,
     topic: input.topic || null,

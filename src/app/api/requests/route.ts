@@ -1,5 +1,8 @@
 import { createRequest, listRequests, updateRequestStatus, type RequestKind, type RequestStatus } from "@/lib/requests";
 import { supabase } from "@/lib/supabase";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 
 export const runtime = "nodejs";
 
@@ -16,6 +19,8 @@ export async function POST(request: Request) {
   
   const name = (formData.get("name") as string)?.trim() || "";
   const email = (formData.get("email") as string)?.trim() || "";
+  const doc_type = (formData.get("doc_type") as string)?.trim() || "";
+  const doc_number = (formData.get("doc_number") as string)?.trim() || "";
   const kind = formData.get("kind") as RequestKind;
   const category = (formData.get("category") as string)?.trim();
   const mode = formData.get("mode") as "Virtual" | "Presencial" || "Presencial";
@@ -25,7 +30,7 @@ export async function POST(request: Request) {
   
   const file = formData.get("file") as File | null;
 
-  if (!name || !email || !email.includes("@") || !allowedKinds.includes(kind)) {
+  if (!name || !email || !email.includes("@") || !allowedKinds.includes(kind) || !doc_type || !doc_number) {
     return Response.json({ error: "Completa los campos obligatorios." }, { status: 400 });
   }
 
@@ -64,6 +69,8 @@ export async function POST(request: Request) {
     category,
     name,
     email,
+    doc_type,
+    doc_number,
     mode,
     institution,
     topic,
@@ -73,6 +80,47 @@ export async function POST(request: Request) {
 
   if (!created) {
     return Response.json({ error: "Error al crear la solicitud." }, { status: 500 });
+  }
+
+  // Generar usuario en Supabase Auth
+  const password = doc_number; // Contraseña es el documento
+  const { error: authError } = await supabase.auth.admin.createUser({
+    email: email,
+    password: password,
+    email_confirm: true,
+    user_metadata: { name, doc_type, doc_number }
+  });
+
+  if (authError) {
+    console.error("Error al crear usuario en Auth:", authError);
+    // Seguimos de todas formas porque la request ya se guardó
+  }
+
+  // Enviar correo con Resend
+  if (process.env.RESEND_API_KEY) {
+    try {
+      await resend.emails.send({
+        from: "IV Congreso <onboarding@resend.dev>", // Cambia a tu dominio verificado luego
+        to: email,
+        subject: "Confirmación de registro y accesos - IV Congreso",
+        html: `
+          <div style="font-family: sans-serif; color: #333;">
+            <h2 style="color: #0F2756;">¡Hola, ${name}!</h2>
+            <p>Hemos recibido tu solicitud para el <strong>IV Congreso Internacional</strong>.</p>
+            <p>Se ha generado tu cuenta para acceder a la plataforma del congreso:</p>
+            <ul>
+              <li><strong>Usuario:</strong> ${email}</li>
+              <li><strong>Contraseña:</strong> ${password}</li>
+            </ul>
+            <p>Te avisaremos cuando tu solicitud cambie de estado.</p>
+            <br/>
+            <p>Atentamente,<br/>Comité Organizador</p>
+          </div>
+        `
+      });
+    } catch (err) {
+      console.error("Error enviando email con Resend:", err);
+    }
   }
 
   return Response.json(created, { status: 201 });

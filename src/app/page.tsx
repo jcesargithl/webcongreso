@@ -155,7 +155,7 @@ export default function Home() {
       <header className={`topbar ${menuOpen ? "menu-open" : ""}`} ref={headerRef}>
         <div className="topbar-main">
           <a className="brand-center" href="#inicio" onClick={() => setMenuOpen(false)}>
-            <Image src="/logosecu.png" alt="Escudo EPEP" width={60} height={60} className="brand-logo" />
+            <Image src="/logosecu.png" alt="Escudo EPEP" width={80} height={80} className="brand-logo" />
             <span className="brand-center-text">
               <strong>IV Congreso Internacional</strong>
               <small>EPEP · Investigación Científica</small>
@@ -180,10 +180,6 @@ export default function Home() {
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <Menu size={24} color="var(--primary)" />
-          </button>
-          <button className="btn btn-primary btn-compact desktop-only" onClick={() => setModal({ kind: "registration" })}>
-            <ArrowUpRight size={16} />
-            <span>Inscribirme</span>
           </button>
         </div>
 
@@ -230,25 +226,24 @@ export default function Home() {
             </button>
           </div>
         </div>
-      </section>
 
-      {/* ─── STATS BAR ─── */}
-      <section className="stats-row" aria-label="Datos destacados">
-        <div>
-          <span className="stat-number">25</span>
-          <span className="stat-label">Noviembre<small>Inicio del congreso</small></span>
-        </div>
-        <div>
-          <span className="stat-number">03</span>
-          <span className="stat-label">Días de encuentro<small>25 al 27 de noviembre</small></span>
-        </div>
-        <div>
-          <span className="stat-number">30/10</span>
-          <span className="stat-label">Recepción de trabajos<small>Fecha límite</small></span>
-        </div>
-        <div>
-          <span className="stat-number">05</span>
-          <span className="stat-label">Ejes temáticos<small>Investigación e innovación</small></span>
+        <div className="hero-stats-overlay">
+          <div className="hero-stat-item">
+            <span className="stat-number">25</span>
+            <span className="stat-label">Noviembre<small>Inicio del congreso</small></span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="stat-number">03</span>
+            <span className="stat-label">Días de encuentro<small>25 al 27 de nov</small></span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="stat-number">30/10</span>
+            <span className="stat-label">Recepción de trabajos<small>Fecha límite</small></span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="stat-number">05</span>
+            <span className="stat-label">Ejes temáticos<small>Investigación e innovación</small></span>
+          </div>
         </div>
       </section>
 
@@ -428,7 +423,7 @@ export default function Home() {
       {/* ─── PROGRAMA (TABS) ─── */}
       <section style={{ backgroundColor: '#FDF7E2', padding: '80px clamp(20px, 5vw, 80px)' }} id="programa">
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '42px', color: '#3B0099', fontWeight: 'bold', fontFamily: 'serif', letterSpacing: '0.05em', marginBottom: '40px', textTransform: 'uppercase', textAlign: 'left' }}>
+          <h2 style={{ fontSize: '42px', color: '#0F2756', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.05em', marginBottom: '40px', textTransform: 'uppercase', textAlign: 'left' }}>
             PROGRAMA
           </h2>
           
@@ -531,7 +526,7 @@ export default function Home() {
 
       {/* ─── TARIFAS DE INSCRIPCIÓN (CARDS) ─── */}
       <section style={{ backgroundColor: '#EBEBEB', padding: '80px clamp(20px, 5vw, 80px)', textAlign: 'center' }} id="inscripciones">
-        <h2 style={{ fontSize: '38px', color: '#3B0099', fontWeight: 'bold', fontFamily: 'serif', letterSpacing: '0.05em', marginBottom: '50px', textTransform: 'uppercase' }}>
+        <h2 style={{ fontSize: '38px', color: '#0F2756', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.05em', marginBottom: '50px', textTransform: 'uppercase' }}>
           TARIFAS DE INSCRIPCIÓN
         </h2>
         
@@ -695,6 +690,15 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
             <form onSubmit={submit}>
               <label>Nombre completo<input name="name" required /></label>
               <label>Correo electrónico<input name="email" type="email" required /></label>
+              <label>Tipo de documento
+                <select name="doc_type" required>
+                  <option value="DNI">DNI</option>
+                  <option value="CE">CE</option>
+                  <option value="Pasaporte">Pasaporte</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </label>
+              <label>Nro de documento<input name="doc_number" required /></label>
               <label>Institución<input name="institution" /></label>
               {isPaper && <label>Título o eje de la ponencia<input name="topic" required /></label>}
               <label>
