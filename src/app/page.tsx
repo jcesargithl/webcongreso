@@ -7,6 +7,7 @@ import {
   Building2,
   CalendarDays,
   Check,
+  CheckCircle2,
   CircleHelp,
   ExternalLink,
   FileText,
@@ -83,12 +84,12 @@ const agendaDetails = [
    ["16:00", "Clausura y fotografía oficial", "Cierre institucional del IV Congreso"]],
 ];
 
-const themes: [string, string, string, React.ReactNode][] = [
-  ["01", "Investigación educativa y producción científica", "Investigación cuantitativa, cualitativa y mixta; investigación-acción; ética e integridad científica; tesis, publicaciones y divulgación.", <BookOpen size={22} />],
-  ["02", "Inteligencia artificial, tecnologías digitales y educación", "IA generativa, competencias digitales, analítica del aprendizaje, entornos virtuales, personalización y uso responsable de la IA.", <BrainCircuit size={22} />],
-  ["03", "Innovación pedagógica, currículo y evaluación", "Metodologías activas, ABP, gamificación, aprendizaje colaborativo, currículo por competencias y evaluación formativa.", <Lightbulb size={22} />],
-  ["04", "Formación docente, inclusión e interculturalidad", "Formación inicial y continua, desempeño docente, educación inclusiva, diversidad, interculturalidad, EIB y educación rural.", <Heart size={22} />],
-  ["05", "Gestión educativa, bienestar y desarrollo sostenible", "Liderazgo, calidad, políticas educativas, convivencia, bienestar socioemocional, ciudadanía y educación ambiental.", <Globe size={22} />],
+const themes: [string, string, string, React.ReactNode, string][] = [
+  ["01", "Investigación educativa y producción científica", "Investigación cuantitativa, cualitativa y mixta; investigación-acción; ética e integridad científica; tesis, publicaciones y divulgación.", <BookOpen size={22} />, "/theme_1_v2.jpg"],
+  ["02", "Inteligencia artificial, tecnologías digitales y educación", "IA generativa, competencias digitales, analítica del aprendizaje, entornos virtuales, personalización y uso responsable de la IA.", <BrainCircuit size={22} />, "/theme_2_v2.jpg"],
+  ["03", "Innovación pedagógica, currículo y evaluación", "Metodologías activas, ABP, gamificación, aprendizaje colaborativo, currículo por competencias y evaluación formativa.", <Lightbulb size={22} />, "/theme_3_v2.jpg"],
+  ["04", "Formación docente, inclusión e interculturalidad", "Formación inicial y continua, desempeño docente, educación inclusiva, diversidad, interculturalidad, EIB y educación rural.", <Heart size={22} />, "/theme_4_v2.jpg"],
+  ["05", "Gestión educativa, bienestar y desarrollo sostenible", "Liderazgo, calidad, políticas educativas, convivencia, bienestar socioemocional, ciudadanía y educación ambiental.", <Globe size={22} />, "/theme_5_v2.jpg"],
 ];
 
 const planningPanels = {
@@ -99,13 +100,13 @@ const planningPanels = {
   riesgos: ["Falla de internet: conexión principal y respaldo, pruebas previas", "Falla de energía: UPS o grupo electrógeno", "Ausencia de conferencista: confirmación 72/24 h antes y alterno", "Problemas de audio o video: pruebas individuales y equipos de respaldo", "Baja participación: difusión segmentada, recordatorios y alianzas", "Falta de evidencias: archivo por coordinación y entrega máx. 48 h"],
 };
 
-const costs: [string, string][] = [
-  ["Estudiante EPEP · asistente interno", "S/ 20.00"],
-  ["Estudiante externo", "S/ 30.00"],
-  ["Ponente externo", "S/ 100.00"],
-  ["Asistente externo", "S/ 70.00"],
-  ["Docente ponente EPEP", "S/ 0.00"],
-  ["Estudiante ponente EPEP", "S/ 0.00"],
+const costs: [string, string, string[], string][] = [
+  ["Estudiante EPEP", "S/ 20.00", ["Acceso a todas las conferencias", "Certificado de asistente", "Material del congreso"], "Asistente Interno"],
+  ["Estudiante Externo", "S/ 30.00", ["Acceso a todas las conferencias", "Certificado de asistente", "Material del congreso"], "Público General"],
+  ["Ponente Externo", "S/ 100.00", ["Derecho a ponencia", "Certificado de ponente", "Publicación en la memoria del congreso"], "Investigadores"],
+  ["Asistente Externo", "S/ 70.00", ["Acceso a todas las conferencias", "Certificado de asistente", "Kit de bienvenida"], "Público General"],
+  ["Docente EPEP", "S/ 0.00", ["Derecho a ponencia", "Certificado de ponente", "Acceso prioritario"], "Ponente Interno"],
+  ["Estudiante EPEP", "S/ 0.00", ["Derecho a ponencia", "Certificado de ponente", "Mentoría académica"], "Ponente Interno"],
 ];
 
 const speakers = [
@@ -507,12 +508,23 @@ export default function Home() {
           <p>Explora las líneas de investigación que estructuran nuestra convocatoria para ponencias.</p>
         </div>
 
-        <div className="themes-grid">
-          {themes.map(([number, title, desc]) => (
-            <div className="theme-card" key={number}>
-              <span className="theme-num">{number}</span>
-              <h3>{title}</h3>
-              <p>{desc}</p>
+        <div className="themes-accordion">
+          {themes.map(([number, title, desc, icon, img]) => (
+            <div className="theme-accordion-item" key={number as string}>
+              <div className="theme-accordion-bg-container">
+                <Image src={img as string} alt={title as string} fill className="theme-accordion-bg object-cover" />
+                <div className="theme-accordion-overlay" />
+              </div>
+              <div className="theme-accordion-content">
+                <div className="theme-accordion-header">
+                  <div className="theme-icon-box">{icon}</div>
+                  <span className="theme-accordion-num">{number as string}</span>
+                </div>
+                <div className="theme-accordion-text">
+                  <h3>{title as string}</h3>
+                  <p>{desc as string}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -564,18 +576,25 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="tickets-grid">
-          {costs.map(([category, cost]) => (
-            <div className="ticket-card" key={category} onClick={() => setModal({ kind: "registration", category })}>
-              <div className="ticket-top">
-                <span className="ticket-category">{category}</span>
-                <strong className="ticket-price">{cost}</strong>
+        <div className="pricing-plans-grid">
+          {costs.map(([title, price, features, badge], idx) => (
+            <div className="pricing-plan-card" key={`${title}-${idx}`} onClick={() => setModal({ kind: "registration", category: title })}>
+              <div className="pricing-plan-header">
+                <span className="pricing-plan-badge">{badge}</span>
+                <h3 className="pricing-plan-title">{title}</h3>
+                <div className="pricing-plan-price">
+                  <span className="currency">S/</span>
+                  <span className="amount">{price.replace("S/ ", "")}</span>
+                </div>
               </div>
-              <div className="ticket-divider" />
-              <div className="ticket-action">
-                <span>Adquirir entrada</span>
-                <ArrowUpRight size={18} />
-              </div>
+              <ul className="pricing-plan-features">
+                {features.map((feat, i) => (
+                  <li key={i}><CheckCircle2 size={18} className="feature-icon" /> {feat}</li>
+                ))}
+              </ul>
+              <button className="pricing-plan-btn">
+                Inscribirse ahora <ArrowUpRight size={18} />
+              </button>
             </div>
           ))}
         </div>
