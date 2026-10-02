@@ -169,6 +169,7 @@ export default function Home() {
             <a href="#ejes" onClick={() => setMenuOpen(false)}>Ejes</a>
             <a href="#inscripciones" onClick={() => setMenuOpen(false)}>Inscripciones</a>
             <a href="#contacto" onClick={() => setMenuOpen(false)}>Contacto</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); setModal({ kind: "paper" }); }}>Enviar investigación</a>
           </nav>
         </div>
 
@@ -222,7 +223,7 @@ export default function Home() {
               <Send size={16} /> Inscribirme ahora
             </button>
             <button className="btn btn-outline-light" onClick={() => setModal({ kind: "paper" })}>
-              <FileText size={16} /> Enviar ponencia
+              <FileText size={16} /> Enviar investigación
             </button>
           </div>
         </div>
@@ -353,7 +354,7 @@ export default function Home() {
             <Image src="/autoridades/efrain_yupanqui.jpg" alt="Dr. Efraín Humberto Yupanqui Pino" fill style={{ objectFit: 'cover', objectPosition: 'top' }} />
           </div>
           <h3 style={{ color: '#FFF', fontSize: '26px', fontWeight: 'bold', marginBottom: '5px' }}>Dr. Efraín Yupanqui</h3>
-          <p style={{ color: '#FFF', fontSize: '20px', margin: '0 0 5px 0' }}>Decano FCE</p>
+          <p style={{ color: '#FFF', fontSize: '20px', margin: '0 0 5px 0' }}>Decano FCEDUC</p>
           <p style={{ color: '#FFF', fontSize: '20px', margin: 0 }}>Universidad Nacional del Altiplano</p>
         </div>
       </section>
@@ -534,12 +535,12 @@ export default function Home() {
           
           {costs.map(([title, price, features, badge], idx) => {
             const cardImages = [
-              "/facu_educacion.jpg",
-              "/theme_3_v2.jpg",
-              "/theme_1_v2.jpg",
-              "/theme_2_v2.jpg",
-              "/theme_4_v2.jpg",
-              "/congreso.png"
+              "/enseedu.jpg",
+              "/integrantes.jpeg",
+              "/tutoria.jpg",
+              "/interior.jpg",
+              "/docentes.jpg",
+              "/estudiantesedudes.jpg"
             ];
             const img = cardImages[idx % cardImages.length];
             return (
@@ -682,11 +683,7 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
                 ? "Cuéntanos brevemente sobre tu propuesta y sube tu investigación (PDF)."
                 : "Déjanos tus datos y te enviaremos los pasos para completar tu inscripción."}
             </p>
-            {modal.category && (
-               <div style={{ marginBottom: "16px", padding: "12px", background: "var(--primary-dim)", borderRadius: "var(--radius-sm)", color: "var(--primary)", fontSize: "14px", fontWeight: "600", border: "1px solid rgba(15,39,86,0.1)" }}>
-                 Entrada: {modal.category}
-               </div>
-            )}
+
             <form onSubmit={submit}>
               <label>Nombre completo<input name="name" required /></label>
               <label>Correo electrónico<input name="email" type="email" required /></label>
@@ -700,6 +697,17 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
               </label>
               <label>Nro de documento<input name="doc_number" required /></label>
               <label>Institución<input name="institution" /></label>
+              <label>Categoría
+                <select name="category" defaultValue={modal.category || ""} required>
+                  <option value="" disabled>Selecciona una categoría</option>
+                  <option value="Asistente Interno">Asistente Interno</option>
+                  <option value="Público General">Público General</option>
+                  <option value="Investigadores">Investigadores</option>
+                  <option value="Asistente Externo">Asistente Externo</option>
+                  <option value="Docente EPEP">Docente EPEP</option>
+                  <option value="Estudiante EPEP">Estudiante EPEP</option>
+                </select>
+              </label>
               {isPaper && <label>Título o eje de la ponencia<input name="topic" required /></label>}
               <label>
                 Modalidad
