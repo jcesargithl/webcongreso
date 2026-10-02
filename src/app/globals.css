@@ -7,23 +7,23 @@
 
 :root {
   /* Core palette — warm, luminous surfaces */
-  --bg-primary: #F8F9FF;
-  --bg-secondary: #EFF4FF;
+  --bg-primary: #F8F9FA;
+  --bg-secondary: #F0F3F8;
   --bg-card: #FFFFFF;
-  --bg-elevated: #F0F4FA;
-  --bg-glass: rgba(255, 255, 255, 0.78);
+  --bg-elevated: #F4F7FB;
+  --bg-glass: rgba(255, 255, 255, 0.85);
 
-  /* Primary — deep academic navy -> now premium gold */
-  --primary: #B38600;
-  --primary-light: #D4AF37;
-  --primary-dim: rgba(179, 134, 0, 0.08);
-  --primary-glow: rgba(179, 134, 0, 0.15);
+  /* Primary — Deep Academic Navy */
+  --primary: #0F2756;
+  --primary-light: #1D3B75;
+  --primary-dim: rgba(15, 39, 86, 0.08);
+  --primary-glow: rgba(15, 39, 86, 0.15);
 
-  /* Secondary — vibrant indigo/violet for CTAs */
-  --accent: #4B41E1;
-  --accent-light: #645EFB;
-  --accent-dim: rgba(75, 65, 225, 0.08);
-  --accent-glow: rgba(75, 65, 225, 0.18);
+  /* Secondary/Accent — Premium Gold */
+  --accent: #D4AF37;
+  --accent-light: #F3C944;
+  --accent-dim: rgba(212, 175, 55, 0.12);
+  --accent-glow: rgba(212, 175, 55, 0.25);
 
   /* Tertiary — fresh teal/emerald for highlights */
   --teal: #00A472;
@@ -37,27 +37,27 @@
   --amber-dim: rgba(232, 163, 23, 0.08);
 
   /* Text */
-  --text-primary: #0B1C30;
-  --text-secondary: #44464F;
-  --text-muted: #757780;
-  --text-accent: var(--accent);
+  --text-primary: #1A202C;
+  --text-secondary: #4A5568;
+  --text-muted: #718096;
+  --text-accent: var(--primary);
 
   /* Borders */
-  --border: rgba(15, 39, 86, 0.08);
-  --border-hover: rgba(75, 65, 225, 0.25);
-  --border-subtle: rgba(15, 39, 86, 0.04);
+  --border: rgba(15, 39, 86, 0.12);
+  --border-hover: rgba(212, 175, 55, 0.4);
+  --border-subtle: rgba(15, 39, 86, 0.05);
 
   /* Radius */
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(15, 39, 86, 0.06), 0 1px 2px rgba(15, 39, 86, 0.04);
-  --shadow-md: 0 4px 16px rgba(15, 39, 86, 0.08), 0 2px 4px rgba(15, 39, 86, 0.04);
-  --shadow-lg: 0 12px 40px rgba(15, 39, 86, 0.1), 0 4px 12px rgba(15, 39, 86, 0.05);
-  --shadow-xl: 0 24px 60px rgba(15, 39, 86, 0.12), 0 8px 20px rgba(15, 39, 86, 0.06);
+  --shadow-sm: 0 2px 4px rgba(15, 39, 86, 0.04), 0 1px 2px rgba(15, 39, 86, 0.02);
+  --shadow-md: 0 8px 16px rgba(15, 39, 86, 0.06), 0 4px 8px rgba(15, 39, 86, 0.03);
+  --shadow-lg: 0 16px 32px rgba(15, 39, 86, 0.08), 0 8px 16px rgba(15, 39, 86, 0.04);
+  --shadow-xl: 0 24px 48px rgba(15, 39, 86, 0.12), 0 12px 24px rgba(15, 39, 86, 0.06);
 
   /* Transitions */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -248,12 +248,12 @@ h1, h2, h3 {
 }
 .btn-primary {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-  color: #FFFFFF;
+  color: var(--primary);
   box-shadow: 0 4px 16px var(--accent-glow);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(75, 65, 225, 0.3);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
 }
 .btn-outline {
   background: transparent;
@@ -562,7 +562,7 @@ h1, h2, h3 {
 }
 .section-header h2 em {
   font-style: italic;
-  color: var(--primary);
+  color: var(--accent);
 }
 .section-header > p {
   color: var(--text-secondary);
