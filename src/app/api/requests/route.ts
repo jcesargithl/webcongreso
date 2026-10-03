@@ -9,7 +9,24 @@ export const runtime = "nodejs";
 const allowedKinds: RequestKind[] = ["registration", "paper"];
 const allowedStatuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected"];
 
-export async function GET() {
+async function verifyAdmin(request: Request) {
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader) return null;
+  const token = authHeader.replace("Bearer ", "");
+  
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  if (error || !user) return null;
+
+  const adminEmails = (process.env.ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+  if (!adminEmails.includes(user.email?.toLowerCase() || "")) return null;
+
+  return user;
+}
+
+export async function GET(request: Request) {
+  const admin = await verifyAdmin(request);
+  if (!admin) return Response.json({ error: "No autorizado" }, { status: 401 });
+
   const data = await listRequests();
   return Response.json(data);
 }
@@ -127,6 +144,9 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const admin = await verifyAdmin(request);
+  if (!admin) return Response.json({ error: "No autorizado" }, { status: 401 });
+
   const body = await request.json();
   if (typeof body.id !== "string" || !allowedStatuses.includes(body.status)) {
     return Response.json({ error: "Solicitud de actualización inválida." }, { status: 400 });
