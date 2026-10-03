@@ -2,20 +2,28 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, FileText, RefreshCw, Users, Lock } from "lucide-react";
+import { ArrowLeft, Check, FileText, RefreshCw, Users, Lock, Search } from "lucide-react";
 import type { CongressRequest, RequestStatus } from "@/lib/requests";
 import { supabaseClient } from "@/lib/supabase-client";
 import type { Session } from "@supabase/supabase-js";
 
-const statuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected"];
+const statuses: RequestStatus[] = ["pending", "reviewing", "yape", "cash", "approved", "rejected"];
 
 function statusLabel(status: RequestStatus) {
-  return { pending: "Pendiente", reviewing: "En revisión", approved: "Aprobada", rejected: "Rechazada" }[status];
+  return { 
+    pending: "Pendiente de pago", 
+    reviewing: "En revisión", 
+    yape: "Pagó (Yape/Plin)", 
+    cash: "Pagó (Efectivo)",
+    approved: "Confirmado (General)", 
+    rejected: "Rechazado" 
+  }[status];
 }
 
 export default function AdminPage() {
   const [requests, setRequests] = useState<CongressRequest[]>([]);
   const [filter, setFilter] = useState<"all" | "registration" | "paper">("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   
   // Auth state
@@ -121,8 +129,17 @@ export default function AdminPage() {
     );
   }
 
-  const visibleRequests = filter === "all" ? requests : requests.filter((r) => r.kind === filter);
-  const pending = requests.filter((r) => r.status === "pending").length;
+  const visibleRequests = requests.filter((r) => {
+    if (filter !== "all" && r.kind !== filter) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      if (!r.name.toLowerCase().includes(q) && !(r.doc_number && r.doc_number.toLowerCase().includes(q))) {
+        return false;
+      }
+    }
+    return true;
+  });
+  const pending = requests.filter((r) => r.status === "pending" || r.status === "reviewing").length;
   const papers = requests.filter((r) => r.kind === "paper").length;
 
   return (
@@ -135,23 +152,27 @@ export default function AdminPage() {
           <span className="kicker">Gestión interna</span>
           <h1>Solicitudes</h1>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <span style={{ fontSize: '14px', color: '#666' }}>{session.user.email}</span>
-          <button 
-            onClick={() => supabaseClient.auth.signOut()} 
-            style={{ background: 'transparent', border: '1px solid #CCC', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', background: '#FFF', padding: '6px 14px', borderRadius: '99px', border: '1px solid #EAEAEA', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+            <span style={{ fontSize: '13px', color: '#666', fontWeight: 500 }}>{session.user.email}</span>
+            <div style={{ width: '1px', height: '14px', background: '#EAEAEA' }} />
+            <button 
+              onClick={() => supabaseClient.auth.signOut()} 
+              style={{ background: 'transparent', border: 'none', color: '#BA1A1A', cursor: 'pointer', fontSize: '13px', fontWeight: 600, padding: 0 }}
+            >
+              Salir
+            </button>
+          </div>
+          <button
+            className="icon-button"
+            title="Actualizar solicitudes"
+            aria-label="Actualizar solicitudes"
+            onClick={() => void loadRequests()}
+            style={{ background: '#FFF', border: '1px solid #EAEAEA', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
           >
-            Salir
+            <RefreshCw size={17} color="#0F2756" />
           </button>
         </div>
-        <button
-          className="icon-button admin-refresh"
-          title="Actualizar solicitudes"
-          aria-label="Actualizar solicitudes"
-          onClick={() => void loadRequests()}
-        >
-          <RefreshCw size={19} />
-        </button>
       </header>
 
       <section className="admin-stats">
@@ -169,13 +190,25 @@ export default function AdminPage() {
         </div>
       </section>
 
-      <div className="admin-toolbar">
+      <div className="admin-toolbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
         <div className="filter-tabs">
           <button className={filter === "all" ? "selected" : ""} onClick={() => setFilter("all")}>Todas</button>
           <button className={filter === "registration" ? "selected" : ""} onClick={() => setFilter("registration")}>Inscripciones</button>
           <button className={filter === "paper" ? "selected" : ""} onClick={() => setFilter("paper")}>Ponencias</button>
         </div>
-        <span>{loading ? "Actualizando..." : `${visibleRequests.length} registros`}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <div style={{ position: 'relative' }}>
+            <Search size={14} color="#666" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+            <input 
+              type="text" 
+              placeholder="Buscar por DNI o nombre..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ padding: '8px 12px 8px 30px', borderRadius: '6px', border: '1px solid #CCC', fontSize: '13px', width: '250px' }}
+            />
+          </div>
+          <span>{loading ? "Actualizando..." : `${visibleRequests.length} registros`}</span>
+        </div>
       </div>
 
       <section className="request-table">
@@ -198,8 +231,23 @@ export default function AdminPage() {
                   {request.kind === "paper" ? "Ponencia" : "Inscripción"}
                 </span>
               </div>
-              <p>{request.email} {request.institution && `· ${request.institution}`}</p>
+              <p>
+                {request.doc_number && <strong style={{ color: '#0F2756' }}>DNI: {request.doc_number}</strong>}
+                {request.doc_number && " · "}
+                {request.email} {request.institution && `· ${request.institution}`}
+              </p>
               {request.topic && <small>{request.topic}</small>}
+              
+              {request.message && (
+                <div style={{ marginTop: '8px', fontSize: '12px', background: '#F9F9F9', padding: '8px', borderLeft: '3px solid #B38600' }}>
+                  {request.message.split("\n").map((line, i) => 
+                    line.startsWith("http") 
+                      ? <a key={i} href={line} target="_blank" rel="noreferrer" style={{ color: '#0F2756', textDecoration: 'underline', fontWeight: 'bold', display: 'block', padding: '2px 0' }}>📄 Abrir Comprobante / Archivo</a>
+                      : <span key={i} style={{ display: 'block', padding: '1px 0', color: '#555' }}>{line}</span>
+                  )}
+                </div>
+              )}
+
               <time>
                 {new Date(request.created_at).toLocaleString("es-PE", {
                   dateStyle: "medium",

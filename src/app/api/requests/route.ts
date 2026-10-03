@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 export const runtime = "nodejs";
 
 const allowedKinds: RequestKind[] = ["registration", "paper"];
-const allowedStatuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected"];
+const allowedStatuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected", "yape", "cash"];
 
 async function verifyAdmin(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -46,6 +46,7 @@ export async function POST(request: Request) {
   const message = (formData.get("message") as string)?.trim();
   
   const file = formData.get("file") as File | null;
+  const receipt = formData.get("receipt") as File | null;
 
   if (!name || !email || !email.includes("@") || !allowedKinds.includes(kind) || !doc_type || !doc_number) {
     return Response.json({ error: "Completa los campos obligatorios." }, { status: 400 });
@@ -81,6 +82,38 @@ export async function POST(request: Request) {
     file_url = publicUrlData.publicUrl;
   }
 
+  let receipt_url: string | undefined = undefined;
+
+  // Upload receipt if present
+  if (receipt && receipt.size > 0) {
+    if (!receipt.type.startsWith("image/") && receipt.type !== "application/pdf") {
+      return Response.json({ error: "El comprobante debe ser una imagen o un PDF." }, { status: 400 });
+    }
+    
+    const bytes = await receipt.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const filename = `receipt-${Date.now()}-${receipt.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from("papers")
+      .upload(filename, buffer, {
+        contentType: receipt.type,
+        upsert: false
+      });
+
+    if (uploadError) {
+      console.error("Storage upload error (receipt):", uploadError);
+      return Response.json({ error: "Error al subir el comprobante de pago." }, { status: 500 });
+    }
+    
+    const { data: publicUrlData } = supabase.storage.from("papers").getPublicUrl(filename);
+    receipt_url = publicUrlData.publicUrl;
+  }
+
+  const finalMessage = receipt_url 
+    ? `🔗 COMPROBANTE DE PAGO:\n${receipt_url}\n\n${message || ""}`
+    : message;
+
   const created = await createRequest({
     kind,
     category,
@@ -91,7 +124,7 @@ export async function POST(request: Request) {
     mode,
     institution,
     topic,
-    message,
+    message: finalMessage,
     file_url,
   });
 

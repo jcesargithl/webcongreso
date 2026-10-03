@@ -18,6 +18,8 @@ import {
   Menu,
   Send,
   Sparkles,
+  CreditCard,
+  Upload,
   Users,
   X,
   BookOpen,
@@ -76,14 +78,14 @@ const schedule = [
 
 const agendaDetails = [
   [["09:00", "Acreditación y bienvenida", "Registro de participantes y entrega de materiales"],
-   ["11:00", "Conferencia magistral internacional", "Investigación e innovación educativa"],
-   ["15:00", "Panel de investigadores", "Preguntas, diálogo y ponencias paralelas"]],
+  ["11:00", "Conferencia magistral internacional", "Investigación e innovación educativa"],
+  ["15:00", "Panel de investigadores", "Preguntas, diálogo y ponencias paralelas"]],
   [["09:00", "Conferencias magistrales", "Inteligencia artificial y tecnologías digitales"],
-   ["11:30", "Mesas temáticas", "Presentación y discusión de investigaciones"],
-   ["15:00", "Talleres y foro internacional", "Intercambio de experiencias y propuestas"]],
+  ["11:30", "Mesas temáticas", "Presentación y discusión de investigaciones"],
+  ["15:00", "Talleres y foro internacional", "Intercambio de experiencias y propuestas"]],
   [["09:00", "Conferencias finales", "Síntesis de aprendizajes y experiencias"],
-   ["12:00", "Premiación de investigaciones", "Reconocimiento a los mejores trabajos"],
-   ["16:00", "Clausura y fotografía oficial", "Cierre institucional del IV Congreso"]],
+  ["12:00", "Premiación de investigaciones", "Reconocimiento a los mejores trabajos"],
+  ["16:00", "Clausura y fotografía oficial", "Cierre institucional del IV Congreso"]],
 ];
 
 const themes: [string, string, string, React.ReactNode, string][] = [
@@ -252,7 +254,7 @@ export default function Home() {
       <section className="section" id="ponentes" style={{ backgroundColor: '#F0F0F0', padding: '60px clamp(20px, 5vw, 80px)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '32px', color: '#B38600', fontWeight: 400, marginBottom: '50px' }}>Ponentes Magistrales</h2>
-          
+
           <div className="speakers-grid">
             {speakers.map((speaker, idx) => (
               <Link href={`/ponentes/${speaker.slug}`} className="speaker-card" key={`${speaker.name}-${idx}`}>
@@ -273,7 +275,7 @@ export default function Home() {
           <h2 style={{ fontSize: '36px', color: '#B38600', fontWeight: 400, marginBottom: '60px' }}>Aspectos Destacados</h2>
 
           <div className="highlights-list">
-            
+
             <div className="highlight-row">
               <div className="highlight-left">
                 <h3>Programa Integral</h3>
@@ -328,7 +330,7 @@ export default function Home() {
         {/* Left Side: Message */}
         <div style={{ flex: '1 1 60%', backgroundColor: '#EBEBEB', padding: '80px clamp(30px, 8vw, 100px)', color: '#444', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <h2 style={{ fontSize: '38px', color: '#B38600', fontWeight: 400, marginBottom: '40px' }}>Mensaje de Presidencia</h2>
-          
+
           <div style={{ fontSize: '17px', lineHeight: '1.8', color: '#333' }}>
             <p style={{ marginBottom: '25px', color: '#B38600' }}>Estimados colegas y estudiantes,</p>
             <p style={{ marginBottom: '25px' }}>
@@ -340,14 +342,14 @@ export default function Home() {
             <p style={{ marginBottom: '40px' }}>
               Este evento es más que una simple conferencia académica; es una celebración de nuestra pasión compartida por el descubrimiento y nuestro compromiso de mejorar la educación a través de la ciencia. ¡Espero darles la bienvenida a cada uno de ustedes para conectar, colaborar y forjar juntos el futuro de la investigación!
             </p>
-            
+
             <p style={{ marginBottom: '0', color: '#555' }}>Atentamente,</p>
             <p style={{ fontWeight: 'bold', color: '#B38600', marginBottom: '0', fontSize: '18px' }}>Dr. Efraín Humberto Yupanqui Pino</p>
             <p style={{ marginBottom: '0', color: '#555' }}>Decano</p>
             <p style={{ marginBottom: '0', color: '#555' }}>Facultad de Ciencias de la Educación - UNAP</p>
           </div>
         </div>
-        
+
         {/* Right Side: Portrait */}
         <div style={{ flex: '1 1 40%', backgroundColor: '#D6AE47', padding: '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '400px' }}>
           <div style={{ width: '250px', height: '250px', borderRadius: '50%', position: 'relative', overflow: 'hidden', border: '5px solid rgba(255,255,255,0.2)', marginBottom: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
@@ -383,7 +385,7 @@ export default function Home() {
               </div>
             </div>
           </article>
-          
+
           <div className="org-cards-stack">
             {/* Card 2: UNAP Logo */}
             <article className="org-card-simple org-card-unap">
@@ -427,13 +429,13 @@ export default function Home() {
           <h2 style={{ fontSize: '42px', color: '#0F2756', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.05em', marginBottom: '40px', textTransform: 'uppercase', textAlign: 'left' }}>
             PROGRAMA
           </h2>
-          
+
           <div style={{ backgroundColor: '#FFF', padding: '0' }}>
             {/* TABS */}
             <div style={{ display: 'flex', borderBottom: '1px solid #EAEAEA', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               {schedule.map(([dayStr], i) => {
                 const parts = dayStr.toString().split(" · ");
-                const dayLabel = parts[0]; 
+                const dayLabel = parts[0];
                 const dateLabel = parts[1];
                 return (
                   <button
@@ -473,7 +475,7 @@ export default function Home() {
                     <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                       <span style={{ color: '#444', fontSize: '18px', marginBottom: '10px' }}>{title}</span>
                       <span style={{ color: '#B38600', fontSize: '15px', fontWeight: 'bold', lineHeight: '1.5', marginBottom: '15px', textTransform: 'uppercase' }}>{detail}</span>
-                      <button 
+                      <button
                         onClick={() => setModal({ kind: "registration" })}
                         style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#666', textDecoration: 'underline', padding: 0, cursor: 'pointer', fontSize: '14px' }}
                       >
@@ -530,9 +532,9 @@ export default function Home() {
         <h2 style={{ fontSize: '38px', color: '#0F2756', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.05em', marginBottom: '50px', textTransform: 'uppercase' }}>
           TARIFAS DE INSCRIPCIÓN
         </h2>
-        
+
         <div className="registration-cards-grid">
-          
+
           {costs.map(([title, price, features, badge], idx) => {
             const cardImages = [
               "/enseedu.jpg",
@@ -548,13 +550,13 @@ export default function Home() {
                 <h3 style={{ color: '#B38600', fontSize: '18px', fontWeight: 'bold', minHeight: '50px', marginBottom: '10px', textTransform: 'uppercase' }}>
                   {title}
                 </h3>
-                
+
                 <p style={{ color: '#D4AF37', fontWeight: 'bold', fontSize: '14px', marginBottom: '20px', minHeight: '20px' }}>{badge}</p>
 
                 <div style={{ flex: 1, position: 'relative', minHeight: '180px', marginBottom: '25px' }}>
                   <Image src={img} alt={title as string} fill style={{ objectFit: 'cover' }} />
                 </div>
-                
+
                 <div style={{ marginBottom: '15px', textAlign: 'left', minHeight: '100px' }}>
                   {features.map((feat, i) => (
                     <p key={i} style={{ color: '#444', fontSize: '14px', marginBottom: '8px', lineHeight: '1.4', display: 'flex', gap: '8px' }}>
@@ -564,7 +566,7 @@ export default function Home() {
                 </div>
 
                 <p style={{ color: '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 20px' }}>{price}</p>
-                <button 
+                <button
                   onClick={() => setModal({ kind: "registration", category: title as string })}
                   style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
                   onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}
@@ -641,7 +643,7 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    
+
     const formElement = event.currentTarget;
     const formData = new FormData(formElement);
     formData.append("kind", modal.kind);
@@ -671,8 +673,21 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
           <div className="success">
             <span><Check size={28} /></span>
             <h2>Solicitud recibida</h2>
-            <p>La Secretaría revisará tus datos y te contactará pronto en el correo indicado.</p>
-            <button className="btn btn-primary btn-full" onClick={onClose}>Cerrar</button>
+            <p style={{ color: '#0F2756', fontWeight: 'bold' }}>
+              Importante: Ya se creó tu cuenta. Podrás ingresar usando tu correo electrónico y como contraseña tu número de documento.
+            </p>
+            <p>La Secretaría revisará tu pago y te contactará pronto.</p>
+
+            <a
+              href="https://wa.me/51926465929?text=Hola,%20acabo%20de%20inscribirme%20al%20congreso.%20Este%20es%20mi%20comprobante..."
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-primary btn-full"
+              style={{ background: '#25D366', color: '#FFF', marginBottom: '10px' }}
+            >
+              Contactar por WhatsApp
+            </a>
+            <button className="btn btn-outline btn-full" onClick={onClose}>Cerrar</button>
           </div>
         ) : (
           <>
@@ -716,6 +731,7 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
                   <option>Virtual</option>
                 </select>
               </label>
+
               {isPaper && (
                 <>
                   <label>Resumen breve<textarea name="message" rows={3} /></label>
@@ -725,6 +741,54 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
                   </label>
                 </>
               )}
+
+              <div style={{ background: 'linear-gradient(135deg, #F8F9FA 0%, #F0F3F8 100%)', padding: '24px', borderRadius: '12px', border: '1.5px dashed #0F275640', margin: '20px 0', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: '#B38600' }} />
+                
+                <h4 style={{ color: '#0F2756', marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CreditCard size={18} color="#B38600" />
+                  Instrucciones de Pago
+                </h4>
+                
+                <div style={{ background: '#FFF', padding: '12px 16px', borderRadius: '8px', border: '1px solid #EAEAEA', marginBottom: '16px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <p style={{ fontSize: '13px', color: '#444', margin: 0, lineHeight: '1.5' }}>
+                    Realiza el pago correspondiente a tu categoría por Yape o Plin al número:
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
+                    <span style={{ background: '#742384', color: '#FFF', fontWeight: 800, fontSize: '18px', padding: '4px 12px', borderRadius: '6px', letterSpacing: '1px' }}>
+                      926 465 929
+                    </span>
+                    <span style={{ fontSize: '12px', color: '#666', fontWeight: 500 }}>
+                      a nombre de<br/>Junior Huaraya
+                    </span>
+                  </div>
+                </div>
+
+                <label style={{ display: 'block', cursor: 'pointer' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0F2756', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+                    <Upload size={14} /> Sube tu comprobante (Foto o PDF)
+                  </span>
+                  <div style={{ position: 'relative' }}>
+                    <input 
+                      type="file" 
+                      name="receipt" 
+                      accept="image/*,.pdf" 
+                      required 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        background: '#FFF', 
+                        border: '1px solid #CCC', 
+                        borderRadius: '6px',
+                        color: '#444',
+                        fontSize: '13px',
+                        cursor: 'pointer'
+                      }} 
+                    />
+                  </div>
+                </label>
+              </div>
+
               <button className="btn btn-primary btn-full" type="submit">
                 <Send size={16} /> Enviar solicitud
               </button>
