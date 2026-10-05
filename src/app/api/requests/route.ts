@@ -1,8 +1,14 @@
 import { createRequest, listRequests, updateRequestStatus, type RequestKind, type RequestStatus } from "@/lib/requests";
 import { supabase } from "@/lib/supabase";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS,
+  },
+});
 
 export const runtime = "nodejs";
 
@@ -146,30 +152,41 @@ export async function POST(request: Request) {
     // Seguimos de todas formas porque la request ya se guardó
   }
 
-  // Enviar correo con Resend
-  if (process.env.RESEND_API_KEY) {
+  // Enviar correo con Nodemailer (Gmail)
+  if (process.env.GMAIL_USER && process.env.GMAIL_PASS) {
     try {
-      await resend.emails.send({
-        from: "IV Congreso <onboarding@resend.dev>", // Cambia a tu dominio verificado luego
+      await transporter.sendMail({
+        from: `"IV Congreso" <${process.env.GMAIL_USER}>`,
         to: email,
-        subject: "Confirmación de registro y accesos - IV Congreso",
+        subject: "Confirmación de registro, accesos y pago - IV Congreso",
         html: `
           <div style="font-family: sans-serif; color: #333;">
             <h2 style="color: #0F2756;">¡Hola, ${name}!</h2>
-            <p>Hemos recibido tu solicitud para el <strong>IV Congreso Internacional</strong>.</p>
-            <p>Se ha generado tu cuenta para acceder a la plataforma del congreso:</p>
+            <p>Hemos recibido tu solicitud de inscripción para el <strong>IV Congreso Internacional</strong>.</p>
+            
+            <h3 style="color: #B38600;">Instrucciones de Pago</h3>
+            <p>Para completar tu registro, por favor realiza el pago correspondiente a tu categoría mediante transferencia o depósito bancario a la siguiente cuenta:</p>
+            <div style="background: #F8F9FA; padding: 15px; border-radius: 8px; border: 1px solid #EAEAEA;">
+              <p><strong>Banco:</strong> Banco de la Nación (Ejemplo)</p>
+              <p><strong>Número de Cuenta:</strong> 0000-0000-0000-0000</p>
+              <p><strong>Titular:</strong> IV Congreso EPEP</p>
+              <p style="margin-top: 10px; font-size: 14px;"><em>Importante: Una vez realizado el pago, responde a este correo adjuntando tu comprobante (foto o PDF) indicando tu nombre completo y DNI.</em></p>
+            </div>
+
+            <h3 style="color: #0F2756; margin-top: 20px;">Accesos a la plataforma</h3>
+            <p>Se ha generado tu cuenta para acceder a la plataforma del congreso (los accesos se activarán al confirmar tu pago):</p>
             <ul>
               <li><strong>Usuario:</strong> ${email}</li>
               <li><strong>Contraseña:</strong> ${password}</li>
             </ul>
-            <p>Te avisaremos cuando tu solicitud cambie de estado.</p>
+            <p>Te avisaremos en cuanto validemos tu pago y tu solicitud cambie a "Confirmado".</p>
             <br/>
             <p>Atentamente,<br/>Comité Organizador</p>
           </div>
         `
       });
     } catch (err) {
-      console.error("Error enviando email con Resend:", err);
+      console.error("Error enviando email con Nodemailer:", err);
     }
   }
 
