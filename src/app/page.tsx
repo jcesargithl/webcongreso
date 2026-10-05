@@ -747,46 +747,14 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
                 
                 <h4 style={{ color: '#0F2756', marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <CreditCard size={18} color="#B38600" />
-                  Instrucciones de Pago
+                  Información de Pago
                 </h4>
                 
                 <div style={{ background: '#FFF', padding: '12px 16px', borderRadius: '8px', border: '1px solid #EAEAEA', marginBottom: '16px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                   <p style={{ fontSize: '13px', color: '#444', margin: 0, lineHeight: '1.5' }}>
-                    Realiza el pago correspondiente a tu categoría por Yape o Plin al número:
+                    Las instrucciones para realizar el pago se enviarán próximamente a tu correo electrónico. Por ahora, puedes enviar tu solicitud de registro.
                   </p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
-                    <span style={{ background: '#742384', color: '#FFF', fontWeight: 800, fontSize: '18px', padding: '4px 12px', borderRadius: '6px', letterSpacing: '1px' }}>
-                      926 465 929
-                    </span>
-                    <span style={{ fontSize: '12px', color: '#666', fontWeight: 500 }}>
-                      a nombre de<br/>Junior Huaraya
-                    </span>
-                  </div>
                 </div>
-
-                <label style={{ display: 'block', cursor: 'pointer' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0F2756', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
-                    <Upload size={14} /> Sube tu comprobante (Foto o PDF)
-                  </span>
-                  <div style={{ position: 'relative' }}>
-                    <input 
-                      type="file" 
-                      name="receipt" 
-                      accept="image/*,.pdf" 
-                      required 
-                      style={{ 
-                        width: '100%', 
-                        padding: '12px', 
-                        background: '#FFF', 
-                        border: '1px solid #CCC', 
-                        borderRadius: '6px',
-                        color: '#444',
-                        fontSize: '13px',
-                        cursor: 'pointer'
-                      }} 
-                    />
-                  </div>
-                </label>
               </div>
 
               <button className="btn btn-primary btn-full" type="submit">

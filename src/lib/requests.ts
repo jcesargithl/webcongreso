@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 
 export type RequestKind = "registration" | "paper";
-export type RequestStatus = "pending" | "reviewing" | "approved" | "rejected" | "yape" | "cash";
+export type RequestStatus = "pending" | "reviewing" | "approved" | "rejected" | "cash";
 
 export type CongressRequest = {
   id: string;

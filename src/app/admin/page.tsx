@@ -7,13 +7,12 @@ import type { CongressRequest, RequestStatus } from "@/lib/requests";
 import { supabaseClient } from "@/lib/supabase-client";
 import type { Session } from "@supabase/supabase-js";
 
-const statuses: RequestStatus[] = ["pending", "reviewing", "yape", "cash", "approved", "rejected"];
+const statuses: RequestStatus[] = ["pending", "reviewing", "cash", "approved", "rejected"];
 
 function statusLabel(status: RequestStatus) {
   return { 
     pending: "Pendiente de pago", 
     reviewing: "En revisión", 
-    yape: "Pagó (Yape/Plin)", 
     cash: "Pagó (Efectivo)",
     approved: "Confirmado (General)", 
     rejected: "Rechazado" 

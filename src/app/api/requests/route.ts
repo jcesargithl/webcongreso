@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 export const runtime = "nodejs";
 
 const allowedKinds: RequestKind[] = ["registration", "paper"];
-const allowedStatuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected", "yape", "cash"];
+const allowedStatuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected", "cash"];
 
 async function verifyAdmin(request: Request) {
   const authHeader = request.headers.get("authorization");
