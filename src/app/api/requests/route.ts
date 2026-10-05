@@ -138,19 +138,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Error al crear la solicitud." }, { status: 500 });
   }
 
-  // Generar usuario en Supabase Auth
-  const password = doc_number; // Contraseña es el documento
-  const { error: authError } = await supabase.auth.admin.createUser({
-    email: email,
-    password: password,
-    email_confirm: true,
-    user_metadata: { name, doc_type, doc_number }
-  });
 
-  if (authError) {
-    console.error("Error al crear usuario en Auth:", authError);
-    // Seguimos de todas formas porque la request ya se guardó
-  }
 
   // Enviar correo con Nodemailer (Gmail)
   if (process.env.GMAIL_USER && process.env.GMAIL_PASS) {
@@ -173,13 +161,7 @@ export async function POST(request: Request) {
               <p style="margin-top: 10px; font-size: 14px;"><em>Importante: Una vez realizado el pago, responde a este correo adjuntando tu comprobante (foto o PDF) indicando tu nombre completo y DNI.</em></p>
             </div>
 
-            <h3 style="color: #0F2756; margin-top: 20px;">Accesos a la plataforma</h3>
-            <p>Se ha generado tu cuenta para acceder a la plataforma del congreso (los accesos se activarán al confirmar tu pago):</p>
-            <ul>
-              <li><strong>Usuario:</strong> ${email}</li>
-              <li><strong>Contraseña:</strong> ${password}</li>
-            </ul>
-            <p>Te avisaremos en cuanto validemos tu pago y tu solicitud cambie a "Confirmado".</p>
+            <p style="margin-top: 20px;">Te avisaremos en cuanto validemos tu pago y tu solicitud cambie a "Confirmado".</p>
             <br/>
             <p>Atentamente,<br/>Comité Organizador</p>
           </div>

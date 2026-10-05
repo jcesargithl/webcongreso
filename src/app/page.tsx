@@ -674,9 +674,12 @@ function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onCl
             <span><Check size={28} /></span>
             <h2>Solicitud recibida</h2>
             <p style={{ color: '#0F2756', fontWeight: 'bold' }}>
-              Importante: Ya se creó tu cuenta. Podrás ingresar usando tu correo electrónico y como contraseña tu número de documento.
+              Te hemos enviado un correo con las instrucciones para realizar el pago.
             </p>
-            <p>La Secretaría revisará tu pago y te contactará pronto.</p>
+            <p style={{ color: '#BA1A1A', fontSize: '14px', fontWeight: 'bold' }}>
+              Por favor, revisa tu bandeja de entrada y tu carpeta de SPAM o Correo no deseado.
+            </p>
+            <p>La Secretaría revisará tu solicitud y te contactará pronto.</p>
 
             <a
               href="https://wa.me/51926465929?text=Hola,%20acabo%20de%20inscribirme%20al%20congreso.%20Este%20es%20mi%20comprobante..."
