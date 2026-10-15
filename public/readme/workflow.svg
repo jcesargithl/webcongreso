@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 280" width="100%" height="100%" style="border-radius: 14px; overflow: hidden;">
+  <defs>
+    <linearGradient id="flowBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B132B" />
+      <stop offset="100%" stop-color="#1C2541" />
+    </linearGradient>
+    <linearGradient id="stepGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#FDE047" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="280" fill="url(#flowBg)" />
+  <rect x="2" y="2" width="996" height="276" rx="12" fill="none" stroke="#D4AF37" stroke-width="1" stroke-opacity="0.25" />
+
+  <!-- Section Header -->
+  <text x="40" y="42" fill="#FDE047" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" letter-spacing="2">FLUJO DE ATENCIÓN Y REGISTRO</text>
+  <text x="40" y="68" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800">Ciclo Completo: De la Inscripción a la Ponencia</text>
+
+  <!-- Connecting Lines Behind Cards -->
+  <line x1="140" y1="165" x2="860" y2="165" stroke="#334155" stroke-width="3" stroke-dasharray="6 6" />
+
+  <!-- Step 1 -->
+  <g transform="translate(40, 95)" filter="url(#shadow)">
+    <rect width="168" height="150" rx="10" fill="#0F172A" stroke="#38BDF8" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#38BDF8" fill-opacity="0.2" />
+    <text x="28" y="33" fill="#38BDF8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="800" text-anchor="middle">01</text>
+    <text x="52" y="32" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Elección Rol</text>
+    <text x="16" y="65" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" line-height="1.4">
+      <tspan x="16" dy="0">6 modalidades fijas</tspan>
+      <tspan x="16" dy="16">(Asistente / Ponente)</tspan>
+      <tspan x="16" dy="16">Tarifas validadas</tspan>
+      <tspan x="16" dy="16">en servidor.</tspan>
+    </text>
+    <rect x="16" y="118" width="80" height="18" rx="4" fill="#1E293B" />
+    <text x="56" y="131" fill="#38BDF8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" text-anchor="middle">Catálogo Seguro</text>
+  </g>
+
+  <!-- Step 2 -->
+  <g transform="translate(232, 95)" filter="url(#shadow)">
+    <rect width="168" height="150" rx="10" fill="#0F172A" stroke="#F59E0B" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#F59E0B" fill-opacity="0.2" />
+    <text x="28" y="33" fill="#F59E0B" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="800" text-anchor="middle">02</text>
+    <text x="52" y="32" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Págalo.pe</text>
+    <text x="16" y="65" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">
+      <tspan x="16" dy="0">Cód. 091 Banco Nación</tspan>
+      <tspan x="16" dy="16">Secuencia 6 dígitos</tspan>
+      <tspan x="16" dy="16">+ Voucher PDF &lt; 2MB</tspan>
+      <tspan x="16" dy="16">(Gratis para EPEP)</tspan>
+    </text>
+    <rect x="16" y="118" width="90" height="18" rx="4" fill="#1E293B" />
+    <text x="61" y="131" fill="#F59E0B" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" text-anchor="middle">Voucher Seguro</text>
+  </g>
+
+  <!-- Step 3 -->
+  <g transform="translate(424, 95)" filter="url(#shadow)">
+    <rect width="168" height="150" rx="10" fill="#0F172A" stroke="#D4AF37" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#D4AF37" fill-opacity="0.2" />
+    <text x="28" y="33" fill="#FDE047" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="800" text-anchor="middle">03</text>
+    <text x="52" y="32" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Panel /admin</text>
+    <text x="16" y="65" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">
+      <tspan x="16" dy="0">Auditoría institucional</tspan>
+      <tspan x="16" dy="16">Revisión de voucher</tspan>
+      <tspan x="16" dy="16">vía Signed URLs</tspan>
+      <tspan x="16" dy="16">Aprobación manual</tspan>
+    </text>
+    <rect x="16" y="118" width="80" height="18" rx="4" fill="#1E293B" />
+    <text x="56" y="131" fill="#FDE047" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" text-anchor="middle">Auth + RLS</text>
+  </g>
+
+  <!-- Step 4 -->
+  <g transform="translate(616, 95)" filter="url(#shadow)">
+    <rect width="168" height="150" rx="10" fill="#0F172A" stroke="#A855F7" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#A855F7" fill-opacity="0.2" />
+    <text x="28" y="33" fill="#C084FC" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="800" text-anchor="middle">04</text>
+    <text x="52" y="32" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Envío Ponencia</text>
+    <text x="16" y="65" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">
+      <tspan x="16" dy="0">Token firmado 15min</tspan>
+      <tspan x="16" dy="16">Solo ponentes aptos</tspan>
+      <tspan x="16" dy="16">PDF hasta 10 MB</tspan>
+      <tspan x="16" dy="16">Revisión científica</tspan>
+    </text>
+    <rect x="16" y="118" width="90" height="18" rx="4" fill="#1E293B" />
+    <text x="61" y="131" fill="#C084FC" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" text-anchor="middle">HMAC Seguro</text>
+  </g>
+
+  <!-- Step 5 -->
+  <g transform="translate(808, 95)" filter="url(#shadow)">
+    <rect width="152" height="150" rx="10" fill="#0F172A" stroke="#10B981" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#10B981" fill-opacity="0.2" />
+    <text x="28" y="33" fill="#34D399" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="800" text-anchor="middle">05</text>
+    <text x="52" y="32" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Notificación</text>
+    <text x="16" y="65" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">
+      <tspan x="16" dy="0">Email instantáneo</tspan>
+      <tspan x="16" dy="16">Plantilla dorada/azul</tspan>
+      <tspan x="16" dy="16">Estado de pago y</tspan>
+      <tspan x="16" dy="16">revisión académica</tspan>
+    </text>
+    <rect x="16" y="118" width="92" height="18" rx="4" fill="#1E293B" />
+    <text x="62" y="131" fill="#34D399" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" text-anchor="middle">SMTP Nodemailer</text>
+  </g>
+</svg>

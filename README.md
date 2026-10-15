@@ -1,94 +1,220 @@
-# IV Congreso Internacional de Investigación Científica EPEP
+<div align="center">
 
-Aplicación Next.js 16.3.6 con React 19, TypeScript, Tailwind CSS 4 y Supabase. Incluye inscripciones, comprobantes de Págalo.pe, revisión administrativa y recepción de investigaciones.
+<img src="./public/readme/banner.svg" alt="IV Congreso Internacional de Investigación e Innovación" width="100%" />
 
-## Preparación de Supabase
+<br/>
+<br/>
 
-Antes de usar el nuevo flujo, ejecuta en el SQL Editor del proyecto:
+[![Next.js](https://img.shields.io/badge/Next.js-16.3.6-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![License](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)](https://www.coninci2026.com/)
 
-- supabase/migrations/202610140001_registration_payments_and_papers.sql
+<p align="center">
+  <b>Plataforma web oficial para la gestión integral de inscripciones académicas, validación de comprobantes de pago de Págalo.pe, recepción de ponencias científicas y panel administrativo de control.</b>
+</p>
 
-La migración es transaccional, conserva los registros existentes, agrega campos de pago y vínculos entre ponencias e inscripciones, e instala las reglas de validación. Crea el bucket privado congress-files; los PDFs se muestran mediante enlaces firmados que vencen en una hora. La base de datos y este bucket se utilizan desde la API del servidor, no directamente desde el navegador.
+[🌐 Sitio Web Oficial](https://www.coninci2026.com/) • [📋 Ver Tarifas](#-tarifas-y-modalidades) • [🏛️ Arquitectura](#-arquitectura-del-sistema) • [🚀 Puesta en Marcha](#-instalación-y-configuración) • [🔐 Panel Admin](#-panel-de-administración-admin)
 
-Las categorías anteriores que identifican inequívocamente una tarifa se migran. Registros con “Estudiante EPEP” o “Público General” sin rol se conservan sin categoría identificada: un administrador debe clasificarlos en el panel. No se asume que una inscripción de estudiante sea gratuita ni de ponente. Los pagos antiguos aprobados se conservan; no se inventan números de comprobante ni datos de auditoría.
+</div>
 
-Si falla cualquier instrucción, la transacción se revierte. Revisa el error del SQL Editor antes de habilitar el nuevo formulario. La aplicación no aplica migraciones automáticamente.
+---
 
-## Configuración local
+## 📌 Acerca del Proyecto
 
-Variables de .env.local:
+El **IV Congreso Internacional de Investigación Científica e Innovación** es el evento insignia organizado por la **Facultad de Ciencias de la Educación (FCEDUC)** y la **Escuela Profesional de Educación Primaria (EPEP)** de la **Universidad Nacional del Altiplano de Puno (UNA Puno)**.
 
-- NEXT_PUBLIC_SUPABASE_URL
-- NEXT_PUBLIC_SUPABASE_ANON_KEY
-- SUPABASE_SERVICE_ROLE_KEY (solo servidor)
-- ADMIN_EMAILS (correos autorizados, separados por coma)
-- GMAIL_USER y GMAIL_PASS (cuenta de Gmail y contraseña de aplicación; necesarias para enviar notificaciones, también en el alojamiento de producción)
-- PAPER_VERIFICATION_SECRET (opcional; usa una clave larga y aleatoria, solo servidor; de no existir se usa la clave de servicio para firmar la verificación)
+Esta plataforma fue diseñada para resolver de manera robusta y automatizada el flujo académico e institucional del congreso:
+- **Inscripciones segmentadas** para estudiantes, docentes y profesionales (locales y externos).
+- **Procesamiento de pagos del Banco de la Nación / Págalo.pe** (código de tasa educativa 091).
+- **Recepción segura de artículos de investigación** con verificación criptográfica (HMAC).
+- **Panel de auditoría y gestión administrativa** con autenticación Supabase y enlaces privados firmados.
+- **Sistema de notificaciones automáticas por correo electrónico** con plantillas institucionales HTML/CSS y soporte para reintentos.
 
-No publiques claves ni este archivo.
+---
 
-## Inscripción y pagos
+## 🔄 Flujo del Sistema
 
-Las seis tarjetas tienen identificadores únicos. La API determina categoría, modalidad y tarifa desde el catálogo, sin confiar en el precio enviado por el navegador.
+<div align="center">
+  <img src="./public/readme/workflow.svg" alt="Flujo del Sistema" width="100%" />
+</div>
 
-| Categoría | Tarifa | Cargo institucional | Total |
-| --- | --- | --- | --- |
-| Estudiante EPEP asistente | S/ 20 | S/ 1 | S/ 21 |
-| Estudiante externo | S/ 30 | S/ 1 | S/ 31 |
-| Ponente externo | S/ 100 | S/ 1 | S/ 101 |
-| Asistente externo | S/ 70 | S/ 1 | S/ 71 |
-| Docente EPEP ponente | Gratis | S/ 0 | S/ 0 |
-| Estudiante EPEP ponente | Gratis | S/ 0 | S/ 0 |
+El ciclo operativo garantiza trazabilidad y rigor institucional en 5 fases:
 
-El S/ 1 es el cargo institucional indicado por la organización, no una comisión adicional del Banco de la Nación. Instrucciones del evento: Págalo.pe, código 091, Tasas educativas UNA Puno, OTROS SERV. EDU. EDU. PRIMARIA.
+1. **Elección de Categoría y Modalidad**: El participante escoge su rol (Asistente o Ponente) según su perfil (Estudiante EPEP, Docente EPEP, Estudiante Externo o Público General).
+2. **Registro y Voucher Págalo.pe**: Para modalidades con costo, se ingresa la secuencia de 6 dígitos del comprobante del Banco de la Nación y se sube el comprobante en formato PDF (límite 2 MB). Las modalidades internas de la EPEP quedan exoneradas según normativa.
+3. **Auditoría Administrativa**: El equipo organizador revisa la autenticidad de los comprobantes desde el panel privado `/admin` mediante URLs firmadas con caducidad temporal (1 hora).
+4. **Envío de Ponencias Científicas**: Una vez verificado y aprobado el pago (o condición interna), el ponente accede a la plataforma de recepción mediante una firma criptográfica válida por 15 minutos, adjuntando su investigación en PDF (hasta 10 MB).
+5. **Notificación Transaccional**: El usuario recibe confirmaciones detalladas por correo en cada etapa (recepción, aprobación de pago, estado de revisión académica y observaciones).
 
-Cada inscripción de pago exige confirmar Págalo.pe, documento del comprobante, secuencia de seis dígitos (conserva ceros), monto total, fecha y voucher PDF menor de 2 MB. La recepción del comprobante deja el pago pendiente; solo un administrador puede aprobarlo. Los ponentes internos no deben adjuntar comprobantes.
+---
 
-No se conecta a una API de verificación bancaria. La autenticidad de cada comprobante la revisa el administrador contra los registros institucionales.
+## 🏛️ Arquitectura del Sistema
 
-## Recepción de investigaciones
+<div align="center">
+  <img src="./public/readme/architecture.svg" alt="Arquitectura de la Plataforma" width="100%" />
+</div>
 
-Enviar investigación comienza por verificar el correo, tipo y número de documento de una inscripción. Solo son aptos ponentes externos con pago aprobado, docentes EPEP ponentes y estudiantes EPEP ponentes. Las inscripciones rechazadas o de asistentes no habilitan el envío.
+### Componentes Clave:
 
-Una verificación válida genera un permiso firmado de 15 minutos para esa inscripción. La API vuelve a consultar sus condiciones al recibir el PDF, y la base de datos impide crear una ponencia sin inscripción apta. La verificación es de la inscripción registrada; no sustituye la comprobación institucional de pertenencia a la EPEP.
+| Módulo | Tecnologías | Responsabilidad |
+|---|---|---|
+| **Frontend** | Next.js 16.3 (Turbopack), React 19, Tailwind CSS 4 | Experiencia de usuario ultra rápida, slider de autoridades (Decano de FCEDUC), modales accesibles y diseño responsivo. |
+| **API Backend** | Next.js Route Handlers (`/api/requests`, `/api/registrations/verify`) | Validación estricta del catálogo de precios en servidor, firma y validación de tokens de ponencia, upload streaming a Supabase Storage. |
+| **Persistencia** | PostgreSQL en Supabase | Base de datos relacional con RLS (Row Level Security), esquema con integridad referencial y migraciones transaccionales. |
+| **Almacenamiento** | Supabase Storage (`congress-files`) | Bucket privado para vouchers y ponencias. Acceso exclusivo mediante enlaces firmados (`createSignedUrl`) con vencimiento. |
+| **Correos** | Nodemailer + Google Workspace / Gmail SMTP | Plantilla HTML institucional (Navy `#0F2756` y Gold `#D4AF37`), con imágenes adjuntas, texto plano y detección de errores SMTP. |
 
-Las ponencias se vinculan a la inscripción original, heredan sus datos, admiten PDF de hasta 10 MB y quedan en revisión académica. Aprobar el pago no acepta automáticamente la ponencia.
+---
 
-## Administración
+## 💳 Tarifas y Modalidades
 
-/admin requiere Supabase Auth y un correo incluido en ADMIN_EMAILS. Muestra categoría, modalidad, documento, institución, tarifa, cargo institucional, secuencia, monto, fecha, comprobante, estado y auditoría del pago, observaciones e investigación vinculada.
+La API del servidor **nunca confía en montos enviados desde el navegador**; la tarifa se calcula exclusivamente a partir del catálogo interno autorizado:
 
-Aprobar pago confirma la inscripción y habilita al ponente externo. El estado académico de una ponencia se gestiona por separado. Los errores de red o de base de datos se muestran en el panel.
+| Categoría | Modalidad | Tarifa Base | Cargo Institucional | Total a Pagar | Comprobante |
+|---|---|:---:|:---:|:---:|:---:|
+| **Estudiante EPEP** | Asistente | S/ 20.00 | S/ 1.00 | **S/ 21.00** | Obligatorio (Págalo.pe) |
+| **Estudiante Externo** | Asistente / Ponente | S/ 30.00 | S/ 1.00 | **S/ 31.00** | Obligatorio (Págalo.pe) |
+| **Asistente Externo** | Asistente General | S/ 70.00 | S/ 1.00 | **S/ 71.00** | Obligatorio (Págalo.pe) |
+| **Ponente Externo** | Ponente Magistral / Mesa | S/ 100.00 | S/ 1.00 | **S/ 101.00** | Obligatorio (Págalo.pe) |
+| **Docente EPEP** | Ponente | Gratis | S/ 0.00 | **Gratis** | Exonerado |
+| **Estudiante EPEP** | Ponente | Gratis | S/ 0.00 | **Gratis** | Exonerado |
 
-## Notificaciones por correo
+> [!NOTE]
+> El cargo institucional de **S/ 1.00** corresponde al concepto estipulado por la organización del evento bajo el **Código 091** (*Tasas educativas UNA Puno - OTROS SERV. EDU. EDU. PRIMARIA* en Págalo.pe o agencias del Banco de la Nación).
 
-Los correos usan una plantilla azul y dorada con logotipos PNG integrados, texto alternativo, versión de texto plano y enlaces a https://www.coninci2026.com/. Las respuestas se dirigen a subdireccion.investigacion.epep@unap.edu.pe.
+---
 
-Se envían al recibir una inscripción o investigación, al cambiar el estado académico de una ponencia (incluidas aprobación y rechazo), al cambiar el estado de una inscripción y al revisar su pago. Una inscripción gratuita se confirma sin solicitar comprobante. La aprobación de un pago nunca se presenta como aprobación de la ponencia.
+## ⚙️ Preparación de Base de Datos (Supabase)
 
-El panel indica si el servidor de correo aceptó el envío. Si falla, el cambio permanece guardado y «Reenviar correo» permite volver a notificar el estado actual sin cambiarlo. También sirve para solicitudes anteriores; no se envían correos retroactivos automáticamente. Guardar otra vez el mismo estado no dispara otro correo; cambiar las observaciones del pago sí notifica al interesado. No hay cola de reintentos automáticos ni historial persistente de entregas. La aceptación SMTP no garantiza la llegada a la bandeja principal.
+Antes de habilitar el formulario de registros, se debe aplicar la migración en el **SQL Editor** del proyecto Supabase:
 
-Configura GMAIL_USER y GMAIL_PASS en producción y vuelve a desplegar. Usa una contraseña de aplicación de Google, no la contraseña habitual de la cuenta. Los errores del servidor incluyen el código SMTP y el identificador de solicitud sin mostrar credenciales. Los logotipos de public se incluyen explícitamente en el trazado de archivos de /api/requests para los despliegues de Next.js.
+```sql
+-- Ejecutar en Supabase SQL Editor:
+supabase/migrations/202610140001_registration_payments_and_papers.sql
+```
 
-## Desarrollo y validación
+### Características de la Migración:
+- **Transaccional (`BEGIN ... COMMIT`)**: Si una sola instrucción falla, la base de datos se revierte intacta.
+- **Preservación histórica**: Conserva inscripciones anteriores y clasifica pagos legítimos existentes.
+- **Bucket Privado**: Configura automáticamente el bucket `congress-files` con políticas RLS para impedir acceso público no autorizado.
+- **Integridad Referencial**: Impide que se registren ponencias sin una inscripción apta y confirmada.
 
+---
+
+## 🚀 Instalación y Configuración
+
+### 1. Clonar el repositorio e instalar dependencias
+
+```bash
+git clone https://github.com/jcesargithl/webcongreso.git
+cd congreso-app
 npm install
+```
+
+### 2. Configurar variables de entorno
+
+Crea el archivo `.env.local` en la raíz del proyecto:
+
+```env
+# Conexión Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key_privada
+
+# Seguridad del Panel Administrativo
+ADMIN_EMAILS=administrador1@unap.edu.pe,administrador2@unap.edu.pe
+
+# Servicio de Correo Transaccional (Nodemailer / Gmail)
+GMAIL_USER=tu_cuenta@gmail.com
+GMAIL_PASS=tu_contraseña_de_aplicacion_google
+
+# Firma Criptográfica para Ponencias (Opcional - genera fallback seguro)
+PAPER_VERIFICATION_SECRET=cadena_secreta_larga_y_aleatoria_para_firmar_tokens
+```
+
+> [!CAUTION]
+> **Nunca** expongas ni subas al control de versiones `SUPABASE_SERVICE_ROLE_KEY`, `GMAIL_PASS` o el archivo `.env.local`.
+
+### 3. Ejecutar en entorno local
+
+```bash
+# Servidor de desarrollo con Turbopack
 npm run dev
-npm run lint
-npm run build
-npm run start
+
+# Ejecutar suite de pruebas
 npm run test
 
-Las pruebas del flujo utilizan datos ficticios y un cliente Supabase simulado. No crean inscripciones reales ni envían correos. La migración debe probarse y aplicarse en el proyecto Supabase configurado.
+# Verificación de TypeScript y Linter
+npm run lint
 
-## Archivos principales
+# Compilación para producción
+npm run build
+npm run start
+```
 
-- src/lib/congress.ts: tarifas, roles, modalidades e instrucciones.
-- src/lib/registration-rules.ts: requisitos de ponentes, importes y PDFs.
-- src/components/request-modal.tsx: inscripción, comprobantes y envío de investigaciones.
-- src/app/api/registrations/verify/route.ts: verificación de inscripción.
-- src/app/api/requests/route.ts: recepción y revisión administrativa.
-- src/app/admin/page.tsx: panel de gestión.
-- supabase/migrations/: cambios de esquema y reglas de la base de datos.
+---
 
-data/requests.json y code.html son artefactos del prototipo anterior; no se usan para guardar solicitudes del flujo actual.
+## 🔐 Panel de Administración (`/admin`)
+
+La ruta `/admin` está protegida mediante **Supabase Auth** y validación de lista blanca con `ADMIN_EMAILS`:
+
+- **Gestión de Comprobantes**: Visualización de vouchers mediante enlaces firmados temporales de 1 hora.
+- **Acciones Rápidas**: Aprobar o rechazar pagos con ingreso de observaciones de auditoría.
+- **Estado de Ponencias**: Revisión independiente del estado académico de las investigaciones adjuntas.
+- **Reenvío de Notificaciones**: Botón de reenvío para disparar correos en caso de problemas temporales de conectividad SMTP.
+- **Filtros Avanzados**: Búsqueda por documento, estado de pago, modalidad y categoría.
+
+---
+
+## 📂 Estructura del Código
+
+```text
+congreso-app/
+├── public/
+│   ├── readme/                  # Diagramas e imágenes SVG de documentación
+│   │   ├── banner.svg
+│   │   ├── workflow.svg
+│   │   └── architecture.svg
+│   └── autoridades/             # Fotografías oficiales de autoridades y ponentes
+├── src/
+│   ├── app/
+│   │   ├── admin/page.tsx       # Panel administrativo de revisión
+│   │   ├── api/
+│   │   │   ├── registrations/
+│   │   │   │   └── verify/      # Endpoint de verificación y emisión de tokens
+│   │   │   └── requests/        # Endpoint transaccional de pagos y ponencias
+│   │   ├── globals.css          # Sistema de diseño con CSS tokens
+│   │   └── page.tsx             # Landing page principal del congreso
+│   ├── components/
+│   │   ├── authority-slider.tsx # Carrusel de mensajes de autoridades
+│   │   └── request-modal.tsx    # Modal de inscripción, pagos y ponencias
+│   └── lib/
+│       ├── authorities.ts       # Mensajes institucionales (Decano, Dirección)
+│       ├── congress.ts          # Tarifas, roles y reglas del evento
+│       ├── email.ts             # Cliente SMTP y lógica de envío de correos
+│       ├── email-template.ts    # Plantilla HTML/CSS institucional
+│       ├── registration-rules.ts# Validaciones de negocio y seguridad
+│       └── supabase-server.ts   # Cliente seguro con Service Role
+├── supabase/
+│   └── migrations/              # Scripts SQL transaccionales
+└── tests/
+    └── registration-flow.test.mjs # Pruebas unitarias de flujo y tarifas
+```
+
+---
+
+## 🏛️ Créditos Institucionales
+
+- **Organiza**: Escuela Profesional de Educación Primaria (EPEP).
+- **Facultad**: Facultad de Ciencias de la Educación (FCEDUC).
+- **Institución**: Universidad Nacional del Altiplano de Puno (UNA Puno).
+- **Contacto**: [subdireccion.investigacion.epep@unap.edu.pe](mailto:subdireccion.investigacion.epep@unap.edu.pe)
+
+---
+
+<div align="center">
+  <p>© 2026 IV Congreso Internacional de Investigación Científica e Innovación. Todos los derechos reservados.</p>
+</div>

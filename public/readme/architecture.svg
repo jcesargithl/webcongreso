@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="100%" height="100%" style="border-radius: 14px; overflow: hidden;">
+  <defs>
+    <linearGradient id="archBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070D1E" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="360" fill="url(#archBg)" />
+  <rect x="2" y="2" width="996" height="356" rx="12" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.2" />
+
+  <!-- Title Header -->
+  <text x="50" y="42" fill="#38BDF8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" letter-spacing="2">ARQUITECTURA DE LA PLATAFORMA</text>
+  <text x="50" y="70" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="800">Stack Tecnológico y Seguridad de Datos</text>
+
+  <!-- Column 1: Client Layer -->
+  <g transform="translate(50, 95)" filter="url(#cardShadow)">
+    <rect width="210" height="230" rx="12" fill="#0E1E38" stroke="#38BDF8" stroke-width="1.5" />
+    <rect x="16" y="16" width="36" height="36" rx="8" fill="#38BDF8" fill-opacity="0.15" />
+    <text x="34" y="39" fill="#38BDF8" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle">⚡</text>
+    <text x="62" y="32" fill="#FFFFFF" font-family="sans-serif" font-size="14" font-weight="700">Capa Cliente</text>
+    <text x="62" y="48" fill="#94A3B8" font-family="sans-serif" font-size="11">Frontend &amp; UI</text>
+    <line x1="16" y1="65" x2="194" y2="65" stroke="#334155" stroke-width="1" />
+    <text x="16" y="90" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Next.js 16 (Turbopack)</text>
+    <text x="16" y="112" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• React 19 Client Components</text>
+    <text x="16" y="134" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Tailwind CSS 4 Design System</text>
+    <text x="16" y="156" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Modal dinámico de pagos</text>
+    <text x="16" y="178" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Slider institucional de Decano</text>
+    <text x="16" y="200" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Panel /admin con filtros</text>
+  </g>
+
+  <!-- Connection arrow 1 -> 2 -->
+  <path d="M 265 210 L 290 210" stroke="#38BDF8" stroke-width="2" stroke-dasharray="4 4" />
+
+  <!-- Column 2: Server API & Security -->
+  <g transform="translate(295, 95)" filter="url(#cardShadow)">
+    <rect width="210" height="230" rx="12" fill="#0E1E38" stroke="#D4AF37" stroke-width="1.5" />
+    <rect x="16" y="16" width="36" height="36" rx="8" fill="#D4AF37" fill-opacity="0.15" />
+    <text x="34" y="39" fill="#FDE047" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle">🔒</text>
+    <text x="62" y="32" fill="#FFFFFF" font-family="sans-serif" font-size="14" font-weight="700">API &amp; Seguridad</text>
+    <text x="62" y="48" fill="#94A3B8" font-family="sans-serif" font-size="11">Server-Side Layer</text>
+    <line x1="16" y1="65" x2="194" y2="65" stroke="#334155" stroke-width="1" />
+    <text x="16" y="90" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• /api/requests (Transaccional)</text>
+    <text x="16" y="112" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• /api/registrations/verify</text>
+    <text x="16" y="134" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Validación de catálogo rígida</text>
+    <text x="16" y="156" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Token HMAC firmado 15m</text>
+    <text x="16" y="178" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Control de acceso ADMIN_EMAILS</text>
+    <text x="16" y="200" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Service Role Key seguro</text>
+  </g>
+
+  <!-- Connection arrow 2 -> 3 -->
+  <path d="M 510 210 L 535 210" stroke="#D4AF37" stroke-width="2" stroke-dasharray="4 4" />
+
+  <!-- Column 3: Supabase Core -->
+  <g transform="translate(540, 95)" filter="url(#cardShadow)">
+    <rect width="210" height="230" rx="12" fill="#0E1E38" stroke="#3ECF8E" stroke-width="1.5" />
+    <rect x="16" y="16" width="36" height="36" rx="8" fill="#3ECF8E" fill-opacity="0.15" />
+    <text x="34" y="39" fill="#3ECF8E" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle">🗄️</text>
+    <text x="62" y="32" fill="#FFFFFF" font-family="sans-serif" font-size="14" font-weight="700">Supabase Backend</text>
+    <text x="62" y="48" fill="#94A3B8" font-family="sans-serif" font-size="11">Base de Datos &amp; Storage</text>
+    <line x1="16" y1="65" x2="194" y2="65" stroke="#334155" stroke-width="1" />
+    <text x="16" y="90" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• PostgreSQL Relacional + RLS</text>
+    <text x="16" y="112" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Migraciones transaccionales</text>
+    <text x="16" y="134" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Bucket congress-files privado</text>
+    <text x="16" y="156" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Signed URLs de 1h de validez</text>
+    <text x="16" y="178" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Integridad relacional ponencias</text>
+    <text x="16" y="200" fill="#CBD5E1" font-family="sans-serif" font-size="11.5" font-weight="600">• Supabase Auth integrado</text>
+  </g>
+
+  <!-- Connection arrow 3 -> 4 -->
+  <path d="M 755 210 L 780 210" stroke="#3ECF8E" stroke-width="2" stroke-dasharray="4 4" />
+
+  <!-- Column 4: Email & Notifications -->
+  <g transform="translate(785, 95)" filter="url(#cardShadow)">
+    <rect width="170" height="230" rx="12" fill="#0E1E38" stroke="#F43F5E" stroke-width="1.5" />
+    <rect x="16" y="16" width="36" height="36" rx="8" fill="#F43F5E" fill-opacity="0.15" />
+    <text x="34" y="39" fill="#FB7185" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle">✉️</text>
+    <text x="60" y="32" fill="#FFFFFF" font-family="sans-serif" font-size="13" font-weight="700">Notificaciones</text>
+    <text x="60" y="48" fill="#94A3B8" font-family="sans-serif" font-size="11">Email Service</text>
+    <line x1="16" y1="65" x2="154" y2="65" stroke="#334155" stroke-width="1" />
+    <text x="16" y="90" fill="#CBD5E1" font-family="sans-serif" font-size="11" font-weight="600">• Nodemailer SMTP</text>
+    <text x="16" y="112" fill="#CBD5E1" font-family="sans-serif" font-size="11" font-weight="600">• Google App Password</text>
+    <text x="16" y="134" fill="#CBD5E1" font-family="sans-serif" font-size="11" font-weight="600">• HTML responsivo</text>
+    <text x="16" y="156" fill="#CBD5E1" font-family="sans-serif" font-size="11" font-weight="600">• Logos UNA Puno</text>
+    <text x="16" y="178" fill="#CBD5E1" font-family="sans-serif" font-size="11" font-weight="600">• Fallback texto plano</text>
+    <text x="16" y="200" fill="#CBD5E1" font-family="sans-serif" font-size="11" font-weight="600">• Reenvío desde panel</text>
+  </g>
+</svg>
