@@ -3,25 +3,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { speakers } from "@/lib/speakers";
+import { registrationCategories, formatCurrency, getInstitutionalFee, getRegistrationTotal } from "@/lib/congress";
+import { RequestModal, type ModalState } from "@/components/request-modal";
+import { AuthoritySlider } from "@/components/authority-slider";
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowUpRight,
   Building2,
   CalendarDays,
-  Check,
-  CheckCircle2,
   CircleHelp,
-  ExternalLink,
   FileText,
-  GraduationCap,
   MapPin,
   Menu,
   Send,
   Sparkles,
-  CreditCard,
-  Upload,
   Users,
-  X,
   BookOpen,
   BrainCircuit,
   Lightbulb,
@@ -32,43 +28,6 @@ import {
 /* ────────────────────────────────────────────────
    DATA
    ──────────────────────────────────────────────── */
-
-const institutions = [
-  "Subdirección de Investigación",
-  "Escuela Profesional de Educación Primaria",
-  "Facultad de Ciencias de la Educación",
-  "Universidad Nacional del Altiplano de Puno",
-];
-
-const honorCommittee = [
-  "Dr. Efraín Humberto Yupanqui Pino · Decano de la Facultad",
-  "Dr. Henry Mark Vilca Apaza · Director de la EPEP",
-  "Dra. Ruth Mery Cruz Huisa · Subdirectora de Investigación",
-];
-
-const committee = [
-  "Dra. Ruth Mery Cruz Huisa · Presidencia",
-  "M.Sc. Ofelia Marleny Mamani Apaza · Secretaría técnica",
-  "Dr. Vidnay Noel Valero Ancco · Coordinación académica",
-  "Dr. Lesy Berly Leon Hancco · Tecnología",
-  "Dr. Estanislao Pacompia Cari · Logística",
-  "Dra. Zaida Esther Callata Gallegos · Protocolo",
-  "Dr. Juan Alexander Condori Palomino · Comunicaciones",
-  "M.Sc. Juan Carlos Callomani · Publicaciones",
-  "Dr. Wido Willan Condori Castillo · Coordinación financiera",
-  "Dra. Katia Perez Argollo · Certificaciones",
-  "M.Sc. Milciades Conrado Suaña Calsin · Bienestar",
-];
-
-const committeeMembers = [
-  "Dr. Humberto Mamani Coaquira",
-  "Dra. Danitza Luisa Sardón Ari",
-  "Dr. Fredy Sosa Gutierrez",
-  "M.Sc. Jose Antonio Supo Gutierrez",
-  "Dr. Jose Marcial Mamani Condori",
-  "Dra. Damiana Flores Mamani",
-  "Dra. Yesica Dominga Diaz Vilcanqui",
-];
 
 const schedule = [
   ["DÍA 01 · 25 NOV", "Apertura y conferencia magistral", "Acreditación · ceremonia inaugural · panel de investigadores · ponencias paralelas", "/dia 1.png"],
@@ -89,33 +48,12 @@ const agendaDetails = [
 ];
 
 const themes: [string, string, string, React.ReactNode, string][] = [
-  ["01", "Investigación educativa y producción científica", "Investigación cuantitativa, cualitativa y mixta; investigación-acción; ética e integridad científica; tesis, publicaciones y divulgación.", <BookOpen size={22} />, "/theme_1_v2.jpg"],
-  ["02", "Inteligencia artificial, tecnologías digitales y educación", "IA generativa, competencias digitales, analítica del aprendizaje, entornos virtuales, personalización y uso responsable de la IA.", <BrainCircuit size={22} />, "/theme_2_v2.jpg"],
-  ["03", "Innovación pedagógica, currículo y evaluación", "Metodologías activas, ABP, gamificación, aprendizaje colaborativo, currículo por competencias y evaluación formativa.", <Lightbulb size={22} />, "/theme_3_v2.jpg"],
-  ["04", "Formación docente, inclusión e interculturalidad", "Formación inicial y continua, desempeño docente, educación inclusiva, diversidad, interculturalidad, EIB y educación rural.", <Heart size={22} />, "/theme_4_v2.jpg"],
-  ["05", "Gestión educativa, bienestar y desarrollo sostenible", "Liderazgo, calidad, políticas educativas, convivencia, bienestar socioemocional, ciudadanía y educación ambiental.", <Globe size={22} />, "/theme_5_v2.jpg"],
+  ["01", "Investigación educativa y producción científica", "Investigación cuantitativa, cualitativa y mixta; investigación-acción; ética e integridad científica; tesis, publicaciones y divulgación.", <BookOpen key="theme-1" size={22} />, "/theme_1_v2.jpg"],
+  ["02", "Inteligencia artificial, tecnologías digitales y educación", "IA generativa, competencias digitales, analítica del aprendizaje, entornos virtuales, personalización y uso responsable de la IA.", <BrainCircuit key="theme-2" size={22} />, "/theme_2_v2.jpg"],
+  ["03", "Innovación pedagógica, currículo y evaluación", "Metodologías activas, ABP, gamificación, aprendizaje colaborativo, currículo por competencias y evaluación formativa.", <Lightbulb key="theme-3" size={22} />, "/theme_3_v2.jpg"],
+  ["04", "Formación docente, inclusión e interculturalidad", "Formación inicial y continua, desempeño docente, educación inclusiva, diversidad, interculturalidad, EIB y educación rural.", <Heart key="theme-4" size={22} />, "/theme_4_v2.jpg"],
+  ["05", "Gestión educativa, bienestar y desarrollo sostenible", "Liderazgo, calidad, políticas educativas, convivencia, bienestar socioemocional, ciudadanía y educación ambiental.", <Globe key="theme-5" size={22} />, "/theme_5_v2.jpg"],
 ];
-
-const planningPanels = {
-  actividades: ["Planificación · agosto 2026", "Organización académica · agosto a noviembre", "Convocatoria y difusión · agosto a noviembre", "Inscripciones · setiembre a noviembre", "Evaluación de ponencias · octubre a noviembre", "Tecnología híbrida · noviembre", "Logística y protocolo · noviembre", "Desarrollo del congreso · 25 al 27 de noviembre", "Certificación y publicaciones · noviembre a diciembre", "Cierre y evaluación · diciembre 2026"],
-  recursos: ["Plataforma Zoom Webinar o Microsoft Teams", "Transmisión simultánea por YouTube o Facebook Live", "Internet dedicado y red de respaldo", "Cámaras, consola de audio, micrófonos y grabación", "UPS o grupo electrógeno", "Credenciales, carpetas, lapiceros y señalética", "Equipos de protocolo, atención, fotografía y video"],
-  calidad: ["Ejecución de actividades programadas: meta ≥ 95 %", "Continuidad de transmisión híbrida: meta ≥ 98 %", "Ponencias evaluadas antes de su programación: 100 %", "Satisfacción general: meta ≥ 90 % favorable", "Certificados emitidos y validados: 100 %", "Informe final y memoria académica: 1 de cada producto", "Acciones de mejora priorizadas: al menos 3"],
-  gestion: ["Presupuesto referencial total: S/ 4,500.00", "Honorarios o reconocimiento a conferencistas: S/ 2,000.00", "Soporte técnico, streaming y conectividad: S/ 600.00", "Registro audiovisual: S/ 250.00 · diseño e impresión: S/ 250.00", "Materiales, credenciales, señalética y protocolo: S/ 1,300.00", "Financiamiento: ingresos por inscripciones y/o recursos institucionales"],
-  riesgos: ["Falla de internet: conexión principal y respaldo, pruebas previas", "Falla de energía: UPS o grupo electrógeno", "Ausencia de conferencista: confirmación 72/24 h antes y alterno", "Problemas de audio o video: pruebas individuales y equipos de respaldo", "Baja participación: difusión segmentada, recordatorios y alianzas", "Falta de evidencias: archivo por coordinación y entrega máx. 48 h"],
-};
-
-const costs: [string, string, string[], string][] = [
-  ["Estudiante EPEP", "S/ 20.00", ["Acceso a todas las conferencias", "Certificado de asistente", "Material del congreso"], "Asistente Interno"],
-  ["Estudiante Externo", "S/ 30.00", ["Acceso a todas las conferencias", "Certificado de asistente", "Material del congreso"], "Público General"],
-  ["Ponente Externo", "S/ 100.00", ["Derecho a ponencia", "Certificado de ponente", "Publicación en la memoria del congreso"], "Investigadores"],
-  ["Asistente Externo", "S/ 70.00", ["Acceso a todas las conferencias", "Certificado de asistente", "Kit de bienvenida"], "Público General"],
-  ["Docente EPEP", "S/ 0.00", ["Derecho a ponencia", "Certificado de ponente", "Acceso prioritario"], "Ponente Interno"],
-  ["Estudiante EPEP", "S/ 0.00", ["Derecho a ponencia", "Certificado de ponente", "Mentoría académica"], "Ponente Interno"],
-];
-
-
-
-type ModalState = { kind: "registration" | "paper"; category?: string } | null;
 
 /* ────────────────────────────────────────────────
    MAIN PAGE
@@ -125,7 +63,6 @@ export default function Home() {
   const [modal, setModal] = useState<ModalState>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDay, setActiveDay] = useState(0);
-  const [activePanel, setActivePanel] = useState<keyof typeof planningPanels>("actividades");
   const headerRef = useRef<HTMLElement>(null);
 
   // Handle scroll for navbar background
@@ -138,18 +75,6 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const renderListMember = (member: string) => {
-    const parts = member.split("·");
-    const name = parts[0].trim();
-    const role = parts.length > 1 ? parts[1].trim() : "Miembro";
-    return (
-      <div className="directory-item" key={member}>
-        <h4>{name}</h4>
-        <span>{role}</span>
-      </div>
-    );
-  };
 
   return (
     <main>
@@ -221,9 +146,9 @@ export default function Home() {
           </div>
 
           <div className="hero-actions">
-            <button className="btn btn-primary" onClick={() => setModal({ kind: "registration" })}>
+            <a className="btn btn-primary" href="#inscripciones">
               <Send size={16} /> Inscribirme ahora
-            </button>
+            </a>
             <button className="btn btn-outline-light" onClick={() => setModal({ kind: "paper" })}>
               <FileText size={16} /> Enviar investigación
             </button>
@@ -325,43 +250,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── MENSAJE DEL DECANO ─── */}
-      <section style={{ display: 'flex', flexWrap: 'wrap', minHeight: '500px' }}>
-        {/* Left Side: Message */}
-        <div style={{ flex: '1 1 60%', backgroundColor: '#EBEBEB', padding: '80px clamp(30px, 8vw, 100px)', color: '#444', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <h2 style={{ fontSize: '38px', color: '#B38600', fontWeight: 400, marginBottom: '40px' }}>Mensaje de Presidencia</h2>
-
-          <div style={{ fontSize: '17px', lineHeight: '1.8', color: '#333' }}>
-            <p style={{ marginBottom: '25px', color: '#B38600' }}>Estimados colegas y estudiantes,</p>
-            <p style={{ marginBottom: '25px' }}>
-              Al asumir este rol como Decano de la Facultad, me emociona extenderles una cordial invitación para unirse a nosotros en el IV Congreso Internacional de Investigación e Innovación, que tendrá lugar en noviembre de 2026. Este extraordinario evento es un testimonio de nuestra pasión colectiva por avanzar en la comprensión de la educación y su profundo impacto en el desarrollo de la sociedad.
-            </p>
-            <p style={{ marginBottom: '25px' }}>
-              Nuestro congreso siempre ha sido un faro de colaboración e innovación, reuniendo a una diversa comunidad de investigadores, educadores y profesionales de cada rincón de la región. Este año, estamos comprometidos a crear una experiencia aún más inclusiva y dinámica. Nuestro programa contará con un rico tapiz de presentaciones, talleres y discusiones, mostrando los últimos avances en la investigación educativa y sus aplicaciones prácticas.
-            </p>
-            <p style={{ marginBottom: '40px' }}>
-              Este evento es más que una simple conferencia académica; es una celebración de nuestra pasión compartida por el descubrimiento y nuestro compromiso de mejorar la educación a través de la ciencia. ¡Espero darles la bienvenida a cada uno de ustedes para conectar, colaborar y forjar juntos el futuro de la investigación!
-            </p>
-
-            <p style={{ marginBottom: '0', color: '#555' }}>Atentamente,</p>
-            <p style={{ fontWeight: 'bold', color: '#B38600', marginBottom: '0', fontSize: '18px' }}>Dr. Efraín Humberto Yupanqui Pino</p>
-            <p style={{ marginBottom: '0', color: '#555' }}>Decano</p>
-            <p style={{ marginBottom: '0', color: '#555' }}>Facultad de Ciencias de la Educación - UNAP</p>
-          </div>
-        </div>
-
-        {/* Right Side: Portrait */}
-        <div style={{ flex: '1 1 40%', backgroundColor: '#D6AE47', padding: '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '400px' }}>
-          <div style={{ width: '250px', height: '250px', borderRadius: '50%', position: 'relative', overflow: 'hidden', border: '5px solid rgba(255,255,255,0.2)', marginBottom: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-            <Image src="/autoridades/efrain_yupanqui.jpg" alt="Dr. Efraín Humberto Yupanqui Pino" fill style={{ objectFit: 'cover', objectPosition: 'top' }} />
-          </div>
-          <h3 style={{ color: '#FFF', fontSize: '26px', fontWeight: 'bold', marginBottom: '5px' }}>Dr. Efraín Yupanqui</h3>
-          <p style={{ color: '#FFF', fontSize: '20px', margin: '0 0 5px 0' }}>Decano FCEDUC</p>
-          <p style={{ color: '#FFF', fontSize: '20px', margin: 0 }}>Universidad Nacional del Altiplano</p>
-        </div>
-      </section>
-
-
+      {/* ─── MENSAJES DE AUTORIDADES ─── */}
+      <AuthoritySlider />
 
       {/* ─── ORGANIZACIÓN ─── */}
       <section className="section" id="organizadores">
@@ -475,12 +365,12 @@ export default function Home() {
                     <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                       <span style={{ color: '#444', fontSize: '18px', marginBottom: '10px' }}>{title}</span>
                       <span style={{ color: '#B38600', fontSize: '15px', fontWeight: 'bold', lineHeight: '1.5', marginBottom: '15px', textTransform: 'uppercase' }}>{detail}</span>
-                      <button
-                        onClick={() => setModal({ kind: "registration" })}
+                      <a
+                        href="#inscripciones"
                         style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#666', textDecoration: 'underline', padding: 0, cursor: 'pointer', fontSize: '14px' }}
                       >
                         Más Información
-                      </button>
+                      </a>
                     </div>
                   </div>
                 ))}
@@ -535,23 +425,20 @@ export default function Home() {
 
         <div className="registration-cards-grid">
 
-          {costs.map(([title, price, features, badge], idx) => {
-            const cardImages = [
-              "/enseedu.jpg",
-              "/integrantes.jpeg",
-              "/tutoria.jpg",
-              "/interior.jpg",
-              "/docentes.jpg",
-              "/estudiantesedudes.jpg"
-            ];
-            const img = cardImages[idx % cardImages.length];
+          {registrationCategories.map((category) => {
+            const { title, fee, features, role: badge, mode, image: img } = category;
+            const price = formatCurrency(fee);
             return (
-              <div key={idx} style={{ backgroundColor: '#FFF', padding: '30px 20px', display: 'flex', flexDirection: 'column' }}>
+              <div key={category.id} style={{ backgroundColor: '#FFF', padding: '30px 20px', display: 'flex', flexDirection: 'column' }}>
                 <h3 style={{ color: '#B38600', fontSize: '18px', fontWeight: 'bold', minHeight: '50px', marginBottom: '10px', textTransform: 'uppercase' }}>
                   {title}
                 </h3>
 
-                <p style={{ color: '#D4AF37', fontWeight: 'bold', fontSize: '14px', marginBottom: '20px', minHeight: '20px' }}>{badge}</p>
+                <p style={{ color: '#D4AF37', fontWeight: 'bold', fontSize: '14px', marginBottom: '10px', minHeight: '20px' }}>{badge}</p>
+                <span className="registration-mode-badge">
+                  {mode === "Presencial" ? <MapPin size={14} aria-hidden="true" /> : <Globe size={14} aria-hidden="true" />}
+                  {mode}
+                </span>
 
                 <div style={{ flex: 1, position: 'relative', minHeight: '180px', marginBottom: '25px' }}>
                   <Image src={img} alt={title as string} fill style={{ objectFit: 'cover' }} />
@@ -566,8 +453,9 @@ export default function Home() {
                 </div>
 
                 <p style={{ color: '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 20px' }}>{price}</p>
+                {fee > 0 && <p className="registration-fee-note">Cargo institucional: {formatCurrency(getInstitutionalFee(category))} · Total: {formatCurrency(getRegistrationTotal(category))}</p>}
                 <button
-                  onClick={() => setModal({ kind: "registration", category: title as string })}
+                  onClick={() => setModal({ kind: "registration", categoryId: category.id })}
                   style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
                   onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}
                   onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#FFF'; e.currentTarget.style.color = '#B38600'; }}
@@ -585,9 +473,9 @@ export default function Home() {
             Las entradas son extremadamente limitadas y se espera una alta demanda para estas modalidades. Reserva tu entrada ahora para asegurar tu participación en el congreso y acceder a todas las sesiones, ponencias y networking.
           </p>
 
-          <button style={{ backgroundColor: '#D4AF37', color: '#FFF', border: 'none', padding: '20px', width: '100%', fontSize: '22px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '50px' }} onClick={() => setModal({ kind: "registration" })}>
-            Inscribirse Ahora
-          </button>
+          <a href="#inscripciones" style={{ display: 'block', backgroundColor: '#D4AF37', color: '#FFF', border: 'none', padding: '20px', width: '100%', fontSize: '22px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '50px' }}>
+            Elegir mi categoría
+          </a>
 
 
         </div>
@@ -628,146 +516,5 @@ export default function Home() {
       {/* ─── MODAL ─── */}
       {modal && <RequestModal modal={modal} onClose={() => setModal(null)} />}
     </main>
-  );
-}
-
-/* ────────────────────────────────────────────────
-   REGISTRATION MODAL
-   ──────────────────────────────────────────────── */
-
-function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onClose: () => void }) {
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
-  const isPaper = modal.kind === "paper";
-
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-
-    const formElement = event.currentTarget;
-    const formData = new FormData(formElement);
-    formData.append("kind", modal.kind);
-    if (modal.category) formData.append("category", modal.category);
-
-    const response = await fetch("/api/requests", {
-      method: "POST",
-      body: formData, // Enviar FormData directamente (browser pone el boundary)
-    });
-
-    if (!response.ok) {
-      const resData = await response.json().catch(() => ({}));
-      setError(resData.error || "No pudimos registrar la solicitud. Revisa tus datos y el archivo (PDF).");
-      return;
-    }
-    setSent(true);
-  }
-
-  return (
-    <div className="modal-backdrop" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <button className="icon-button modal-close" title="Cerrar" aria-label="Cerrar" onClick={onClose}>
-          <X size={20} />
-        </button>
-
-        {sent ? (
-          <div className="success">
-            <span><Check size={28} /></span>
-            <h2>Solicitud recibida</h2>
-            <p style={{ color: '#0F2756', fontWeight: 'bold' }}>
-              Te hemos enviado un correo con las instrucciones para realizar el pago.
-            </p>
-            <p style={{ color: '#BA1A1A', fontSize: '14px', fontWeight: 'bold' }}>
-              Por favor, revisa tu bandeja de entrada y tu carpeta de SPAM o Correo no deseado.
-            </p>
-            <p>La Secretaría revisará tu solicitud y te contactará pronto.</p>
-
-            <a
-              href="https://wa.me/51926465929?text=Hola,%20acabo%20de%20inscribirme%20al%20congreso.%20Este%20es%20mi%20comprobante..."
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn-primary btn-full"
-              style={{ background: '#25D366', color: '#FFF', marginBottom: '10px' }}
-            >
-              Contactar por WhatsApp
-            </a>
-            <button className="btn btn-outline btn-full" onClick={onClose}>Cerrar</button>
-          </div>
-        ) : (
-          <>
-            <span className="kicker">{isPaper ? "Call for papers" : "Registro"}</span>
-            <h2 id="modal-title">{isPaper ? "Presenta tu investigación." : "Reserva tu lugar."}</h2>
-            <p className="modal-intro">
-              {isPaper
-                ? "Cuéntanos brevemente sobre tu propuesta y sube tu investigación (PDF)."
-                : "Déjanos tus datos y te enviaremos los pasos para completar tu inscripción."}
-            </p>
-
-            <form onSubmit={submit}>
-              <label>Nombre completo<input name="name" required /></label>
-              <label>Correo electrónico<input name="email" type="email" required /></label>
-              <label>Tipo de documento
-                <select name="doc_type" required>
-                  <option value="DNI">DNI</option>
-                  <option value="CE">CE</option>
-                  <option value="Pasaporte">Pasaporte</option>
-                  <option value="Otro">Otro</option>
-                </select>
-              </label>
-              <label>Nro de documento<input name="doc_number" required /></label>
-              <label>Institución<input name="institution" /></label>
-              <label>Categoría
-                <select name="category" defaultValue={modal.category || ""} required>
-                  <option value="" disabled>Selecciona una categoría</option>
-                  <option value="Asistente Interno">Asistente Interno</option>
-                  <option value="Público General">Público General</option>
-                  <option value="Investigadores">Investigadores</option>
-                  <option value="Asistente Externo">Asistente Externo</option>
-                  <option value="Docente EPEP">Docente EPEP</option>
-                  <option value="Estudiante EPEP">Estudiante EPEP</option>
-                </select>
-              </label>
-              {isPaper && <label>Título o eje de la ponencia<input name="topic" required /></label>}
-              <label>
-                Modalidad
-                <select name="mode">
-                  <option>Presencial</option>
-                  <option>Virtual</option>
-                </select>
-              </label>
-
-              {isPaper && (
-                <>
-                  <label>Resumen breve<textarea name="message" rows={3} /></label>
-                  <label>
-                    Sube tu investigación (PDF)
-                    <input type="file" name="file" accept=".pdf" required style={{ border: "none", padding: "12px 0" }} />
-                  </label>
-                </>
-              )}
-
-              <div style={{ background: 'linear-gradient(135deg, #F8F9FA 0%, #F0F3F8 100%)', padding: '24px', borderRadius: '12px', border: '1.5px dashed #0F275640', margin: '20px 0', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: '#B38600' }} />
-                
-                <h4 style={{ color: '#0F2756', marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <CreditCard size={18} color="#B38600" />
-                  Información de Pago
-                </h4>
-                
-                <div style={{ background: '#FFF', padding: '12px 16px', borderRadius: '8px', border: '1px solid #EAEAEA', marginBottom: '16px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                  <p style={{ fontSize: '13px', color: '#444', margin: 0, lineHeight: '1.5' }}>
-                    Las instrucciones para realizar el pago se enviarán próximamente a tu correo electrónico. Por ahora, puedes enviar tu solicitud de registro.
-                  </p>
-                </div>
-              </div>
-
-              <button className="btn btn-primary btn-full" type="submit">
-                <Send size={16} /> Enviar solicitud
-              </button>
-              {error && <p className="form-error">{error}</p>}
-            </form>
-          </>
-        )}
-      </div>
-    </div>
   );
 }

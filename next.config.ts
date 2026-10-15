@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     "127.0.0.1",
     "192.168.1.46",
     "10.70.216.6",
+    "10.123.112.6",
   ],
   outputFileTracingRoot: __dirname,
   turbopack: {

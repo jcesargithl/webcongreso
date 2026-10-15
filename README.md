@@ -1,95 +1,84 @@
-# IV Congreso Internacional de Investigación Científica
+# IV Congreso Internacional de Investigación Científica EPEP
 
-Sitio web y panel de gestión para el IV Congreso Internacional de Investigación Científica de la Facultad de Educación Primaria.
+Aplicación Next.js 16.3.6 con React 19, TypeScript, Tailwind CSS 4 y Supabase. Incluye inscripciones, comprobantes de Págalo.pe, revisión administrativa y recepción de investigaciones.
 
-La aplicación presenta el programa académico, los ejes temáticos, las tarifas de participación y un formulario para registrar inscripciones o propuestas de ponencia.
+## Preparación de Supabase
 
-## Vista general
+Antes de usar el nuevo flujo, ejecuta en el SQL Editor del proyecto:
 
-- Landing pública con identidad visual institucional.
-- Diseño adaptable para escritorio, tablet y móvil.
-- Modal de inscripción y recepción de ponencias.
-- Panel administrativo para consultar y actualizar solicitudes.
-- Escudo institucional integrado desde `public/logosecu.png`.
+- supabase/migrations/202610140001_registration_payments_and_papers.sql
 
-## Tecnologías
+La migración es transaccional, conserva los registros existentes, agrega campos de pago y vínculos entre ponencias e inscripciones, e instala las reglas de validación. Crea el bucket privado congress-files; los PDFs se muestran mediante enlaces firmados que vencen en una hora. La base de datos y este bucket se utilizan desde la API del servidor, no directamente desde el navegador.
 
-- Next.js 16 con App Router y Turbopack.
-- React 19 y TypeScript.
-- Tailwind CSS 4 y `lucide-react`.
-- Route Handlers para la API interna.
-- Persistencia local en `data/requests.json`.
+Las categorías anteriores que identifican inequívocamente una tarifa se migran. Registros con “Estudiante EPEP” o “Público General” sin rol se conservan sin categoría identificada: un administrador debe clasificarlos en el panel. No se asume que una inscripción de estudiante sea gratuita ni de ponente. Los pagos antiguos aprobados se conservan; no se inventan números de comprobante ni datos de auditoría.
 
-## Requisitos
+Si falla cualquier instrucción, la transacción se revierte. Revisa el error del SQL Editor antes de habilitar el nuevo formulario. La aplicación no aplica migraciones automáticamente.
 
-- Node.js 20 o superior.
-- npm 10 o superior.
+## Configuración local
 
-## Instalación y desarrollo
+Variables de .env.local:
 
-```bash
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY (solo servidor)
+- ADMIN_EMAILS (correos autorizados, separados por coma)
+- GMAIL_USER y GMAIL_PASS (contraseña de aplicación, opcionales para enviar confirmaciones)
+- PAPER_VERIFICATION_SECRET (opcional; usa una clave larga y aleatoria, solo servidor; de no existir se usa la clave de servicio para firmar la verificación)
+
+No publiques claves ni este archivo.
+
+## Inscripción y pagos
+
+Las seis tarjetas tienen identificadores únicos. La API determina categoría, modalidad y tarifa desde el catálogo, sin confiar en el precio enviado por el navegador.
+
+| Categoría | Tarifa | Cargo institucional | Total |
+| --- | --- | --- | --- |
+| Estudiante EPEP asistente | S/ 20 | S/ 1 | S/ 21 |
+| Estudiante externo | S/ 30 | S/ 1 | S/ 31 |
+| Ponente externo | S/ 100 | S/ 1 | S/ 101 |
+| Asistente externo | S/ 70 | S/ 1 | S/ 71 |
+| Docente EPEP ponente | Gratis | S/ 0 | S/ 0 |
+| Estudiante EPEP ponente | Gratis | S/ 0 | S/ 0 |
+
+El S/ 1 es el cargo institucional indicado por la organización, no una comisión adicional del Banco de la Nación. Instrucciones del evento: Págalo.pe, código 091, Tasas educativas UNA Puno, OTROS SERV. EDU. EDU. PRIMARIA.
+
+Cada inscripción de pago exige confirmar Págalo.pe, documento del comprobante, secuencia de seis dígitos (conserva ceros), monto total, fecha y voucher PDF menor de 2 MB. La recepción del comprobante deja el pago pendiente; solo un administrador puede aprobarlo. Los ponentes internos no deben adjuntar comprobantes.
+
+No se conecta a una API de verificación bancaria. La autenticidad de cada comprobante la revisa el administrador contra los registros institucionales.
+
+## Recepción de investigaciones
+
+Enviar investigación comienza por verificar el correo, tipo y número de documento de una inscripción. Solo son aptos ponentes externos con pago aprobado, docentes EPEP ponentes y estudiantes EPEP ponentes. Las inscripciones rechazadas o de asistentes no habilitan el envío.
+
+Una verificación válida genera un permiso firmado de 15 minutos para esa inscripción. La API vuelve a consultar sus condiciones al recibir el PDF, y la base de datos impide crear una ponencia sin inscripción apta. La verificación es de la inscripción registrada; no sustituye la comprobación institucional de pertenencia a la EPEP.
+
+Las ponencias se vinculan a la inscripción original, heredan sus datos, admiten PDF de hasta 10 MB y quedan en revisión académica. Aprobar el pago no acepta automáticamente la ponencia.
+
+## Administración
+
+/admin requiere Supabase Auth y un correo incluido en ADMIN_EMAILS. Muestra categoría, modalidad, documento, institución, tarifa, cargo institucional, secuencia, monto, fecha, comprobante, estado y auditoría del pago, observaciones e investigación vinculada.
+
+Aprobar pago confirma la inscripción y habilita al ponente externo. El estado académico de una ponencia se gestiona por separado. Los errores de red o de base de datos se muestran en el panel.
+
+## Desarrollo y validación
+
 npm install
 npm run dev
-```
+npm run lint
+npm run build
+npm run start
+npm run test
 
-La aplicación estará disponible en:
+Las pruebas del flujo utilizan datos ficticios y un cliente Supabase simulado. No crean inscripciones reales ni envían correos. La migración debe probarse y aplicarse en el proyecto Supabase configurado.
 
-- Sitio público: <http://localhost:3000>
-- Panel de gestión: <http://localhost:3000/admin>
+## Archivos principales
 
-Para acceder desde otro dispositivo de la red local:
+- src/lib/congress.ts: tarifas, roles, modalidades e instrucciones.
+- src/lib/registration-rules.ts: requisitos de ponentes, importes y PDFs.
+- src/components/request-modal.tsx: inscripción, comprobantes y envío de investigaciones.
+- src/app/api/registrations/verify/route.ts: verificación de inscripción.
+- src/app/api/requests/route.ts: recepción y revisión administrativa.
+- src/app/admin/page.tsx: panel de gestión.
+- supabase/migrations/: cambios de esquema y reglas de la base de datos.
 
-```bash
-npm run dev -- --hostname 0.0.0.0
-```
-
-El origen de desarrollo debe estar incluido en `allowedDevOrigins` dentro de `next.config.ts`.
-
-## Comandos disponibles
-
-```bash
-npm run dev      # Inicia el servidor de desarrollo
-npm run lint     # Ejecuta ESLint
-npm run build    # Genera la versión de producción
-npm run start    # Inicia la versión compilada
-```
-
-## API de solicitudes
-
-La API interna se encuentra en `src/app/api/requests/route.ts`.
-
-- `POST /api/requests`: registra una inscripción o propuesta de ponencia.
-- `GET /api/requests`: consulta las solicitudes desde el panel.
-- `PATCH /api/requests`: actualiza el estado de una solicitud.
-
-Durante el desarrollo, los datos se guardan en `data/requests.json`. Este mecanismo es suficiente para una demostración local, pero no es recomendable para producción porque un entorno serverless puede ser efímero y no garantiza persistencia entre despliegues.
-
-## Despliegue
-
-El proyecto puede desplegarse en Vercel u otra plataforma compatible con Next.js.
-
-Configuración recomendada:
-
-1. Usar `npm run build` como comando de compilación.
-2. Usar `npm run start` cuando la plataforma requiera un comando de inicio.
-3. Configurar el directorio raíz en la carpeta del proyecto.
-4. Migrar la persistencia de solicitudes a PostgreSQL, Supabase o un servicio equivalente.
-5. Añadir autenticación y autorización para proteger `/admin`.
-
-Si un despliegue aparece con una X roja en GitHub, el detalle exacto se encuentra en la pestaña **Deployments** del proveedor que creó ese estado, normalmente Vercel. El commit puede estar publicado correctamente aunque un despliegue externo haya fallado.
-
-## Estructura principal
-
-```text
-src/app/page.tsx                 Página pública del congreso
-src/app/admin/page.tsx           Panel de solicitudes
-src/app/api/requests/route.ts    API de inscripciones y ponencias
-src/app/globals.css              Sistema visual y diseño responsive
-src/lib/requests.ts              Lectura y escritura de solicitudes
-public/logosecu.png              Escudo institucional
-data/requests.json               Datos locales del prototipo
-```
-
-## Estado del proyecto
-
-El proyecto se encuentra preparado como prototipo funcional. Antes de utilizarlo en producción deben incorporarse una base de datos persistente, autenticación para el panel administrativo, validación reforzada y un sistema de respaldo para las solicitudes.
+data/requests.json y code.html son artefactos del prototipo anterior; no se usan para guardar solicitudes del flujo actual.
