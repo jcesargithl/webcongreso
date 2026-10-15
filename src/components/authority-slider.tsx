@@ -91,13 +91,18 @@ export function AuthoritySlider() {
               {authority.greeting && <p className="authority-greeting">{authority.greeting}</p>}
               <div className="authority-message-body">
                 {authority.paragraphs.map((paragraph, paragraphIndex) => (
-                  <p key={paragraphIndex}>{paragraph}</p>
+                  <p key={paragraphIndex}>
+                    {authority.emphasizedParagraphs?.includes(paragraphIndex)
+                      ? <strong>{paragraph}</strong>
+                      : paragraph}
+                  </p>
                 ))}
               </div>
               <div className="authority-signature">
                 <p>Atentamente,</p>
                 <p className="authority-signature-name">{authority.name}</p>
-                <p>{authority.signatureRole}</p>
+                <p><strong>{authority.signatureRole}</strong></p>
+                {authority.signatureDetails?.map((detail) => <p key={detail}>{detail}</p>)}
                 <p>{authority.signatureInstitution}</p>
               </div>
             </div>
@@ -107,7 +112,7 @@ export function AuthoritySlider() {
                   src={authority.image}
                   alt={authority.name}
                   fill
-                  sizes="(max-width: 600px) 220px, 260px"
+                  sizes={`(max-width: 600px) ${220 * authority.portraitScale}px, ${260 * authority.portraitScale}px`}
                   style={{
                     objectFit: "cover",
                     objectPosition: "top",
@@ -118,6 +123,7 @@ export function AuthoritySlider() {
               </div>
               <h3>{authority.name}</h3>
               <p className="authority-role">{authority.role}</p>
+              {authority.secondaryRole && <p className="authority-secondary-role">{authority.secondaryRole}</p>}
               <p className="authority-institution">{authority.institution}</p>
             </div>
           </article>
