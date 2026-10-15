@@ -98,13 +98,6 @@ export function AuthoritySlider() {
                   </p>
                 ))}
               </div>
-              <div className="authority-signature">
-                <p>Atentamente,</p>
-                <p className="authority-signature-name">{authority.name}</p>
-                <p><strong>{authority.signatureRole}</strong></p>
-                {authority.signatureDetails?.map((detail) => <p key={detail}>{detail}</p>)}
-                <p>{authority.signatureInstitution}</p>
-              </div>
             </div>
             <div className="authority-profile">
               <div className="authority-portrait">
@@ -112,7 +105,7 @@ export function AuthoritySlider() {
                   src={authority.image}
                   alt={authority.name}
                   fill
-                  sizes={`(max-width: 600px) ${220 * authority.portraitScale}px, ${260 * authority.portraitScale}px`}
+                  sizes={`(max-width: 600px) ${180 * authority.portraitScale}px, ${220 * authority.portraitScale}px`}
                   style={{
                     objectFit: "cover",
                     objectPosition: "top",

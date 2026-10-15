@@ -11,8 +11,8 @@ const KEY = "local-test-secret-not-a-real-credential";
 const ADMIN_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const REGISTRATION_ID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 
-function harness(initial = []) {
-  const state = { records: initial.map(row => ({ ...row })), uploads: [], removed: [], failInsert: null };
+function harness(initial = [], options = {}) {
+  const state = { records: initial.map(row => ({ ...row })), uploads: [], removed: [], failInsert: null, sentEmails: [], failMail: false, rejectRecipient: false };
   class Query {
     constructor() { this.filters = []; this.operation = "select"; this.cap = Infinity; }
     select() { return this; }
@@ -53,7 +53,12 @@ function harness(initial = []) {
   const cache = new Map();
   function load(request, parent = path.join(process.cwd(), "tests/registration-flow.test.mjs")) {
     if (request === "server-only") return {};
-    if (request === "nodemailer") return { createTransport: () => ({ sendMail: async () => { throw new Error("Tests must not send mail"); } }) };
+    if (request === "node:fs/promises" && options.missingLogos) return { readFile: async () => { throw new Error("Missing test logo"); } };
+    if (request === "nodemailer") return { createTransport: () => ({ sendMail: async message => {
+      if (state.failMail) throw Object.assign(new Error("Simulated SMTP failure"), { code: "ECONNECTION" });
+      state.sentEmails.push(message);
+      return { accepted: state.rejectRecipient ? [] : [message.to.address] };
+    } }) };
     if (!request.startsWith(".") && !request.startsWith("@/") && !path.isAbsolute(request)) return requireDependency(request);
     let filename = request.startsWith("@/") ? path.join(process.cwd(), "src", request.slice(2)) : path.resolve(path.dirname(parent), request);
     if (!path.extname(filename)) filename += ".ts";
@@ -62,7 +67,7 @@ function harness(initial = []) {
     const compiledModule = { exports: {} };
     cache.set(filename, compiledModule);
     const code = ts.transpileModule(fs.readFileSync(filename, "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
-    const environment = { env: { ADMIN_EMAILS: "admin@example.test", PAPER_VERIFICATION_SECRET: KEY, GMAIL_USER: "", GMAIL_PASS: "" } };
+    const environment = { cwd: () => process.cwd(), env: { ADMIN_EMAILS: "admin@example.test", PAPER_VERIFICATION_SECRET: KEY, GMAIL_USER: options.mailConfigured === false ? "" : "sender@example.test", GMAIL_PASS: options.mailConfigured === false ? "" : "fake-app-password" } };
     new Function("require", "module", "exports", "process", code)(key => load(key, filename), compiledModule, compiledModule.exports, environment);
     return compiledModule.exports;
   }
@@ -272,4 +277,188 @@ test("administrator can identify a legacy registration with a text identifier", 
   assert.equal(response.status, 200);
   assert.equal(h.state.records[0].payment_status, "exempt");
   assert.equal(h.state.records[0].category_id, "speaker_internal_student");
+});
+
+function patchRequest(id, changes, token = "test-admin") {
+  return new Request("http://localhost/api/requests", {
+    method: "PATCH", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+    body: JSON.stringify({ id, ...changes }),
+  });
+}
+
+function paperRecord(status = "reviewing") {
+  return {
+    ...registration("speaker_internal_student"),
+    id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc", kind: "paper",
+    registration_id: REGISTRATION_ID, status, topic: "Aprendizaje e inteligencia artificial",
+  };
+}
+
+test("paper status changes notify the author with the matching result and do not resend unchanged states", async () => {
+  for (const [status, expected] of [
+    ["approved", "Tu ponencia ha sido aprobada"],
+    ["rejected", "Resultado de la evaluación de tu ponencia"],
+    ["reviewing", "Tu ponencia está en revisión"],
+    ["pending", "Recibimos tu investigación"],
+  ]) {
+    const paper = paperRecord(status === "reviewing" ? "pending" : "reviewing");
+    const h = harness([registration("speaker_internal_student"), paper]);
+    const route = h.load("../src/app/api/requests/route");
+    const response = await route.PATCH(patchRequest(paper.id, { status }));
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).email_sent, true);
+    assert.equal(h.state.sentEmails.length, 1);
+    assert.equal(h.state.sentEmails[0].to.address, paper.email);
+    assert.match(h.state.sentEmails[0].subject, new RegExp(expected));
+    assert.ok(h.state.sentEmails[0].text.includes(paper.topic));
+    assert.equal(h.state.records[1].status, status);
+    const unchanged = await route.PATCH(patchRequest(paper.id, { status }));
+    assert.equal((await unchanged.json()).email_sent, null);
+    assert.equal(h.state.sentEmails.length, 1);
+  }
+});
+
+test("SMTP failure preserves approval and the admin can resend without changing the decision", async () => {
+  const paper = paperRecord();
+  const h = harness([registration("speaker_internal_student"), paper]);
+  const route = h.load("../src/app/api/requests/route");
+  h.state.failMail = true;
+  const response = await route.PATCH(patchRequest(paper.id, { status: "approved" }));
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).email_sent, false);
+  assert.equal(h.state.records[1].status, "approved");
+  h.state.failMail = false;
+  const retry = await route.PATCH(patchRequest(paper.id, { action: "resend_notification" }));
+  assert.equal(retry.status, 200);
+  assert.equal((await retry.json()).email_sent, true);
+  assert.equal(h.state.records[1].status, "approved");
+  assert.equal(h.state.sentEmails.length, 1);
+  assert.match(h.state.sentEmails[0].subject, /ponencia ha sido aprobada/);
+});
+
+test("only an administrator can resend notifications and unknown requests do not send mail", async () => {
+  const paper = paperRecord("approved");
+  const h = harness([paper]);
+  const route = h.load("../src/app/api/requests/route");
+  assert.equal((await route.PATCH(patchRequest(paper.id, { action: "resend_notification" }, "invalid"))).status, 401);
+  assert.equal((await route.PATCH(patchRequest(paper.id, { status: "rejected" }, "invalid"))).status, 401);
+  assert.equal((await route.PATCH(patchRequest("unknown-request", { action: "resend_notification" }))).status, 404);
+  assert.equal(h.state.sentEmails.length, 0);
+});
+
+test("payment approval and rejection send receipt details and notes, never academic acceptance", async () => {
+  const paid = {
+    ...registration("speaker_external", "pending"), status: "reviewing",
+    payment_method: "pagalo_pe", receipt_path: "receipts/test.pdf",
+    payment_sequence: "093245", payment_amount: 101, payment_date: "2026-10-14", payment_document_number: "12345678",
+  };
+  const h = harness([paid]);
+  const route = h.load("../src/app/api/requests/route");
+  const decision = { action: "review_payment", decision: "approved", notes: "Comprobante validado." };
+  assert.equal((await (await route.PATCH(patchRequest(paid.id, decision))).json()).email_sent, true);
+  const message = h.state.sentEmails[0];
+  assert.match(message.subject, /Tu pago ha sido aprobado/);
+  assert.match(message.text, /093245/);
+  assert.match(message.text, /14\/10\/2026/);
+  assert.match(message.text, /S\/ 101\.00/);
+  assert.match(message.text, /Comprobante validado/);
+  assert.match(message.text, /La aceptación de la ponencia dependerá/);
+  assert.doesNotMatch(message.text, /Tu ponencia ha sido aprobada/);
+  assert.equal((await (await route.PATCH(patchRequest(paid.id, decision))).json()).email_sent, null);
+  assert.equal(h.state.sentEmails.length, 1);
+  assert.equal((await (await route.PATCH(patchRequest(paid.id, { ...decision, notes: "Nueva observación" }))).json()).email_sent, true);
+  const rejection = await route.PATCH(patchRequest(paid.id, { action: "review_payment", decision: "rejected", notes: "Secuencia no encontrada." }));
+  assert.equal((await rejection.json()).email_sent, true);
+  assert.match(h.state.sentEmails[2].subject, /comprobante de pago no fue aprobado/);
+  assert.match(h.state.sentEmails[2].text, /Secuencia no encontrada/);
+});
+
+test("new free and paid registrations receive accurate confirmations", async () => {
+  for (const [id, fields, subject] of [
+    ["speaker_internal_student", {}, /Tu inscripción está confirmada/],
+    ["speaker_external", paymentFields(), /Recibimos tu inscripción/],
+  ]) {
+    const h = harness();
+    const response = await h.load("../src/app/api/requests/route").POST(formRequest({ ...registrationFields(id), ...fields }));
+    assert.equal(response.status, 201);
+    assert.equal((await response.json()).email_sent, true);
+    assert.match(h.state.sentEmails[0].subject, subject);
+    if (id === "speaker_internal_student") {
+      assert.match(h.state.sentEmails[0].text, /gratuita/);
+      assert.match(h.state.sentEmails[0].text, /Ya puedes presentar tu investigación/);
+    } else assert.match(h.state.sentEmails[0].text, /Pago pendiente de validación/i);
+  }
+});
+
+test("missing SMTP configuration or rejected recipient reports email failure without losing registration", async () => {
+  for (const config of [{ mailConfigured: false }, { rejectRecipient: true }]) {
+    const h = harness([], config);
+    h.state.rejectRecipient = Boolean(config.rejectRecipient);
+    const response = await h.load("../src/app/api/requests/route").POST(formRequest(registrationFields("speaker_internal_student")));
+    assert.equal(response.status, 201);
+    assert.equal((await response.json()).email_sent, false);
+    assert.equal(h.state.records.length, 1);
+  }
+});
+
+test("email HTML escapes participant data and never includes uploaded files, document numbers or private URLs", () => {
+  const h = harness();
+  const { buildRequestEmail } = h.load("../src/lib/email-template");
+  const paper = {
+    ...paperRecord("approved"), name: '<img src=x onerror="alert(1)"> & nombre',
+    topic: '<a href="https://untrusted.invalid">Investigación</a>',
+    file_url: "https://private.invalid/paper.pdf", receipt_url: "https://private.invalid/receipt.pdf",
+  };
+  const message = buildRequestEmail(paper, "status_updated");
+  assert.doesNotMatch(message.html, /<img src=x|<a href="https:\/\/untrusted/);
+  assert.match(message.html, /&lt;img src=x onerror=&quot;alert\(1\)&quot;&gt; &amp; nombre/);
+  assert.match(message.html, /href="https:\/\/www\.coninci2026\.com\/#programa"/);
+  assert.doesNotMatch(message.html + message.text, /private\.invalid|12345678/);
+  assert.ok(message.text.includes(paper.topic));
+  const observed = buildRequestEmail({ ...registration("speaker_external", "rejected"), payment_notes: "<script>bad()</script>\nContactar al comité" }, "payment_reviewed");
+  assert.match(observed.html, /&lt;script&gt;bad\(\)&lt;\/script&gt;<br>Contactar/);
+  assert.doesNotMatch(observed.html, /<script>/);
+});
+
+test("templates distinguish receipt from review and never confirm a rejected free registration", () => {
+  const { buildRequestEmail } = harness().load("../src/lib/email-template");
+  assert.match(buildRequestEmail(paperRecord(), "received").subject, /Recibimos tu investigación/);
+  assert.match(buildRequestEmail(paperRecord(), "status_updated").subject, /Tu ponencia está en revisión/);
+  const rejected = buildRequestEmail({ ...registration("speaker_internal_student"), status: "rejected" }, "status_updated");
+  assert.doesNotMatch(rejected.subject + rejected.text, /inscripción está confirmada/);
+  const attendee = buildRequestEmail(registration("attendee_external", "approved"), "payment_reviewed");
+  assert.doesNotMatch(attendee.text, /Ya puedes presentar tu investigación/);
+  const legacy = buildRequestEmail({ ...registration(null, null), status: "cash" }, "status_updated");
+  assert.doesNotMatch(legacy.text, /inscripción está confirmada|pago ha sido aprobado/);
+});
+
+test("transactional email builds offline with HTML, plain text and two actual embedded PNG logos", async () => {
+  const h = harness();
+  const delivered = await h.load("../src/lib/email").sendRequestEmail(paperRecord("approved"), "status_updated");
+  assert.equal(delivered, true);
+  const message = h.state.sentEmails[0];
+  assert.equal(message.attachments.length, 2);
+  assert.equal(message.replyTo.address, "subdireccion.investigacion.epep@unap.edu.pe");
+  for (const attachment of message.attachments) {
+    assert.equal(attachment.content.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+    assert.ok(message.html.includes("cid:" + attachment.cid));
+    assert.equal(attachment.contentDisposition, "inline");
+  }
+  const MailComposer = requireDependency("nodemailer/lib/mail-composer");
+  const mime = (await new MailComposer(message).compile().build()).toString("utf8");
+  assert.match(mime, /multipart\/alternative/);
+  assert.match(mime, /multipart\/related/);
+  assert.match(mime, /Content-Type: text\/plain; charset=utf-8/);
+  assert.match(mime, /Content-Type: text\/html; charset=utf-8/);
+  assert.match(mime, /Content-ID: <una-logo@coninci2026\.com>/);
+  assert.match(mime, /Content-ID: <epep-logo@coninci2026\.com>/);
+  assert.ok(Buffer.byteLength(mime) < 1024 * 1024);
+});
+
+test("missing logo assets still send a readable email without broken image references", async () => {
+  const h = harness([], { missingLogos: true });
+  assert.equal(await h.load("../src/lib/email").sendRequestEmail(paperRecord("approved"), "status_updated"), true);
+  assert.equal(h.state.sentEmails[0].attachments.length, 0);
+  assert.doesNotMatch(h.state.sentEmails[0].html, /src="cid:/);
+  assert.match(h.state.sentEmails[0].html, /UNIVERSIDAD NACIONAL/);
 });

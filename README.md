@@ -22,7 +22,7 @@ Variables de .env.local:
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
 - SUPABASE_SERVICE_ROLE_KEY (solo servidor)
 - ADMIN_EMAILS (correos autorizados, separados por coma)
-- GMAIL_USER y GMAIL_PASS (contraseña de aplicación, opcionales para enviar confirmaciones)
+- GMAIL_USER y GMAIL_PASS (cuenta de Gmail y contraseña de aplicación; necesarias para enviar notificaciones, también en el alojamiento de producción)
 - PAPER_VERIFICATION_SECRET (opcional; usa una clave larga y aleatoria, solo servidor; de no existir se usa la clave de servicio para firmar la verificación)
 
 No publiques claves ni este archivo.
@@ -59,6 +59,16 @@ Las ponencias se vinculan a la inscripción original, heredan sus datos, admiten
 /admin requiere Supabase Auth y un correo incluido en ADMIN_EMAILS. Muestra categoría, modalidad, documento, institución, tarifa, cargo institucional, secuencia, monto, fecha, comprobante, estado y auditoría del pago, observaciones e investigación vinculada.
 
 Aprobar pago confirma la inscripción y habilita al ponente externo. El estado académico de una ponencia se gestiona por separado. Los errores de red o de base de datos se muestran en el panel.
+
+## Notificaciones por correo
+
+Los correos usan una plantilla azul y dorada con logotipos PNG integrados, texto alternativo, versión de texto plano y enlaces a https://www.coninci2026.com/. Las respuestas se dirigen a subdireccion.investigacion.epep@unap.edu.pe.
+
+Se envían al recibir una inscripción o investigación, al cambiar el estado académico de una ponencia (incluidas aprobación y rechazo), al cambiar el estado de una inscripción y al revisar su pago. Una inscripción gratuita se confirma sin solicitar comprobante. La aprobación de un pago nunca se presenta como aprobación de la ponencia.
+
+El panel indica si el servidor de correo aceptó el envío. Si falla, el cambio permanece guardado y «Reenviar correo» permite volver a notificar el estado actual sin cambiarlo. También sirve para solicitudes anteriores; no se envían correos retroactivos automáticamente. Guardar otra vez el mismo estado no dispara otro correo; cambiar las observaciones del pago sí notifica al interesado. No hay cola de reintentos automáticos ni historial persistente de entregas. La aceptación SMTP no garantiza la llegada a la bandeja principal.
+
+Configura GMAIL_USER y GMAIL_PASS en producción y vuelve a desplegar. Usa una contraseña de aplicación de Google, no la contraseña habitual de la cuenta. Los errores del servidor incluyen el código SMTP y el identificador de solicitud sin mostrar credenciales. Los logotipos de public se incluyen explícitamente en el trazado de archivos de /api/requests para los despliegues de Next.js.
 
 ## Desarrollo y validación
 

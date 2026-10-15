@@ -467,18 +467,6 @@ export default function Home() {
           })}
         </div>
 
-        {/* Footer Text and Buttons */}
-        <div style={{ maxWidth: '850px', margin: '60px auto 0' }}>
-          <p style={{ fontSize: '19px', color: '#B38600', lineHeight: '1.6', marginBottom: '40px' }}>
-            Las entradas son extremadamente limitadas y se espera una alta demanda para estas modalidades. Reserva tu entrada ahora para asegurar tu participación en el congreso y acceder a todas las sesiones, ponencias y networking.
-          </p>
-
-          <a href="#inscripciones" style={{ display: 'block', backgroundColor: '#D4AF37', color: '#FFF', border: 'none', padding: '20px', width: '100%', fontSize: '22px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '50px' }}>
-            Elegir mi categoría
-          </a>
-
-
-        </div>
       </section>
 
       {/* ─── CONTACTO ─── */}

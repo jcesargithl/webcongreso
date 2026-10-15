@@ -6,9 +6,6 @@ export type AuthorityMessage = {
   role: string;
   secondaryRole?: string;
   institution: string;
-  signatureRole: string;
-  signatureDetails?: readonly string[];
-  signatureInstitution: string;
   image: string;
   portraitScale: number;
   paragraphs: readonly string[];
@@ -19,12 +16,10 @@ export const authorities: readonly AuthorityMessage[] = [
   {
     id: "efrain-yupanqui",
     name: "Dr. Efraín Humberto Yupanqui Pino",
-    heading: "Mensaje de Presidencia",
+    heading: "Mensaje del Decano de la FCEDUC",
     greeting: "Estimados colegas y estudiantes,",
     role: "Decano FCEDUC",
     institution: "Universidad Nacional del Altiplano",
-    signatureRole: "Decano",
-    signatureInstitution: "Facultad de Ciencias de la Educación - UNAP",
     image: "/autoridades/efrain_yupanqui.jpg",
     portraitScale: 1,
     paragraphs: [
@@ -39,8 +34,6 @@ export const authorities: readonly AuthorityMessage[] = [
     heading: "Mensaje de Dirección",
     role: "Director del Programa de Estudios de Educación Primaria",
     institution: "Universidad Nacional del Altiplano de Puno - Perú",
-    signatureRole: "Director del Programa de Estudios de Educación Primaria",
-    signatureInstitution: "Universidad Nacional del Altiplano de Puno - Perú",
     image: "/autoridades/henry_mark_vilca_apaza.jpg",
     portraitScale: 1.8,
     paragraphs: [
@@ -56,9 +49,6 @@ export const authorities: readonly AuthorityMessage[] = [
     role: "Presidenta del Comité Organizador",
     secondaryRole: "Subdirectora de Investigación de la Escuela Profesional de Educación Primaria",
     institution: "Universidad Nacional del Altiplano – Puno",
-    signatureRole: "Presidenta del IV Congreso Internacional de Investigación Científica",
-    signatureDetails: ["Subdirectora de Investigación", "Escuela Profesional de Educación Primaria"],
-    signatureInstitution: "Universidad Nacional del Altiplano – Puno",
     image: "/autoridades/ruth_mery_cruz_huisa.png",
     portraitScale: 1.8,
     emphasizedParagraphs: [4],

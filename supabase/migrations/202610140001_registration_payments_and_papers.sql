@@ -17,6 +17,14 @@ CREATE TABLE IF NOT EXISTS public.congress_requests (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+-- Older installations stored identity documents as bigint. Convert them before
+-- creating text-based lookup indexes, preserving the existing values.
+ALTER TABLE public.congress_requests
+  ADD COLUMN IF NOT EXISTS doc_type text,
+  ADD COLUMN IF NOT EXISTS doc_number text;
+ALTER TABLE public.congress_requests
+  ALTER COLUMN doc_number TYPE text USING doc_number::text;
+
 ALTER TABLE public.congress_requests
   ADD COLUMN IF NOT EXISTS category_id text,
   ADD COLUMN IF NOT EXISTS receipt_path text,

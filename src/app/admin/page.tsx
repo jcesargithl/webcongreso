@@ -45,6 +45,7 @@ export default function AdminPage() {
   const [loginBusy, setLoginBusy] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [notice, setNotice] = useState<{ text: string; warning: boolean } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -56,7 +57,7 @@ export default function AdminPage() {
     }).catch(() => { if (active) { setError("No pudimos conectar con el servicio de acceso."); setAuthLoading(false); } });
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, nextSession) => {
       setSession(nextSession);
-      if (!nextSession) { setRequests([]); setError(""); }
+      if (!nextSession) { setRequests([]); setError(""); setNotice(null); }
     });
     return () => { active = false; subscription.unsubscribe(); };
   }, []);
@@ -93,7 +94,7 @@ export default function AdminPage() {
 
   async function updateRequest(id: string, changes: Record<string, string>) {
     if (!session || busyId) return;
-    setBusyId(id); setError("");
+    setBusyId(id); setError(""); setNotice(null);
     try {
       const response = await fetch("/api/requests", {
         method: "PATCH", headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
@@ -103,7 +104,17 @@ export default function AdminPage() {
         const data = await response.json().catch(() => ({}));
         throw new Error(data.error || "No pudimos actualizar la solicitud.");
       }
-      await loadRequests();
+      const data = await response.json();
+      const resend = changes.action === "resend_notification";
+      setNotice({
+        warning: data.email_sent === false,
+        text: data.email_sent === false
+          ? (resend ? "" : "Cambio guardado. ") + "No se pudo enviar el correo a " + data.email + ". Usa «Reenviar correo» para volver a intentarlo."
+          : data.email_sent === true
+            ? (resend ? "Notificación reenviada a " : "Cambio guardado y notificación enviada a ") + data.email + "."
+            : "Solicitud guardada. No se envió otro correo porque el estado no cambió.",
+      });
+      if (!resend) await loadRequests();
     } catch (reason) { setError(reason instanceof Error ? reason.message : "No pudimos actualizar la solicitud."); }
     finally { setBusyId(null); }
   }
@@ -151,6 +162,7 @@ export default function AdminPage() {
         <div><CreditCard size={19} /><span><b>{requests.filter(request => request.kind === "registration" && request.payment_status === "pending").length}</b> pagos por validar</span></div>
       </section>
       {error && <p className="admin-error" role="alert">{error}</p>}
+      {notice && <p className={"admin-notice" + (notice.warning ? " admin-notice-warning" : "")} role="status">{notice.text}</p>}
       <div className="admin-toolbar">
         <div className="filter-tabs">
           <button className={filter === "all" ? "selected" : ""} onClick={() => setFilter("all")}>Todas</button>
@@ -240,7 +252,8 @@ export default function AdminPage() {
                   {request.status === "cash" && <option value="cash" disabled>{statusLabel("cash", request.kind)}</option>}
                   {statuses.map(status => <option key={status} value={status} disabled={status === "approved" && !canApprove}>{statusLabel(status, request.kind)}</option>)}
                 </select>
-                {busyId === request.id && <small>Guardando...</small>}
+                <button className="form-link request-email-button" disabled={Boolean(busyId)} onClick={() => void updateRequest(request.id, { action: "resend_notification" })}>Reenviar correo</button>
+                {busyId === request.id && <small>Procesando...</small>}
               </div>
             </article>
           );

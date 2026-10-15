@@ -119,19 +119,31 @@ export async function PATCH(request: Request) {
     if (!administrator) return Response.json({ error: "No autorizado" }, { status: 401 });
     const body = await request.json().catch(() => null);
     if (!body || typeof body.id !== "string" || !body.id.trim() || body.id.length > 128) throw new ValidationError("Solicitud de actualización inválida.");
+    if (body.action === "resend_notification") {
+      const existing = await getRequest(body.id);
+      if (!existing) throw new ValidationError("Solicitud no encontrada.", 404);
+      const emailSent = await sendRequestEmail(existing, "status_updated");
+      return Response.json({ ...existing, email_sent: emailSent });
+    }
     if (body.action === "review_payment") {
       if (!["approved", "rejected"].includes(body.decision) || (body.notes != null && (typeof body.notes !== "string" || body.notes.length > 2000))) {
         throw new ValidationError("La decisión de pago no es válida.");
       }
-      const updated = await reviewPayment(body.id, body.decision, administrator.id, administrator.email || "", (body.notes || "").trim());
-      await sendRequestEmail(updated);
-      return Response.json(updated);
+      const notes = (body.notes || "").trim();
+      const previous = await getRequest(body.id);
+      const changed = previous?.payment_status !== body.decision || previous?.status !== body.decision || (previous?.payment_notes || "") !== notes;
+      const updated = await reviewPayment(body.id, body.decision, administrator.id, administrator.email || "", notes);
+      const emailSent = changed ? await sendRequestEmail(updated, "payment_reviewed") : null;
+      return Response.json({ ...updated, email_sent: emailSent });
     }
     if (body.action === "assign_category") {
       if (typeof body.category_id !== "string" || !getCategory(body.category_id)) throw new ValidationError("Categoría inválida.");
       return Response.json(await assignLegacyCategory(body.id, body.category_id));
     }
     if (!statuses.includes(body.status)) throw new ValidationError("Estado inválido.");
-    return Response.json(await updateRequestStatus(body.id, body.status));
+    const previousStatus = (await getRequest(body.id))?.status;
+    const updated = await updateRequestStatus(body.id, body.status);
+    const emailSent = previousStatus !== updated.status ? await sendRequestEmail(updated, "status_updated") : null;
+    return Response.json({ ...updated, email_sent: emailSent });
   } catch (error) { return errorResponse(error); }
 }

@@ -1,40 +1,63 @@
 import "server-only";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import nodemailer from "nodemailer";
 import type { CongressRequest } from "./requests";
-import { getCategoryForRequest, formatCurrency } from "./congress";
+import { buildRequestEmail, CONGRESS_CONTACT_EMAIL, type EmailEvent, type EmailLogo } from "./email-template";
 
-function escapeHtml(value: string): string {
-  const entities: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-  return value.replace(/[&<>"']/g, character => entities[character] || character);
-}
+const logoAssets = [
+  { filename: "Logo_UNAP.png", cid: "una-logo@coninci2026.com", alt: "UNA Puno", width: 48, height: 52 },
+  { filename: "logosecu.png", cid: "epep-logo@coninci2026.com", alt: "EPEP", width: 50, height: 52 },
+];
 
-export async function sendRequestEmail(request: CongressRequest): Promise<boolean> {
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) return false;
-  const category = getCategoryForRequest(request);
-  const description = request.kind === "paper"
-    ? "Recibimos tu investigación. El comité académico revisará la ponencia; este mensaje confirma su recepción."
-    : request.payment_status === "exempt"
-      ? "Tu inscripción como ponente interno es gratuita y está registrada. Ya puedes verificar tu inscripción en «Enviar investigación»."
-      : request.payment_status === "approved"
-        ? "Un administrador aprobó tu pago. Tu inscripción está confirmada." + (category?.speaker ? " Ya puedes verificar tu inscripción en «Enviar investigación»." : "")
-        : request.payment_status === "rejected"
-          ? "La Secretaría observó tu comprobante de pago. Contacta al comité para revisar tu inscripción."
-          : "Recibimos tu inscripción y el comprobante de Págalo.pe. Tu pago está pendiente de validación por un administrador.";
+export async function sendRequestEmail(request: CongressRequest, event: EmailEvent = "received"): Promise<boolean> {
+  const user = process.env.GMAIL_USER?.trim();
+  const pass = process.env.GMAIL_PASS;
+  if (!user || !pass) {
+    console.error("Correo no enviado: configura GMAIL_USER y GMAIL_PASS.", { requestId: request.id, event });
+    return false;
+  }
   try {
-    await nodemailer.createTransport({
+    const assets = await Promise.all(logoAssets.map(async asset => {
+      try {
+        return { ...asset, content: await readFile(path.join(process.cwd(), "public", asset.filename)) };
+      } catch {
+        // Keep the notification readable even if a deployment omits a logo.
+        console.error("Logotipo no disponible para el correo:", asset.filename);
+        return null;
+      }
+    }));
+    const logos: EmailLogo[] = [];
+    const attachments = [];
+    for (const asset of assets) {
+      if (!asset) continue;
+      logos.push(asset);
+      attachments.push({ filename: asset.filename, content: asset.content, cid: asset.cid, contentType: "image/png", contentDisposition: "inline" as const });
+    }
+    const message = buildRequestEmail(request, event, logos);
+    const result = await nodemailer.createTransport({
       service: "gmail",
-      auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS },
+      auth: { user, pass },
       connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000,
     }).sendMail({
-      from: '"IV Congreso EPEP" <' + process.env.GMAIL_USER + ">",
-      to: request.email,
-      subject: request.kind === "paper" ? "Investigación recibida - IV Congreso EPEP" : "Estado de inscripción - IV Congreso EPEP",
-      html: '<div style="font-family:sans-serif;color:#333"><h2>Hola, ' + escapeHtml(request.name) + '</h2><p>' + escapeHtml(description) +
-        '</p><p><strong>Categoría:</strong> ' + escapeHtml(request.category || "") + '</p><p><strong>Modalidad:</strong> ' + escapeHtml(request.mode) +
-        '</p>' + (request.payment_amount != null ? '<p><strong>Monto declarado:</strong> ' + formatCurrency(Number(request.payment_amount)) + '</p>' : "") +
-        (request.payment_notes ? '<p><strong>Observaciones:</strong> ' + escapeHtml(request.payment_notes) + '</p>' : "") +
-        '<p>Comité Organizador · IV Congreso Internacional EPEP</p></div>',
+      from: { name: "IV Congreso EPEP", address: user },
+      to: { name: request.name, address: request.email },
+      replyTo: { name: "Comité Organizador EPEP", address: CONGRESS_CONTACT_EMAIL },
+      ...message,
+      attachments,
+      disableFileAccess: true,
+      disableUrlAccess: true,
     });
+    if (!result.accepted.length) {
+      console.error("El servidor de correo no aceptó el destinatario.", { requestId: request.id, event });
+      return false;
+    }
     return true;
-  } catch (error) { console.error("No se pudo enviar el correo de confirmación:", error); return false; }
+  } catch (error) {
+    const failure = error as { code?: string; responseCode?: number };
+    console.error("No se pudo enviar la notificación del congreso:", {
+      requestId: request.id, event, code: failure?.code, responseCode: failure?.responseCode,
+    });
+    return false;
+  }
 }

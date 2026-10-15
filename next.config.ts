@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     "10.123.112.6",
   ],
   outputFileTracingRoot: __dirname,
+  outputFileTracingIncludes: {
+    "/api/requests": ["./public/Logo_UNAP.png", "./public/logosecu.png"],
+  },
   turbopack: {
     root: __dirname,
   },
