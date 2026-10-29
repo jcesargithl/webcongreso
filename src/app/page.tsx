@@ -429,7 +429,20 @@ export default function Home() {
             const { title, fee, features, role: badge, mode, image: img } = category;
             const price = formatCurrency(fee);
             return (
-              <div key={category.id} style={{ backgroundColor: '#FFF', padding: '30px 20px', display: 'flex', flexDirection: 'column' }}>
+              <div
+                key={category.id}
+                style={{
+                  backgroundColor: '#FFF',
+                  padding: '30px 20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  borderRadius: '16px',
+                  border: '1px solid var(--border, rgba(15, 39, 86, 0.1))',
+                  boxShadow: 'var(--shadow-sm, 0 4px 16px rgba(15, 39, 86, 0.05))',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                }}
+              >
                 <h3 style={{ color: '#B38600', fontSize: '18px', fontWeight: 'bold', minHeight: '50px', marginBottom: '10px', textTransform: 'uppercase' }}>
                   {title}
                 </h3>
@@ -440,8 +453,8 @@ export default function Home() {
                   {mode}
                 </span>
 
-                <div style={{ flex: 1, position: 'relative', minHeight: '180px', marginBottom: '25px' }}>
-                  <Image src={img} alt={title as string} fill style={{ objectFit: 'cover' }} />
+                <div style={{ flex: 1, position: 'relative', minHeight: '180px', marginBottom: '25px', borderRadius: '12px', overflow: 'hidden' }}>
+                  <Image src={img} alt={title as string} fill style={{ objectFit: 'cover', borderRadius: '12px' }} />
                 </div>
 
                 <div style={{ marginBottom: '15px', textAlign: 'left', minHeight: '100px' }}>
@@ -456,7 +469,7 @@ export default function Home() {
                 {fee > 0 && <p className="registration-fee-note">Cargo institucional: {formatCurrency(getInstitutionalFee(category))} · Total: {formatCurrency(getRegistrationTotal(category))}</p>}
                 <button
                   onClick={() => setModal({ kind: "registration", categoryId: category.id })}
-                  style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
+                  style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s' }}
                   onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}
                   onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#FFF'; e.currentTarget.style.color = '#B38600'; }}
                 >

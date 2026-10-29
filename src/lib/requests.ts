@@ -46,9 +46,18 @@ export type CongressRequest = {
 export type NewCongressRequest = Omit<CongressRequest, "id" | "created_at" | "receipt_url">;
 
 export async function listRequests(): Promise<CongressRequest[]> {
-  const { data, error } = await supabase.from("congress_requests").select("*").order("created_at", { ascending: false });
-  if (error) throw error;
-  const rows = data as CongressRequest[];
+  const rows: CongressRequest[] = [];
+  const batchSize = 1000;
+  // Read every batch so the admin's pagination, counts and CSV are complete.
+  for (let offset = 0; ; offset += batchSize) {
+    const { data, error } = await supabase.from("congress_requests").select("*")
+      .order("created_at", { ascending: false }).order("id", { ascending: false })
+      .range(offset, offset + batchSize - 1);
+    if (error) throw error;
+    const batch = data as CongressRequest[];
+    rows.push(...batch);
+    if (batch.length < batchSize) break;
+  }
   const paths = [...new Set(rows.flatMap(row => [row.receipt_path, row.file_path].filter((path): path is string => Boolean(path))))];
   if (!paths.length) return rows;
   const { data: urls, error: signingError } = await supabase.storage.from(CONGRESS_FILES_BUCKET).createSignedUrls(paths, 3600);

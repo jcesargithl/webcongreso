@@ -1,4 +1,5 @@
 import "server-only";
+import { after } from "next/server";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import nodemailer from "nodemailer";
@@ -9,6 +10,29 @@ const logoAssets = [
   { filename: "Logo_UNAP.png", cid: "una-logo@coninci2026.com", alt: "UNA Puno", width: 48, height: 52 },
   { filename: "logosecu.png", cid: "epep-logo@coninci2026.com", alt: "EPEP", width: 50, height: 52 },
 ];
+
+export type RequestEmailStatus = "pending" | "unavailable";
+
+export function queueRequestEmail(request: CongressRequest, event: EmailEvent = "received"): RequestEmailStatus {
+  if (!process.env.GMAIL_USER?.trim() || !process.env.GMAIL_PASS) {
+    console.error("Correo no programado: configura GMAIL_USER y GMAIL_PASS.", { requestId: request.id, event });
+    return "unavailable";
+  }
+  try {
+    after(async () => {
+      const startedAt = performance.now();
+      const sent = await sendRequestEmail(request, event);
+      console.info("Notificación de solicitud procesada:", {
+        requestId: request.id, event, sent, durationMs: Math.round(performance.now() - startedAt),
+      });
+    });
+    return "pending";
+  } catch {
+    // A scheduling failure must not undo a request that is already saved.
+    console.error("No se pudo programar el correo de la solicitud.", { requestId: request.id, event });
+    return "unavailable";
+  }
+}
 
 export async function sendRequestEmail(request: CongressRequest, event: EmailEvent = "received"): Promise<boolean> {
   const user = process.env.GMAIL_USER?.trim();

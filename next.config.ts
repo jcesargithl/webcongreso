@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     "192.168.1.46",
     "10.70.216.6",
     "10.123.112.6",
+    "10.90.125.6",
   ],
   outputFileTracingRoot: __dirname,
   outputFileTracingIncludes: {

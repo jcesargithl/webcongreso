@@ -12,17 +12,18 @@ const ADMIN_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const REGISTRATION_ID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 
 function harness(initial = [], options = {}) {
-  const state = { records: initial.map(row => ({ ...row })), uploads: [], removed: [], failInsert: null, sentEmails: [], failMail: false, rejectRecipient: false };
+  const state = { records: initial.map(row => ({ ...row })), uploads: [], removed: [], failInsert: null, sentEmails: [], failMail: false, rejectRecipient: false, afterWork: [] };
   class Query {
-    constructor() { this.filters = []; this.operation = "select"; this.cap = Infinity; }
+    constructor() { this.filters = []; this.operation = "select"; this.cap = Infinity; this.offset = 0; }
     select() { return this; }
     eq(key, value) { this.filters.push(row => row[key] === value); return this; }
     ilike(key, value) { const literal = value.replace(/\\([\\%_])/g, "$1").toLowerCase(); this.filters.push(row => (row[key] || "").toLowerCase() === literal); return this; }
     order() { return this; }
     limit(value) { this.cap = value; return this; }
+    range(from, to) { this.offset = from; this.cap = to - from + 1; return this; }
     insert(value) { this.operation = "insert"; this.value = value; return this; }
     update(value) { this.operation = "update"; this.value = value; return this; }
-    rows() { return state.records.filter(row => this.filters.every(filter => filter(row))).slice(0, this.cap); }
+    rows() { return state.records.filter(row => this.filters.every(filter => filter(row))).slice(this.offset, this.offset + this.cap); }
     async maybeSingle() { return { data: this.rows()[0] || null, error: null }; }
     async single() {
       if (this.operation === "insert") {
@@ -53,8 +54,13 @@ function harness(initial = [], options = {}) {
   const cache = new Map();
   function load(request, parent = path.join(process.cwd(), "tests/registration-flow.test.mjs")) {
     if (request === "server-only") return {};
+    if (request === "next/server") return { after: callback => {
+      if (options.failSchedule) throw new Error("Simulated scheduling failure");
+      state.afterWork.push(callback);
+    } };
     if (request === "node:fs/promises" && options.missingLogos) return { readFile: async () => { throw new Error("Missing test logo"); } };
     if (request === "nodemailer") return { createTransport: () => ({ sendMail: async message => {
+      await options.waitForMail;
       if (state.failMail) throw Object.assign(new Error("Simulated SMTP failure"), { code: "ECONNECTION" });
       state.sentEmails.push(message);
       return { accepted: state.rejectRecipient ? [] : [message.to.address] };
@@ -71,7 +77,9 @@ function harness(initial = [], options = {}) {
     new Function("require", "module", "exports", "process", code)(key => load(key, filename), compiledModule, compiledModule.exports, environment);
     return compiledModule.exports;
   }
-  return { state, load };
+  return { state, load, flushAfter: async () => {
+    for (const callback of state.afterWork.splice(0)) await callback();
+  } };
 }
 function registration(categoryId, paymentStatus = "exempt") {
   return {
@@ -381,7 +389,11 @@ test("new free and paid registrations receive accurate confirmations", async () 
     const h = harness();
     const response = await h.load("../src/app/api/requests/route").POST(formRequest({ ...registrationFields(id), ...fields }));
     assert.equal(response.status, 201);
-    assert.equal((await response.json()).email_sent, true);
+    const result = await response.json();
+    assert.equal(result.email_sent, null);
+    assert.equal(result.email_status, "pending");
+    assert.equal(h.state.sentEmails.length, 0);
+    await h.flushAfter();
     assert.match(h.state.sentEmails[0].subject, subject);
     if (id === "speaker_internal_student") {
       assert.match(h.state.sentEmails[0].text, /gratuita/);
@@ -390,15 +402,85 @@ test("new free and paid registrations receive accurate confirmations", async () 
   }
 });
 
-test("missing SMTP configuration or rejected recipient reports email failure without losing registration", async () => {
-  for (const config of [{ mailConfigured: false }, { rejectRecipient: true }]) {
-    const h = harness([], config);
-    h.state.rejectRecipient = Boolean(config.rejectRecipient);
-    const response = await h.load("../src/app/api/requests/route").POST(formRequest(registrationFields("speaker_internal_student")));
-    assert.equal(response.status, 201);
-    assert.equal((await response.json()).email_sent, false);
-    assert.equal(h.state.records.length, 1);
+test("missing SMTP configuration reports unavailable mail without losing registration", async () => {
+  const h = harness([], { mailConfigured: false });
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest(registrationFields("speaker_internal_student")));
+  assert.equal(response.status, 201);
+  const result = await response.json();
+  assert.equal(result.email_sent, false);
+  assert.equal(result.email_status, "unavailable");
+  assert.equal(h.state.records.length, 1);
+  assert.equal(h.state.afterWork.length, 0);
+});
+
+test("rejected recipient does not undo a registration after its response", async () => {
+  const h = harness();
+  h.state.rejectRecipient = true;
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest(registrationFields("speaker_internal_student")));
+  assert.equal(response.status, 201);
+  assert.equal((await response.json()).email_status, "pending");
+  await h.flushAfter();
+  assert.equal(h.state.records.length, 1);
+  assert.equal(h.state.sentEmails.length, 1);
+});
+
+test("paper submission responds while SMTP is blocked and records upload timings", { timeout: 3000 }, async t => {
+  let releaseMail;
+  const waitForMail = new Promise(resolve => { releaseMail = resolve; });
+  t.after(() => releaseMail());
+  const h = harness([registration("speaker_internal_teacher")], { waitForMail });
+  const token = h.load("../src/lib/paper-verification").issueVerificationToken(h.state.records[0]);
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest({
+    kind: "paper", verification_token: token, topic: "Investigación de prueba", file: pdf(),
+  }));
+  assert.equal(response.status, 201);
+  const result = await response.json();
+  assert.equal(result.email_status, "pending");
+  assert.equal(result.email_sent, null);
+  assert.equal(h.state.records.length, 2);
+  assert.equal(h.state.uploads.length, 1);
+  assert.equal(h.state.sentEmails.length, 0);
+  for (const name of ["form", "registration", "storage", "database", "total"]) {
+    assert.match(response.headers.get("Server-Timing"), new RegExp(name + ";dur=[0-9]+[.][0-9]"));
   }
+  let mailFinished = false;
+  const mailWork = h.flushAfter().then(() => { mailFinished = true; });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(mailFinished, false);
+  releaseMail();
+  await mailWork;
+  assert.equal(h.state.sentEmails.length, 1);
+  assert.deepEqual(h.state.removed, []);
+});
+
+test("background SMTP failure preserves the uploaded paper and saved request", async () => {
+  const h = harness([registration("speaker_internal_student")]);
+  h.state.failMail = true;
+  const token = h.load("../src/lib/paper-verification").issueVerificationToken(h.state.records[0]);
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest({
+    kind: "paper", verification_token: token, topic: "Investigación de prueba", file: pdf(),
+  }));
+  assert.equal(response.status, 201);
+  assert.equal((await response.json()).email_status, "pending");
+  await h.flushAfter();
+  assert.equal(h.state.records.length, 2);
+  assert.equal(h.state.uploads.length, 1);
+  assert.deepEqual(h.state.removed, []);
+});
+
+test("notification scheduling failure preserves a paid registration and its voucher", async () => {
+  const h = harness([], { failSchedule: true });
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest({
+    ...registrationFields("speaker_external"), ...paymentFields(),
+  }));
+  assert.equal(response.status, 201);
+  const result = await response.json();
+  assert.equal(result.email_sent, false);
+  assert.equal(result.email_status, "unavailable");
+  assert.equal(h.state.records.length, 1);
+  assert.equal(h.state.uploads.length, 1);
+  assert.deepEqual(h.state.removed, []);
+  assert.equal(h.state.afterWork.length, 0);
 });
 
 test("email HTML escapes participant data and never includes uploaded files, document numbers or private URLs", () => {
@@ -461,4 +543,15 @@ test("missing logo assets still send a readable email without broken image refer
   assert.equal(h.state.sentEmails[0].attachments.length, 0);
   assert.doesNotMatch(h.state.sentEmails[0].html, /src="cid:/);
   assert.match(h.state.sentEmails[0].html, /UNIVERSIDAD NACIONAL/);
+});
+
+test("admin listing includes registrations beyond a single database result page", async () => {
+  const records = Array.from({ length: 1005 }, (_, index) => ({
+    ...registration("speaker_internal_student"), id: "test-registration-" + index,
+  }));
+  const h = harness(records);
+  const rows = await h.load("../src/lib/requests").listRequests();
+  assert.equal(rows.length, 1005);
+  assert.equal(new Set(rows.map(row => row.id)).size, 1005);
+  assert.ok(rows.some(row => row.id === "test-registration-1004"));
 });

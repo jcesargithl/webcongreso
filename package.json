@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/registration-flow.test.mjs"
+    "test": "node --test tests/registration-flow.test.mjs tests/admin-requests.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

@@ -7,7 +7,7 @@ import { categoryLabel, formatCurrency, getCategory, getInstitutionalFee, getReg
 export type ModalState = { kind: "registration"; categoryId: RegistrationCategoryId } | { kind: "paper" } | null;
 type VerifiedRegistration = { id: string; name: string; email: string; doc_type: string; doc_number: string; institution: string; category: string; mode: string };
 type Verification = { token: string; registration: VerifiedRegistration };
-type SubmissionResult = { id: string; payment_status: string; email_sent: boolean };
+type SubmissionResult = { id: string; payment_status: string; email_sent: boolean | null; email_status?: "pending" | "unavailable" };
 
 export function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onClose: () => void }) {
   const [error, setError] = useState("");
@@ -104,7 +104,11 @@ export function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState
             <p>{isPaper ? "El comité académico revisará tu ponencia. La recepción del archivo no significa que la ponencia ya fue aprobada."
               : result.payment_status === "exempt" ? "Tu inscripción como ponente interno es gratuita. Ya puedes verificarla en «Enviar investigación»."
                 : "Guardamos tus datos y tu comprobante. Un administrador revisará el pago antes de confirmar la inscripción."}</p>
-            <p>{result.email_sent ? "Enviamos una confirmación a tu correo. Revisa también la carpeta de spam." : "Tu solicitud quedó guardada. No pudimos enviar la confirmación por correo; contacta a la Secretaría si necesitas ayuda."}</p>
+            <p>{result.email_status === "pending"
+              ? "La confirmación por correo está en proceso. Revisa tu bandeja de entrada y la carpeta de spam."
+              : result.email_sent
+                ? "Enviamos una confirmación a tu correo. Revisa también la carpeta de spam."
+                : "Tu solicitud quedó guardada. No pudimos enviar la confirmación por correo; contacta a la Secretaría si necesitas ayuda."}</p>
             <a className="btn btn-outline btn-full" href="https://wa.me/51926465929?text=Hola%2C%20necesito%20ayuda%20con%20mi%20inscripci%C3%B3n%20al%20IV%20Congreso." target="_blank" rel="noreferrer">Contactar por WhatsApp</a>
             <button className="btn btn-outline btn-full" onClick={onClose}>Cerrar</button>
           </div>

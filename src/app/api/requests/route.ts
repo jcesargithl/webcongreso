@@ -6,7 +6,7 @@ import { getCategory, categoryLabel, getInstitutionalFee, getRegistrationTotal, 
 import { assertSpeakerEligibility, normalizeDocument, normalizeEmail, validatePayment, validatePdf, ValidationError } from "@/lib/registration-rules";
 import { readVerificationToken } from "@/lib/paper-verification";
 import { errorResponse } from "@/lib/api-errors";
-import { sendRequestEmail } from "@/lib/email";
+import { queueRequestEmail, sendRequestEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 const statuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected"];
@@ -32,8 +32,21 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const uploaded: string[] = [];
+  const startedAt = performance.now();
+  const timings: Record<string, number> = {};
+  async function measure<T>(name: string, operation: () => Promise<T>): Promise<T> {
+    const stageStartedAt = performance.now();
+    try { return await operation(); }
+    finally { timings[name] = performance.now() - stageStartedAt; }
+  }
+  function timingHeaders() {
+    return {
+      "Server-Timing": Object.entries({ ...timings, total: performance.now() - startedAt })
+        .map(([name, duration]) => name + ";dur=" + duration.toFixed(1)).join(", "),
+    };
+  }
   try {
-    const form = await request.formData().catch(() => { throw new ValidationError("El formulario no es válido."); });
+    const form = await measure("form", () => request.formData()).catch(() => { throw new ValidationError("El formulario no es válido."); });
     const kind = field(form, "kind");
     let input: NewCongressRequest;
     if (kind === "registration") {
@@ -72,7 +85,7 @@ export async function POST(request: Request) {
           .eq("kind", "registration").eq("payment_sequence", payment.sequence).eq("payment_date", payment.date).limit(1).maybeSingle();
         if (receiptError) throw receiptError;
         if (usedReceipt) throw new ValidationError("Este comprobante ya fue utilizado en otra inscripción.", 409);
-        const path = await uploadPdf(receipt, "receipts");
+        const path = await measure("storage", () => uploadPdf(receipt, "receipts"));
         uploaded.push(path);
         Object.assign(input, {
           payment_method: "pagalo_pe", payment_sequence: payment.sequence, payment_amount: payment.amount,
@@ -82,7 +95,7 @@ export async function POST(request: Request) {
       }
     } else if (kind === "paper") {
       const claims = readVerificationToken(field(form, "verification_token"));
-      const registration = await getRequest(claims.id);
+      const registration = await measure("registration", () => getRequest(claims.id));
       const category = assertSpeakerEligibility(registration);
       if (!registration || registration.email.toLowerCase() !== claims.email || registration.doc_type !== claims.documentType || registration.doc_number !== claims.documentNumber) {
         throw new ValidationError("Tu inscripción cambió. Vuelve a verificarla.", 403);
@@ -92,7 +105,7 @@ export async function POST(request: Request) {
       if (!topic || topic.length > 300 || message.length > 10000) throw new ValidationError("Ingresa un título válido y un resumen de hasta 10 000 caracteres.");
       const rawPaper = form.get("file");
       const paper = await validatePdf(rawPaper instanceof File ? rawPaper : null, PAPER_MAX_BYTES, "la investigación");
-      const path = await uploadPdf(paper, "papers");
+      const path = await measure("storage", () => uploadPdf(paper, "papers"));
       uploaded.push(path);
       input = {
         kind, registration_id: registration.id, category_id: category.id, category: categoryLabel(category),
@@ -101,15 +114,22 @@ export async function POST(request: Request) {
         registration_fee: 0, institutional_fee: 0, payment_status: "exempt", status: "reviewing",
       };
     } else throw new ValidationError("Tipo de solicitud inválido.");
-    const created = await createRequest(input);
-    const emailSent = await sendRequestEmail(created);
-    return Response.json({ id: created.id, kind: created.kind, status: created.status, payment_status: created.payment_status, email_sent: emailSent }, { status: 201 });
+    const created = await measure("database", () => createRequest(input));
+    const emailStatus = queueRequestEmail(created);
+    const headers = timingHeaders();
+    console.info("Solicitud del congreso guardada:", { requestId: created.id, kind: created.kind, timings: headers["Server-Timing"] });
+    return Response.json({
+      id: created.id, kind: created.kind, status: created.status, payment_status: created.payment_status,
+      email_sent: emailStatus === "pending" ? null : false, email_status: emailStatus,
+    }, { status: 201, headers });
   } catch (error) {
     if (uploaded.length) {
       const { error: cleanupError } = await supabase.storage.from(CONGRESS_FILES_BUCKET).remove(uploaded);
       if (cleanupError) console.error("No se pudo eliminar un archivo de la solicitud fallida:", cleanupError);
     }
-    return errorResponse(error);
+    const response = errorResponse(error);
+    response.headers.set("Server-Timing", timingHeaders()["Server-Timing"]);
+    return response;
   }
 }
 
