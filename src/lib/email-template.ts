@@ -5,6 +5,7 @@ export type EmailEvent = "received" | "status_updated" | "payment_reviewed";
 export type EmailLogo = { cid: string; alt: string; width: number; height: number };
 export const CONGRESS_SITE_URL = "https://www.coninci2026.com";
 export const CONGRESS_CONTACT_EMAIL = "subdireccion.investigacion.epep@unap.edu.pe";
+export const CONGRESS_WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/FeX0kvwFsli3RC18gROIEh";
 
 type MessageContent = {
   title: string;
@@ -119,6 +120,9 @@ export function buildRequestEmail(request: CongressRequest, event: EmailEvent = 
     }
   }
   const notes = request.kind === "registration" ? request.payment_notes?.trim() : undefined;
+  const isConfirmedRegistration = request.kind === "registration" &&
+    request.status === "approved" &&
+    (request.payment_status === "approved" || request.payment_status === "exempt");
   const color = { success: { text: "#176244", background: "#e9f5ee" }, pending: { text: "#755817", background: "#fff5d8" }, attention: { text: "#9a3d37", background: "#fceeed" } }[content.tone];
   const e = escapeHtml;
   const paragraph = (value: string) => '<p style="margin:0 0 18px;font-size:16px;line-height:26px;color:#46536a;">' + e(value) + "</p>";
@@ -145,6 +149,20 @@ export function buildRequestEmail(request: CongressRequest, event: EmailEvent = 
     '<h2 style="margin:24px 0 8px;font-size:16px;line-height:24px;color:#142e59;">¿Qué sigue?</h2>',
     paragraph(content.next),
     '<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:6px 0 24px;"><tr><td bgcolor="#d5ad36" style="border-radius:6px;mso-padding-alt:15px 24px;"><a href="' + e(content.href) + '" style="display:inline-block;padding:15px 24px;mso-padding-alt:0;color:#10294f;font-size:15px;font-weight:bold;text-decoration:none;border:1px solid #d5ad36;border-radius:6px;">' + e(content.button) + "</a></td></tr></table>",
+    ...(isConfirmedRegistration ? [
+      '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:16px 0 24px;border:1px solid #bce6cb;border-radius:10px;background-color:#f0fbf4;overflow:hidden;">',
+      '<tr><td style="padding:20px 22px;">',
+      '<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:8px;"><tr>',
+      '<td bgcolor="#25d366" style="padding:4px 10px;border-radius:12px;color:#ffffff;font-size:11px;font-weight:bold;letter-spacing:0.5px;">WHATSAPP</td>',
+      '<td style="padding-left:10px;font-size:15px;font-weight:bold;color:#0d5e36;">Grupo oficial del congreso</td>',
+      '</tr></table>',
+      '<p style="margin:0 0 14px;font-size:14px;line-height:22px;color:#244c35;">Únete al grupo de WhatsApp de participantes para recibir avisos oficiales, el cronograma en tiempo real y coordinaciones del evento:</p>',
+      '<table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr><td bgcolor="#25d366" style="border-radius:6px;mso-padding-alt:13px 22px;">',
+      '<a href="' + e(CONGRESS_WHATSAPP_GROUP_URL) + '" style="display:inline-block;padding:13px 22px;mso-padding-alt:0;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;border:1px solid #25d366;border-radius:6px;">Unirme al grupo de WhatsApp</a>',
+      '</td></tr></table>',
+      '<p style="margin:12px 0 0;font-size:12px;line-height:18px;color:#4f6f5b;">Enlace directo: <a href="' + e(CONGRESS_WHATSAPP_GROUP_URL) + '" style="color:#0d5e36;font-weight:bold;text-decoration:underline;word-break:break-all;">' + e(CONGRESS_WHATSAPP_GROUP_URL) + '</a></p>',
+      '</td></tr></table>',
+    ] : []),
     '<p style="margin:0 0 20px;font-size:12px;line-height:20px;color:#748198;">Código de solicitud<br><span style="font-family:Consolas,monospace;word-break:break-all;">' + e(request.id) + "</span></p></td></tr>",
     '<tr><td class="pad" bgcolor="#f6f8fc" style="padding:24px 40px;border-top:1px solid #e5eaf2;"><p style="margin:0 0 8px;font-size:14px;line-height:23px;color:#142e59;"><strong>Comité Organizador · IV Congreso EPEP</strong><br>Escuela Profesional de Educación Primaria<br>Universidad Nacional del Altiplano – Puno</p><p style="margin:0;font-size:12px;line-height:21px;color:#68758b;">¿Necesitas ayuda? Responde a este correo o escríbenos a<br><a href="mailto:' + CONGRESS_CONTACT_EMAIL + '" style="color:#244d87;text-decoration:underline;word-break:break-all;">' + CONGRESS_CONTACT_EMAIL + "</a></p></td></tr></table>",
     '<!--[if mso]></td></tr></table><![endif]-->',
@@ -159,6 +177,12 @@ export function buildRequestEmail(request: CongressRequest, event: EmailEvent = 
     ...details.map(([label, value]) => label + ": " + value),
     ...(notes ? ["", "Observaciones de la revisión:", notes] : []),
     "", "¿Qué sigue?", content.next, "", content.button + ": " + content.href,
+    ...(isConfirmedRegistration ? [
+      "",
+      "Grupo oficial de WhatsApp:",
+      "Únete al grupo del congreso para recibir avisos y novedades en tiempo real:",
+      CONGRESS_WHATSAPP_GROUP_URL,
+    ] : []),
     "", "Código de solicitud: " + request.id, "",
     "Comité Organizador · IV Congreso EPEP", "Escuela Profesional de Educación Primaria",
     "Universidad Nacional del Altiplano – Puno", "Contacto: " + CONGRESS_CONTACT_EMAIL,

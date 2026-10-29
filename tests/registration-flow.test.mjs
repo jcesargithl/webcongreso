@@ -503,7 +503,7 @@ test("email HTML escapes participant data and never includes uploaded files, doc
 });
 
 test("templates distinguish receipt from review and never confirm a rejected free registration", () => {
-  const { buildRequestEmail } = harness().load("../src/lib/email-template");
+  const { buildRequestEmail, CONGRESS_WHATSAPP_GROUP_URL } = harness().load("../src/lib/email-template");
   assert.match(buildRequestEmail(paperRecord(), "received").subject, /Recibimos tu investigación/);
   assert.match(buildRequestEmail(paperRecord(), "status_updated").subject, /Tu ponencia está en revisión/);
   const rejected = buildRequestEmail({ ...registration("speaker_internal_student"), status: "rejected" }, "status_updated");
@@ -512,6 +512,33 @@ test("templates distinguish receipt from review and never confirm a rejected fre
   assert.doesNotMatch(attendee.text, /Ya puedes presentar tu investigación/);
   const legacy = buildRequestEmail({ ...registration(null, null), status: "cash" }, "status_updated");
   assert.doesNotMatch(legacy.text, /inscripción está confirmada|pago ha sido aprobado/);
+});
+
+test("confirmed registrations include congress WhatsApp group link while pending and paper emails omit it", () => {
+  const { buildRequestEmail, CONGRESS_WHATSAPP_GROUP_URL } = harness().load("../src/lib/email-template");
+  assert.equal(CONGRESS_WHATSAPP_GROUP_URL, "https://chat.whatsapp.com/FeX0kvwFsli3RC18gROIEh");
+
+  // Free confirmed registration
+  const freeConfirmed = buildRequestEmail(registration("speaker_internal_teacher", "exempt"), "received");
+  assert.ok(freeConfirmed.html.includes(CONGRESS_WHATSAPP_GROUP_URL));
+  assert.ok(freeConfirmed.text.includes(CONGRESS_WHATSAPP_GROUP_URL));
+
+  // Paid confirmed registration
+  const paidConfirmed = buildRequestEmail(registration("attendee_external", "approved"), "payment_reviewed");
+  assert.ok(paidConfirmed.html.includes(CONGRESS_WHATSAPP_GROUP_URL));
+  assert.ok(paidConfirmed.text.includes(CONGRESS_WHATSAPP_GROUP_URL));
+
+  // Pending payment registration
+  const pendingRegistration = buildRequestEmail({ ...registration("attendee_external", "pending"), status: "reviewing" }, "received");
+  assert.doesNotMatch(pendingRegistration.html + pendingRegistration.text, /chat\.whatsapp\.com/);
+
+  // Rejected registration
+  const rejectedRegistration = buildRequestEmail({ ...registration("attendee_external", "rejected"), status: "rejected" }, "payment_reviewed");
+  assert.doesNotMatch(rejectedRegistration.html + rejectedRegistration.text, /chat\.whatsapp\.com/);
+
+  // Paper emails
+  const approvedPaper = buildRequestEmail(paperRecord("approved"), "status_updated");
+  assert.doesNotMatch(approvedPaper.html + approvedPaper.text, /chat\.whatsapp\.com/);
 });
 
 test("transactional email builds offline with HTML, plain text and two actual embedded PNG logos", async () => {
