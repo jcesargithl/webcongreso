@@ -474,6 +474,7 @@ export default function Home() {
                   <p className="registration-fee-note" style={{ color: '#176244', fontWeight: 600 }}>Exonerado de pago · Comunidad EPEP</p>
                 )}
                 <button
+                  type="button"
                   onClick={() => setModal({ kind: "registration", categoryId: category.id })}
                   style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s', marginTop: 'auto' }}
                   onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}

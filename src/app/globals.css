@@ -65,7 +65,7 @@
 
   /* Z-index layers */
   --z-nav: 100;
-  --z-modal: 200;
+  --z-modal: 99999;
 }
 
 /* ── RESET ── */
