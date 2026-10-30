@@ -21,7 +21,16 @@ function harness(initial = [], options = {}) {
     order() { return this; }
     limit(value) { this.cap = value; return this; }
     range(from, to) { this.offset = from; this.cap = to - from + 1; return this; }
-    insert(value) { this.operation = "insert"; this.value = value; return this; }
+    insert(value) {
+      this.operation = "insert";
+      this.value = value;
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          state.records.push({ id: crypto.randomUUID(), created_at: "2026-10-14T15:00:00Z", ...item });
+        }
+      }
+      return this;
+    }
     update(value) { this.operation = "update"; this.value = value; return this; }
     rows() { return state.records.filter(row => this.filters.every(filter => filter(row))).slice(this.offset, this.offset + this.cap); }
     async maybeSingle() { return { data: this.rows()[0] || null, error: null }; }
@@ -175,7 +184,7 @@ test("paid registration ignores forged price and modality, saves complete vouche
   const saved = h.state.records[0];
   assert.equal(saved.registration_fee, 100);
   assert.equal(saved.institutional_fee, 1);
-  assert.equal(saved.mode, "Presencial");
+  assert.equal(saved.mode, "Híbrido");
   assert.equal(saved.payment_status, "pending");
   assert.equal(saved.payment_sequence, "093245");
   assert.match(saved.receipt_path, /^receipts\/.+\.pdf$/);
@@ -581,4 +590,45 @@ test("admin listing includes registrations beyond a single database result page"
   assert.equal(rows.length, 1005);
   assert.equal(new Set(rows.map(row => row.id)).size, 1005);
   assert.ok(rows.some(row => row.id === "test-registration-1004"));
+});
+
+test("corporate registration requires minimum 10 participants, applies 20% discount and routes to manager", async () => {
+  const h = harness();
+  const makeCorporateForm = (count, overrides = {}) => {
+    const form = new FormData();
+    form.set("manager_name", "Dra. Coordinadora");
+    form.set("manager_email", "encargado@universidad.test");
+    form.set("manager_phone", "982311128");
+    form.set("manager_institution", "Universidad Nacional del Altiplano");
+    const list = Array.from({ length: count }, (_, i) => ({
+      name: "Participante " + (i + 1),
+      doc_type: "DNI",
+      doc_number: String(10000000 + i),
+      category_id: "student_external",
+      mode: "Híbrido",
+    }));
+    form.set("participants_json", JSON.stringify(list));
+    for (const [k, v] of Object.entries(overrides)) form.set(k, v);
+    return new Request("http://localhost/api/corporate", { method: "POST", body: form });
+  };
+
+  const corporateRoute = h.load("../src/app/api/corporate/route");
+
+  // Fewer than 10 participants rejected
+  const shortRes = await corporateRoute.POST(makeCorporateForm(9));
+  assert.equal(shortRes.status, 400);
+
+  // 10 participants successful
+  const successRes = await corporateRoute.POST(makeCorporateForm(10));
+  assert.equal(successRes.status, 201);
+  const data = await successRes.json();
+  assert.equal(data.count, 10);
+  assert.equal(data.managerEmail, "encargado@universidad.test");
+  assert.equal(h.state.records.length, 10);
+  // All 10 have the manager's email
+  assert.ok(h.state.records.every(r => r.email === "encargado@universidad.test"));
+  // 20% discount check: 10 participants * (30 fee + 1 inst fee) = 310
+  assert.equal(data.subtotal, 310);
+  assert.equal(data.discount, 62);
+  assert.equal(data.total, 248);
 });

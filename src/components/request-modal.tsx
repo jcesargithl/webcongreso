@@ -4,12 +4,16 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "r
 import { Check, CreditCard, ExternalLink, FileText, Send, X } from "lucide-react";
 import { categoryLabel, formatCurrency, getCategory, getInstitutionalFee, getRegistrationTotal, PAGALO_URL, PAYMENT_CODE, PAYMENT_ENTITY, PAYMENT_SERVICE, PAPER_MAX_BYTES, RECEIPT_MAX_BYTES, type RegistrationCategoryId } from "@/lib/congress";
 
-export type ModalState = { kind: "registration"; categoryId: RegistrationCategoryId } | { kind: "paper" } | null;
+export type ModalState =
+  | { kind: "registration"; categoryId: RegistrationCategoryId }
+  | { kind: "paper" }
+  | { kind: "corporate" }
+  | null;
 type VerifiedRegistration = { id: string; name: string; email: string; doc_type: string; doc_number: string; institution: string; category: string; mode: string };
 type Verification = { token: string; registration: VerifiedRegistration };
 type SubmissionResult = { id: string; payment_status: string; email_sent: boolean | null; email_status?: "pending" | "unavailable" };
 
-export function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState>; onClose: () => void }) {
+export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<ModalState>, { kind: "registration" | "paper" }>; onClose: () => void }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [verification, setVerification] = useState<Verification | null>(null);
@@ -109,7 +113,7 @@ export function RequestModal({ modal, onClose }: { modal: NonNullable<ModalState
               : result.email_sent
                 ? "Enviamos una confirmación a tu correo. Revisa también la carpeta de spam."
                 : "Tu solicitud quedó guardada. No pudimos enviar la confirmación por correo; contacta a la Secretaría si necesitas ayuda."}</p>
-            <a className="btn btn-outline btn-full" href="https://wa.me/51926465929?text=Hola%2C%20necesito%20ayuda%20con%20mi%20inscripci%C3%B3n%20al%20IV%20Congreso." target="_blank" rel="noreferrer">Contactar por WhatsApp</a>
+            <a className="btn btn-outline btn-full" href="https://wa.me/51982311128?text=Hola%20Dra.%20Ruth%2C%20necesito%20ayuda%20con%20mi%20inscripci%C3%B3n%20al%20IV%20Congreso." target="_blank" rel="noreferrer">Contactar por WhatsApp (Dra. Ruth)</a>
             <button className="btn btn-outline btn-full" onClick={onClose}>Cerrar</button>
           </div>
         ) : (

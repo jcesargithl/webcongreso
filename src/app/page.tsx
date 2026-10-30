@@ -5,6 +5,7 @@ import Link from "next/link";
 import { speakers } from "@/lib/speakers";
 import { registrationCategories, formatCurrency, getInstitutionalFee, getRegistrationTotal } from "@/lib/congress";
 import { RequestModal, type ModalState } from "@/components/request-modal";
+import { CorporateModal } from "@/components/corporate-modal";
 import { AuthoritySlider } from "@/components/authority-slider";
 import { useState, useEffect, useRef } from "react";
 import {
@@ -15,6 +16,7 @@ import {
   FileText,
   MapPin,
   Menu,
+  Phone,
   Send,
   Sparkles,
   Users,
@@ -482,6 +484,133 @@ export default function Home() {
               </div>
             );
           })}
+
+          {/* ─── TARJETA DE PAGO CORPORATIVO ─── */}
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              backgroundColor: '#FFF',
+              padding: '35px clamp(20px, 4vw, 40px)',
+              borderRadius: '16px',
+              border: '2px solid #D4AF37',
+              boxShadow: 'var(--shadow-sm, 0 4px 16px rgba(15, 39, 86, 0.05))',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+              textAlign: 'left',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '15px' }}>
+              <div>
+                <span style={{ display: 'inline-block', backgroundColor: 'rgba(212, 175, 55, 0.15)', color: '#B38600', fontWeight: 'bold', fontSize: '12px', padding: '4px 12px', borderRadius: '20px', letterSpacing: '0.05em', marginBottom: '8px', textTransform: 'uppercase' }}>
+                  Grupos y Delegaciones
+                </span>
+                <h3 style={{ color: '#0F2756', fontSize: '24px', fontWeight: 'bold', margin: 0, textTransform: 'uppercase' }}>
+                  Pago Corporativo (20% de Descuento)
+                </h3>
+              </div>
+              <span className="registration-mode-badge" style={{ margin: 0 }}>
+                <Globe size={14} aria-hidden="true" />
+                Presencial / Híbrido
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px', alignItems: 'center', borderTop: '1px solid #ECECEC', paddingTop: '20px' }}>
+              <div>
+                <p style={{ color: '#444', fontSize: '15px', lineHeight: '1.6', marginBottom: '14px' }}>
+                  Beneficio especial para instituciones educativas, universidades, colegios profesionales y delegaciones académicas:
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <p style={{ color: '#444', fontSize: '14px', margin: 0, display: 'flex', gap: '8px' }}>
+                    <span style={{ color: '#B38600', fontWeight: 'bold' }}>•</span>
+                    <span><strong>Mínimo de 10 a más participantes:</strong> 20% de descuento sobre el monto total de inscripción.</span>
+                  </p>
+                  <p style={{ color: '#444', fontSize: '14px', margin: 0, display: 'flex', gap: '8px' }}>
+                    <span style={{ color: '#B38600', fontWeight: 'bold' }}>•</span>
+                    <span><strong>Delegaciones mayores o convenios:</strong> Si son más participantes o requieren convenio institucional, pueden coordinar directamente con la comisión.</span>
+                  </p>
+                  <p style={{ color: '#444', fontSize: '14px', margin: 0, display: 'flex', gap: '8px' }}>
+                    <span style={{ color: '#B38600', fontWeight: 'bold' }}>•</span>
+                    <span>Certificación oficial individual para cada participante de la delegación.</span>
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ backgroundColor: '#FBF9F3', border: '1px solid #EADBBA', borderRadius: '12px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div>
+                  <span style={{ fontSize: '12px', color: '#856400', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tarifa especial para grupos</span>
+                  <p style={{ color: '#B38600', fontSize: '28px', fontWeight: 'bold', margin: '4px 0 2px' }}>20% DCTO.</p>
+                  <small style={{ color: '#666', fontSize: '12px' }}>Válido a partir de 10 participantes registrados</small>
+                </div>
+
+                <div style={{ borderTop: '1px dashed #D4AF37', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#0F2756' }}>Contactos para coordinar pago corporativo:</span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '13px' }}>
+                    <a href="https://wa.me/51982311128?text=Hola%20Dra.%20Ruth%2C%20solicito%20informaci%C3%B3n%20para%20el%20Pago%20Corporativo%20(descuento%20del%2020%25)%20para%20un%20grupo%20al%20IV%20Congreso." target="_blank" rel="noreferrer" style={{ color: '#0D5E36', fontWeight: 600, textDecoration: 'underline' }}>Dra. Ruth: 982 311 128</a>
+                    <span>·</span>
+                    <a href="https://wa.me/51961441879?text=Hola%20Dra.%20Rossy%2C%20solicito%20informaci%C3%B3n%20para%20el%20Pago%20Corporativo%20(descuento%20del%2020%25)%20para%20un%20grupo%20al%20IV%20Congreso." target="_blank" rel="noreferrer" style={{ color: '#0D5E36', fontWeight: 600, textDecoration: 'underline' }}>Dra. Rossy: 961 441 879</a>
+                    <span>·</span>
+                    <a href="https://wa.me/51964328207?text=Hola%20Mg.%20Juan%2C%20solicito%20informaci%C3%B3n%20para%20el%20Pago%20Corporativo%20(descuento%20del%2020%25)%20para%20un%20grupo%20al%20IV%20Congreso." target="_blank" rel="noreferrer" style={{ color: '#0D5E36', fontWeight: 600, textDecoration: 'underline' }}>Mg. Juan: 964 328 207</a>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setModal({ kind: "corporate" })}
+                    style={{
+                      backgroundColor: '#B38600',
+                      color: '#FFF',
+                      padding: '13px 18px',
+                      borderRadius: '8px',
+                      fontWeight: 'bold',
+                      fontSize: '14px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      transition: 'background 0.2s',
+                    }}
+                    onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#8F6B00'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; }}
+                  >
+                    <Users size={17} /> Inscribir Delegación (Formulario)
+                  </button>
+
+                  <a
+                    href="https://wa.me/51982311128?text=Hola%20Dra.%20Ruth%2C%20solicito%20informaci%C3%B3n%20para%20el%20Pago%20Corporativo%20(descuento%20del%2020%25)%20para%20un%20grupo%20al%20IV%20Congreso."
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      border: '1px solid #B38600',
+                      backgroundColor: '#FFF',
+                      color: '#B38600',
+                      padding: '9px 14px',
+                      borderRadius: '8px',
+                      fontWeight: '600',
+                      fontSize: '13px',
+                      textAlign: 'center',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#FFF8E7'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#FFF'; }}
+                  >
+                    <Phone size={14} /> Consultar previamente por WhatsApp (Dra. Ruth)
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
       </section>
@@ -491,10 +620,37 @@ export default function Home() {
         <div>
           <span className="kicker">Mesa de ayuda</span>
           <h2>¿Conversamos?</h2>
-          <p>La Subdirección de Investigación coordina las consultas sobre registro, ponencias, soporte y certificación.</p>
+          <p>La Subdirección de Investigación y la Comisión Organizadora coordinan las consultas sobre registro, ponencias, pagos corporativos y certificación.</p>
         </div>
 
         <div className="contact-links">
+          <a
+            className="contact-link"
+            href="https://wa.me/51982311128?text=Hola%20Dra.%20Ruth%2C%20tengo%20una%20consulta%20sobre%20el%20IV%20Congreso."
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Phone size={18} /> Dra. Ruth · 982 311 128 (WhatsApp) <ArrowUpRight size={15} />
+          </a>
+          <a
+            className="contact-link"
+            href="https://wa.me/51961441879?text=Hola%20Dra.%20Rossy%2C%20tengo%20una%20consulta%20sobre%20el%20IV%20Congreso."
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Phone size={18} /> Dra. Rossy · 961 441 879 (WhatsApp) <ArrowUpRight size={15} />
+          </a>
+          <a
+            className="contact-link"
+            href="https://wa.me/51964328207?text=Hola%20Mg.%20Juan%2C%20tengo%20una%20consulta%20sobre%20el%20IV%20Congreso."
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Phone size={18} /> Mg. Juan · 964 328 207 (WhatsApp) <ArrowUpRight size={15} />
+          </a>
+          <a className="contact-link" href="mailto:subdireccion.investigacion.epep@unap.edu.pe">
+            <Building2 size={18} /> Subdirección de Investigación EPEP <ArrowUpRight size={15} />
+          </a>
           <a
             className="contact-link"
             href="https://www.facebook.com/photo?fbid=1657938369673922&set=a.440134708120967"
@@ -502,12 +658,6 @@ export default function Home() {
             rel="noreferrer"
           >
             <CircleHelp size={18} /> Publicación oficial del congreso <ArrowUpRight size={15} />
-          </a>
-          <a className="contact-link" href="mailto:subdireccion.investigacion.epep@unap.edu.pe">
-            <Building2 size={18} /> Subdirección de Investigación EPEP <ArrowUpRight size={15} />
-          </a>
-          <a className="contact-link" href="#inscripciones">
-            <Send size={18} /> Consultar inscripción y ponencias <ArrowUpRight size={15} />
           </a>
         </div>
       </section>
@@ -519,7 +669,12 @@ export default function Home() {
       </footer>
 
       {/* ─── MODAL ─── */}
-      {modal && <RequestModal modal={modal} onClose={() => setModal(null)} />}
+      {modal?.kind === "corporate" && (
+        <CorporateModal onClose={() => setModal(null)} />
+      )}
+      {modal && modal.kind !== "corporate" && (
+        <RequestModal modal={modal} onClose={() => setModal(null)} />
+      )}
     </main>
   );
 }
