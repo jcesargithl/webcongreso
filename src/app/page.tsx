@@ -427,7 +427,7 @@ export default function Home() {
 
           {registrationCategories.map((category) => {
             const { title, fee, features, role: badge, mode, image: img } = category;
-            const price = formatCurrency(fee);
+            const price = fee === 0 ? "Gratuita" : formatCurrency(fee);
             return (
               <div
                 key={category.id}
@@ -465,11 +465,15 @@ export default function Home() {
                   ))}
                 </div>
 
-                <p style={{ color: '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 20px' }}>{price}</p>
-                {fee > 0 && <p className="registration-fee-note">Cargo institucional: {formatCurrency(getInstitutionalFee(category))} · Total: {formatCurrency(getRegistrationTotal(category))}</p>}
+                <p style={{ color: fee === 0 ? '#176244' : '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 20px' }}>{price}</p>
+                {fee > 0 ? (
+                  <p className="registration-fee-note">Cargo institucional: {formatCurrency(getInstitutionalFee(category))} · Total: {formatCurrency(getRegistrationTotal(category))}</p>
+                ) : (
+                  <p className="registration-fee-note" style={{ color: '#176244', fontWeight: 600 }}>Exonerado de pago · Comunidad EPEP</p>
+                )}
                 <button
                   onClick={() => setModal({ kind: "registration", categoryId: category.id })}
-                  style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s' }}
+                  style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s', marginTop: 'auto' }}
                   onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}
                   onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#FFF'; e.currentTarget.style.color = '#B38600'; }}
                 >
