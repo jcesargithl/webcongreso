@@ -10,6 +10,7 @@ import { AuthoritySlider } from "@/components/authority-slider";
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowUpRight,
+  Award,
   Building2,
   CalendarDays,
   CircleHelp,
@@ -93,6 +94,7 @@ export default function Home() {
 
           <nav className={menuOpen ? "nav-links-center open" : "nav-links-center"}>
             <a href="#inicio" onClick={() => setMenuOpen(false)}>Inicio</a>
+            <a href="#fechas" onClick={() => setMenuOpen(false)}>Fechas</a>
             <a href="#organizadores" onClick={() => setMenuOpen(false)}>Organización</a>
             <a href="#programa" onClick={() => setMenuOpen(false)}>Programa</a>
             <a href="#ejes" onClick={() => setMenuOpen(false)}>Ejes</a>
@@ -115,7 +117,7 @@ export default function Home() {
 
         <div className="marquee-banner">
           <div className="marquee-content">
-            <span>EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp;</span>
+            <span>📢 ¡AMPLIACIÓN DE PLAZO! Recepción de ponencias hasta el 06 de noviembre • Inscripción de asistentes hasta el 15 de noviembre &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; 📢 ¡AMPLIACIÓN DE PLAZO! Recepción de ponencias hasta el 06 de noviembre • Inscripción de asistentes hasta el 15 de noviembre &nbsp;&nbsp;•&nbsp;&nbsp;</span>
           </div>
         </div>
       </header>
@@ -167,12 +169,12 @@ export default function Home() {
             <span className="stat-label">Días de encuentro<small>25 al 27 de nov</small></span>
           </div>
           <div className="hero-stat-item">
-            <span className="stat-number">30/10</span>
-            <span className="stat-label">Recepción de trabajos<small>Fecha límite</small></span>
+            <span className="stat-number" style={{ color: '#D4AF37' }}>06/11</span>
+            <span className="stat-label">Recepción ponencias<small>¡Plazo ampliado!</small></span>
           </div>
           <div className="hero-stat-item">
-            <span className="stat-number">05</span>
-            <span className="stat-label">Ejes temáticos<small>Investigación e innovación</small></span>
+            <span className="stat-number">15/11</span>
+            <span className="stat-label">Inscripción asistentes<small>Fecha límite</small></span>
           </div>
         </div>
       </section>
@@ -416,10 +418,101 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── CRONOGRAMA OFICIAL Y AMPLIACIÓN DE FECHAS ─── */}
+      <section style={{ backgroundColor: '#F8F9FA', padding: '80px clamp(20px, 5vw, 80px)', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }} id="fechas">
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '45px' }}>
+            <span className="kicker" style={{ justifyContent: 'center' }}>Convocatoria Oficial · Cronograma de Fechas</span>
+            <h2 style={{ fontSize: '36px', color: '#0F2756', fontWeight: 'bold', margin: '12px 0 10px', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+              Ampliación de Plazos y Fechas Clave
+            </h2>
+            <p style={{ color: '#4A5568', fontSize: '15px', maxWidth: '750px', margin: '0 auto', lineHeight: '1.6' }}>
+              Compartimos el cronograma oficial actualizado con la ampliación de plazos para recepción de ponencias, evaluación por el comité científico e inscripción de asistentes y delegaciones.
+            </p>
+          </div>
 
+          {/* Grid de 4 Hitos Cronológicos */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '35px', textAlign: 'left' }}>
+            
+            {/* Hito 1: Recepción de Ponencias */}
+            <div style={{ backgroundColor: '#FFF', borderRadius: '14px', padding: '24px 20px', border: '2px solid #D4AF37', boxShadow: 'var(--shadow-sm)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: '12px', right: '12px', backgroundColor: '#FEF3C7', color: '#92400E', fontSize: '11px', fontWeight: 'bold', padding: '3px 8px', borderRadius: '12px', textTransform: 'uppercase' }}>
+                ¡Plazo ampliado!
+              </div>
+              <span style={{ fontSize: '12px', color: '#B38600', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fase 1 · Envío</span>
+              <p style={{ color: '#0F2756', fontSize: '26px', fontWeight: 'bold', margin: '6px 0 4px' }}>Hasta 06 Nov</p>
+              <h3 style={{ fontSize: '16px', color: '#0F2756', fontWeight: 600, marginBottom: '8px' }}>Recepción de Ponencias</h3>
+              <p style={{ color: '#64748B', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                Envío de investigaciones en formato PDF en cualquiera de los 5 ejes temáticos del congreso.
+              </p>
+            </div>
 
+            {/* Hito 2: Evaluación por Comité Científico */}
+            <div style={{ backgroundColor: '#FFF', borderRadius: '14px', padding: '24px 20px', border: '1px solid #CBD5E1', boxShadow: 'var(--shadow-sm)' }}>
+              <span style={{ fontSize: '12px', color: '#0F2756', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fase 2 · Revisión</span>
+              <p style={{ color: '#0F2756', fontSize: '26px', fontWeight: 'bold', margin: '6px 0 4px' }}>07, 08 y 09 Nov</p>
+              <h3 style={{ fontSize: '16px', color: '#0F2756', fontWeight: 600, marginBottom: '8px' }}>Evaluación por Comité Científico</h3>
+              <p style={{ color: '#64748B', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                Revisión académica a cargo de los evaluadores: <strong>Dr. Vidnay, Dra. Danitza, Dra. Katia y Dr. Estanislao</strong>.
+              </p>
+            </div>
 
-      {/* ─── TARIFAS DE INSCRIPCIÓN (CARDS) ─── */}
+            {/* Hito 3: Notificación de Aptas */}
+            <div style={{ backgroundColor: '#FFF', borderRadius: '14px', padding: '24px 20px', border: '1px solid #CBD5E1', boxShadow: 'var(--shadow-sm)' }}>
+              <span style={{ fontSize: '12px', color: '#0F2756', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fase 3 · Resultados</span>
+              <p style={{ color: '#0F2756', fontSize: '26px', fontWeight: 'bold', margin: '6px 0 4px' }}>10 y 11 Nov</p>
+              <h3 style={{ fontSize: '16px', color: '#0F2756', fontWeight: 600, marginBottom: '8px' }}>Notificación de Ponencias Aptas</h3>
+              <p style={{ color: '#64748B', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                Comunicación oficial de resultados a los autores de las ponencias seleccionadas para su exposición.
+              </p>
+            </div>
+
+            {/* Hito 4: Pagos y Asistentes */}
+            <div style={{ backgroundColor: '#FFF', borderRadius: '14px', padding: '24px 20px', border: '1px solid #CBD5E1', boxShadow: 'var(--shadow-sm)' }}>
+              <span style={{ fontSize: '12px', color: '#166534', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fase 4 · Formalización</span>
+              <p style={{ color: '#0F2756', fontSize: '26px', fontWeight: 'bold', margin: '6px 0 4px' }}>Hasta 15 Nov</p>
+              <h3 style={{ fontSize: '16px', color: '#0F2756', fontWeight: 600, marginBottom: '8px' }}>Pagos de Ponencias y Asistentes</h3>
+              <p style={{ color: '#64748B', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                Plazo final para pagos de ponencias aprobadas e inscripción de asistentes individuales y delegaciones corporativas.
+              </p>
+            </div>
+
+          </div>
+
+          {/* Banner de Acuerdos y Condiciones */}
+          <div style={{ backgroundColor: '#FFF9E6', border: '1px solid #F3C944', borderRadius: '14px', padding: '22px 26px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <Award size={22} color="#B38600" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div>
+                <strong style={{ color: '#0F2756', fontSize: '14px', display: 'block', marginBottom: '4px' }}>Certificación para todos los autores</strong>
+                <p style={{ color: '#555', fontSize: '13px', margin: 0, lineHeight: '1.45' }}>
+                  Certificación oficial individual como ponente para cada autor del trabajo de investigación presentado (monto de S/ 100.00 por cada autor).
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <Globe size={22} color="#B38600" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div>
+                <strong style={{ color: '#0F2756', fontSize: '14px', display: 'block', marginBottom: '4px' }}>Ponencias en Modalidad Híbrida</strong>
+                <p style={{ color: '#555', fontSize: '13px', margin: 0, lineHeight: '1.45' }}>
+                  Participación presencial y virtual para ponentes nacionales e internacionales con transmisión en vivo y salas de sustentación interactivas.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <Users size={22} color="#B38600" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div>
+                <strong style={{ color: '#0F2756', fontSize: '14px', display: 'block', marginBottom: '4px' }}>Egresados y Pago Corporativo</strong>
+                <p style={{ color: '#555', fontSize: '13px', margin: 0, lineHeight: '1.45' }}>
+                  Los egresados se inscriben con la tarifa de asistente externo. Grupos de 10 a más participantes acceden a un 20% de descuento corporativo.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section style={{ backgroundColor: '#EBEBEB', padding: '80px clamp(20px, 5vw, 80px)', textAlign: 'center' }} id="inscripciones">
         <h2 style={{ fontSize: '38px', color: '#0F2756', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.05em', marginBottom: '50px', textTransform: 'uppercase' }}>
           TARIFAS DE INSCRIPCIÓN

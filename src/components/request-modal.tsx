@@ -122,7 +122,7 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
             <h2 id="modal-title">{isPaper ? "Presenta tu investigación." : "Reserva tu lugar."}</h2>
             <p className="modal-intro">{isPaper
               ? selected ? "Tu inscripción como ponente está verificada. Completa los datos de tu investigación."
-                : "Primero verifica tu inscripción como ponente con el correo y documento que registraste. Los ponentes externos necesitan tener el pago aprobado."
+                : "Plazo ampliado para recepción de ponencias hasta el 06 de noviembre. Primero verifica tu inscripción como ponente con tu correo y documento registrado (evaluación científica: 7 al 9 de nov; notificación de aptas: 10 y 11 de nov)."
               : category?.fee === 0 ? "Completa tus datos para registrarte como ponente interno. Esta categoría es gratuita."
                 : "Completa tus datos y adjunta la constancia de Págalo.pe para validar tu inscripción."}</p>
 
