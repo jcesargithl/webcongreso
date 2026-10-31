@@ -151,6 +151,22 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
                   </>
                 ) : category ? (
                   <>
+                    {category.id === "speaker_external" && (
+                      <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '10px', padding: '14px 16px', color: '#92400E', fontSize: '13px', lineHeight: '1.5' }}>
+                        <strong style={{ display: 'block', fontSize: '14px', marginBottom: '4px' }}>📢 Flujo para Ponentes: Enviar investigación antes del pago</strong>
+                        <p style={{ margin: '0 0 8px 0' }}>
+                          Los ponentes externos <strong>no deben pagar por adelantado</strong>. Primero deben presentar su investigación (plazo ampliado hasta el <strong>06 de noviembre</strong>) a través del botón superior <em>«Enviar investigación»</em>.
+                        </p>
+                        <p style={{ margin: 0 }}>
+                          <strong>¿Tu investigación ya fue declarada APTA por el Comité Científico?</strong> Si recibiste la notificación de aprobación (10 y 11 de nov), completa tus datos y adjunta tu comprobante a continuación (plazo de pago hasta el 15 de noviembre).
+                        </p>
+                      </div>
+                    )}
+                    {category.id === "attendee_external" && (
+                      <div style={{ backgroundColor: '#F0F9FF', border: '1px solid #BAE6FD', borderRadius: '10px', padding: '12px 14px', color: '#0369A1', fontSize: '13px' }}>
+                        <strong>🎓 Categoría para Egresados y Público General:</strong> Los egresados de la EPEP y otras instituciones participan bajo esta categoría con certificación oficial individual.
+                      </div>
+                    )}
                     <label>Nombre completo<input name="name" placeholder="Ingresa tus nombres y apellidos" autoComplete="name" minLength={2} maxLength={160} required /></label>
                     <label>Correo electrónico<input name="email" type="email" placeholder="Ej.: nombre@correo.com" autoComplete="email" maxLength={320} required /></label>
                     <label>Tipo de documento<select name="doc_type" required><option>DNI</option><option>CE</option><option>Pasaporte</option><option>Otro</option></select></label>

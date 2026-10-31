@@ -479,6 +479,19 @@ export default function Home() {
 
           </div>
 
+          {/* Aviso Destacado: Flujo de Ponentes */}
+          <div style={{ backgroundColor: '#EFF6FF', border: '2px solid #3B82F6', borderRadius: '12px', padding: '16px 20px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
+            <span style={{ fontSize: '24px', flexShrink: 0 }}>📢</span>
+            <div>
+              <strong style={{ color: '#1E3A8A', fontSize: '15px', display: 'block', marginBottom: '3px' }}>
+                Regla para ponentes: Envío de investigación antes del pago
+              </strong>
+              <p style={{ color: '#1E40AF', fontSize: '13px', margin: 0, lineHeight: '1.5' }}>
+                Todos los ponentes deben enviar primero su trabajo de investigación (plazo hasta el 06 de noviembre). <strong>Únicamente cuando el Comité Científico evalúe y notifique que la investigación es APTA / APROBADA (10 y 11 de noviembre), recién procederán a realizar el pago de inscripción de S/ 100.00</strong> (plazo de pago hasta el 15 de noviembre).
+              </p>
+            </div>
+          </div>
+
           {/* Banner de Acuerdos y Condiciones */}
           <div style={{ backgroundColor: '#FFF9E6', border: '1px solid #F3C944', borderRadius: '14px', padding: '22px 26px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', textAlign: 'left' }}>
             <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
@@ -559,6 +572,18 @@ export default function Home() {
                     </p>
                   ))}
                 </div>
+
+                {category.id === "speaker_external" && (
+                  <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px', padding: '10px 12px', fontSize: '12px', color: '#92400E', textAlign: 'left', marginBottom: '14px', lineHeight: '1.4' }}>
+                    <strong>📢 Flujo de inscripción:</strong> Primero envía tu investigación. El pago se realiza <strong>únicamente si tu ponencia es aprobada</strong> por el Comité Científico (10 y 11 de nov).
+                  </div>
+                )}
+
+                {category.id === "attendee_external" && (
+                  <div style={{ backgroundColor: '#F0F9FF', border: '1px solid #BAE6FD', borderRadius: '8px', padding: '10px 12px', fontSize: '12px', color: '#0369A1', textAlign: 'left', marginBottom: '14px', lineHeight: '1.4' }}>
+                    <strong>🎓 Incluye a Egresados:</strong> Los egresados de la EPEP / UNAP y otras instituciones participan con esta tarifa y reciben certificación oficial.
+                  </div>
+                )}
 
                 <p style={{ color: fee === 0 ? '#176244' : '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 20px' }}>{price}</p>
                 {fee > 0 ? (
