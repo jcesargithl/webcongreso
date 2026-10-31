@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
-import { Check, ChevronLeft, ChevronRight, FileText, Phone, Users, X, AlertCircle } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Phone, X, AlertCircle } from "lucide-react";
 import { registrationCategories, formatCurrency, getInstitutionalFee, RECEIPT_MAX_BYTES } from "@/lib/congress";
 
 export type CorporateParticipantInput = {
@@ -333,8 +333,8 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
                     >
                       +
                     </button>
-                    <span style={{ fontSize: '13px', color: '#166534', fontWeight: 600 }}>
-                      ✓ 20% de descuento aplicado al total
+                    <span style={{ fontSize: '13px', color: '#166534', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <Check size={14} /> 20% de descuento aplicado al total
                     </span>
                   </div>
                 </div>
@@ -427,7 +427,7 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
                           }}
                         >
                           {idx + 1}
-                          {isComplete && <span style={{ fontSize: '10px' }}>✓</span>}
+                          {isComplete && <Check size={10} />}
                         </button>
                       );
                     })}
@@ -441,7 +441,9 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
                       Integrante #{currentIdx + 1} de {count}
                     </h3>
                     {isParticipantComplete(currentP) ? (
-                      <span style={{ fontSize: '12px', color: '#166534', fontWeight: 'bold' }}>✓ Datos completos</span>
+                      <span style={{ fontSize: '12px', color: '#166534', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                        <Check size={12} /> Datos completos
+                      </span>
                     ) : (
                       <span style={{ fontSize: '12px', color: '#B38600' }}>Pendiente de completar</span>
                     )}

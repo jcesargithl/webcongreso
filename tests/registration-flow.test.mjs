@@ -122,10 +122,11 @@ test("six categories use the correct fee and exempt only internal speakers", () 
   assert.deepEqual(registrationCategories.map(category => getRegistrationTotal(category)), [21, 31, 101, 71, 0, 0]);
 });
 
-test("only paid external speakers and free internal speakers are eligible", () => {
+test("external speakers can submit with pending payment while rejected registrations are blocked", () => {
   const { assertSpeakerEligibility } = harness().load("../src/lib/registration-rules");
   assert.throws(() => assertSpeakerEligibility(null), /No encontramos/);
-  assert.throws(() => assertSpeakerEligibility(registration("speaker_external", "pending")), /no está aprobado/);
+  assert.equal(assertSpeakerEligibility(registration("speaker_external", "pending")).id, "speaker_external");
+  assert.throws(() => assertSpeakerEligibility(registration("speaker_external", "rejected")), /rechazado/);
   assert.equal(assertSpeakerEligibility(registration("speaker_external", "approved")).id, "speaker_external");
   for (const id of ["speaker_internal_teacher", "speaker_internal_student"]) assert.equal(assertSpeakerEligibility(registration(id)).fee, 0);
   for (const id of ["student_internal_attendee", "student_external", "attendee_external"]) assert.throws(() => assertSpeakerEligibility(registration(id, "approved")), /asistente/);
@@ -209,9 +210,9 @@ test("duplicate document or reused voucher is rejected", async () => {
   }
 });
 
-test("verification endpoint blocks unpaid speakers and attendees, and allows free speakers", async () => {
+test("verification endpoint allows eligible speakers and blocks attendees or rejected registrations", async () => {
   for (const [category, paymentStatus, expected] of [
-    ["speaker_external", "pending", 403], ["speaker_external", "approved", 200],
+    ["speaker_external", "pending", 200], ["speaker_external", "approved", 200], ["speaker_external", "rejected", 403],
     ["attendee_external", "approved", 403], ["speaker_internal_teacher", "exempt", 200], ["speaker_internal_student", "exempt", 200],
   ]) {
     const h = harness([registration(category, paymentStatus)]);
@@ -512,7 +513,7 @@ test("email HTML escapes participant data and never includes uploaded files, doc
 });
 
 test("templates distinguish receipt from review and never confirm a rejected free registration", () => {
-  const { buildRequestEmail, CONGRESS_WHATSAPP_GROUP_URL } = harness().load("../src/lib/email-template");
+  const { buildRequestEmail } = harness().load("../src/lib/email-template");
   assert.match(buildRequestEmail(paperRecord(), "received").subject, /Recibimos tu investigación/);
   assert.match(buildRequestEmail(paperRecord(), "status_updated").subject, /Tu ponencia está en revisión/);
   const rejected = buildRequestEmail({ ...registration("speaker_internal_student"), status: "rejected" }, "status_updated");

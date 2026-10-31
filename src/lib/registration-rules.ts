@@ -24,8 +24,8 @@ export function assertSpeakerEligibility(registration: CongressRequest | null): 
   if (!category) throw new ValidationError("Tu inscripción no tiene una categoría identificada. Contacta a la Secretaría para actualizarla.", 403);
   if (!category.speaker) throw new ValidationError("Tu inscripción es de asistente. Para enviar una investigación debes estar inscrito como ponente externo, docente EPEP o estudiante ponente EPEP.", 403);
   if (registration.status === "rejected") throw new ValidationError("Tu inscripción fue rechazada. Contacta a la Secretaría.", 403);
-  if (category.fee > 0 && registration.payment_status !== "approved") {
-    throw new ValidationError("El pago de tu inscripción como ponente externo todavía no está aprobado por un administrador.", 403);
+  if (registration.payment_status === "rejected") {
+    throw new ValidationError("El pago o registro de tu inscripción como ponente fue rechazado. Contacta a la Secretaría.", 403);
   }
   return category;
 }

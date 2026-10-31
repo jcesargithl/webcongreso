@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     }
     const registrations = await findRegistrations(email, input.doc_type, documentNumber);
     const speakers = registrations.filter(row => getCategoryForRequest(row)?.speaker);
-    const registration = speakers.find(row => row.status !== "rejected" && (getCategoryForRequest(row)?.fee === 0 || row.payment_status === "approved")) || speakers[0] || registrations[0] || null;
+    const registration = speakers.find(row => row.status !== "rejected" && row.payment_status !== "rejected") || speakers[0] || registrations[0] || null;
     const category = assertSpeakerEligibility(registration);
     if (!registration) throw new ValidationError("Inscripción no encontrada.", 404);
     return Response.json({

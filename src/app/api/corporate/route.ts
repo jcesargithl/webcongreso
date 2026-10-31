@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { getCategory, categoryLabel, getInstitutionalFee, CONGRESS_FILES_BUCKET, RECEIPT_MAX_BYTES } from "@/lib/congress";
 import { normalizeDocument, normalizeEmail, validatePdf, ValidationError } from "@/lib/registration-rules";
 import { errorResponse } from "@/lib/api-errors";
-import { sendCorporateEmail, type CorporateParticipant } from "@/lib/corporate-email";
+import { sendCorporateEmail } from "@/lib/corporate-email";
 
 export const runtime = "nodejs";
 

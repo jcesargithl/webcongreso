@@ -94,12 +94,52 @@ export async function POST(request: Request) {
         if (payment.amount !== getRegistrationTotal(category)) throw new ValidationError("El monto del comprobante no coincide con la tarifa.");
       }
     } else if (kind === "paper") {
-      const claims = readVerificationToken(field(form, "verification_token"));
-      const registration = await measure("registration", () => getRequest(claims.id));
-      const category = assertSpeakerEligibility(registration);
-      if (!registration || registration.email.toLowerCase() !== claims.email || registration.doc_type !== claims.documentType || registration.doc_number !== claims.documentNumber) {
-        throw new ValidationError("Tu inscripción cambió. Vuelve a verificarla.", 403);
+      const verificationToken = field(form, "verification_token");
+      let registrationId: string | null = null;
+      let name = "";
+      let email = "";
+      let documentType = "";
+      let documentNumber = "";
+      let institution = "";
+      let category: ReturnType<typeof getCategory>;
+
+      if (verificationToken) {
+        const claims = readVerificationToken(verificationToken);
+        const registration = await measure("registration", () => getRequest(claims.id));
+        category = assertSpeakerEligibility(registration);
+        if (!registration || registration.email.toLowerCase() !== claims.email || registration.doc_type !== claims.documentType || registration.doc_number !== claims.documentNumber) {
+          throw new ValidationError("Tu inscripción cambió. Vuelve a verificarla.", 403);
+        }
+        registrationId = registration.id;
+        name = registration.name;
+        email = registration.email;
+        documentType = registration.doc_type || "DNI";
+        documentNumber = registration.doc_number || "";
+        institution = registration.institution || "";
+      } else {
+        name = field(form, "name");
+        email = normalizeEmail(field(form, "email"));
+        documentType = field(form, "doc_type");
+        documentNumber = normalizeDocument(field(form, "doc_number"));
+        institution = field(form, "institution");
+        const categoryId = field(form, "category_id") || "speaker_external";
+        category = getCategory(categoryId);
+        if (!category || !category.speaker) {
+          throw new ValidationError("Para enviar una investigación debes seleccionar una categoría de ponente válida.", 403);
+        }
+        if (name.length < 2 || name.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320 ||
+            !["DNI", "CE", "Pasaporte", "Otro"].includes(documentType) || !documentNumber || documentNumber.length > 30 || institution.length > 240) {
+          throw new ValidationError("Revisa tu nombre, correo y documento de identidad.", 403);
+        }
+        if (documentType === "DNI" && !/^\d{8}$/.test(documentNumber)) {
+          throw new ValidationError("El DNI debe tener 8 dígitos.");
+        }
+        const { data: existingReg } = await supabase.from("congress_requests").select("id")
+          .eq("kind", "registration").eq("doc_type", documentType).eq("doc_number", documentNumber)
+          .ilike("email", email.replace(/[\\%_]/g, "\\$&")).order("created_at", { ascending: false }).limit(1).maybeSingle();
+        if (existingReg) registrationId = existingReg.id;
       }
+
       const topic = field(form, "topic");
       const message = field(form, "message");
       if (!topic || topic.length > 300 || message.length > 10000) throw new ValidationError("Ingresa un título válido y un resumen de hasta 10 000 caracteres.");
@@ -108,9 +148,9 @@ export async function POST(request: Request) {
       const path = await measure("storage", () => uploadPdf(paper, "papers"));
       uploaded.push(path);
       input = {
-        kind, registration_id: registration.id, category_id: category.id, category: categoryLabel(category),
-        name: registration.name, email: registration.email, doc_type: registration.doc_type, doc_number: registration.doc_number,
-        institution: registration.institution, mode: category.mode, topic, message, file_path: path,
+        kind, registration_id: registrationId, category_id: category.id, category: categoryLabel(category),
+        name, email, doc_type: documentType, doc_number: documentNumber,
+        institution, mode: category.mode, topic, message, file_path: path,
         registration_fee: 0, institutional_fee: 0, payment_status: "exempt", status: "reviewing",
       };
     } else throw new ValidationError("Tipo de solicitud inválido.");

@@ -14,12 +14,15 @@ import {
   Building2,
   CalendarDays,
   CircleHelp,
+  FileCheck,
   FileText,
+  GraduationCap,
   MapPin,
   Menu,
   Phone,
   Send,
   Sparkles,
+  Upload,
   Users,
   BookOpen,
   BrainCircuit,
@@ -117,7 +120,7 @@ export default function Home() {
 
         <div className="marquee-banner">
           <div className="marquee-content">
-            <span>📢 ¡AMPLIACIÓN DE PLAZO! Recepción de ponencias hasta el 06 de noviembre • Inscripción de asistentes hasta el 15 de noviembre &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; 📢 ¡AMPLIACIÓN DE PLAZO! Recepción de ponencias hasta el 06 de noviembre • Inscripción de asistentes hasta el 15 de noviembre &nbsp;&nbsp;•&nbsp;&nbsp;</span>
+            <span>AMPLIACIÓN DE PLAZO: Recepción de ponencias hasta el 06 de noviembre • Inscripción de asistentes hasta el 15 de noviembre &nbsp;&nbsp;•&nbsp;&nbsp; EL MAYOR CONGRESO DE INVESTIGACIÓN CIENTÍFICA DE LA REGIÓN &nbsp;&nbsp;•&nbsp;&nbsp; AMPLIACIÓN DE PLAZO: Recepción de ponencias hasta el 06 de noviembre • Inscripción de asistentes hasta el 15 de noviembre &nbsp;&nbsp;•&nbsp;&nbsp;</span>
           </div>
         </div>
       </header>
@@ -481,7 +484,7 @@ export default function Home() {
 
           {/* Aviso Destacado: Flujo de Ponentes */}
           <div style={{ backgroundColor: '#EFF6FF', border: '2px solid #3B82F6', borderRadius: '12px', padding: '16px 20px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
-            <span style={{ fontSize: '24px', flexShrink: 0 }}>📢</span>
+            <FileCheck size={28} color="#2563EB" style={{ flexShrink: 0 }} />
             <div>
               <strong style={{ color: '#1E3A8A', fontSize: '15px', display: 'block', marginBottom: '3px' }}>
                 Regla para ponentes: Envío de investigación antes del pago
@@ -515,11 +518,11 @@ export default function Home() {
             </div>
 
             <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <Users size={22} color="#B38600" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <GraduationCap size={22} color="#B38600" style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
                 <strong style={{ color: '#0F2756', fontSize: '14px', display: 'block', marginBottom: '4px' }}>Egresados y Pago Corporativo</strong>
                 <p style={{ color: '#555', fontSize: '13px', margin: 0, lineHeight: '1.45' }}>
-                  Los egresados se inscriben con la tarifa de asistente externo. Grupos de 10 a más participantes acceden a un 20% de descuento corporativo.
+                  Los egresados se inscriben con la tarifa de Asistente Externo (S/ 70.00). Grupos de 10 a más participantes acceden a un 20% de descuento corporativo.
                 </p>
               </div>
             </div>
@@ -575,31 +578,58 @@ export default function Home() {
 
                 {category.id === "speaker_external" && (
                   <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px', padding: '10px 12px', fontSize: '12px', color: '#92400E', textAlign: 'left', marginBottom: '14px', lineHeight: '1.4' }}>
-                    <strong>📢 Flujo de inscripción:</strong> Primero envía tu investigación. El pago se realiza <strong>únicamente si tu ponencia es aprobada</strong> por el Comité Científico (10 y 11 de nov).
+                    <strong>Flujo de ponentes:</strong> Envía primero tu investigación (plazo hasta el 06 de nov). El pago de S/ 100 se realiza <strong>únicamente si tu ponencia es aprobada</strong> por el Comité Científico (10 y 11 de nov).
                   </div>
                 )}
 
                 {category.id === "attendee_external" && (
                   <div style={{ backgroundColor: '#F0F9FF', border: '1px solid #BAE6FD', borderRadius: '8px', padding: '10px 12px', fontSize: '12px', color: '#0369A1', textAlign: 'left', marginBottom: '14px', lineHeight: '1.4' }}>
-                    <strong>🎓 Incluye a Egresados:</strong> Los egresados de la EPEP / UNAP y otras instituciones participan con esta tarifa y reciben certificación oficial.
+                    <strong>Incluye a Egresados:</strong> Los egresados de la EPEP / UNAP y otras instituciones participan con esta tarifa (S/ 70.00) y reciben certificación oficial individual.
                   </div>
                 )}
 
-                <p style={{ color: fee === 0 ? '#176244' : '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 20px' }}>{price}</p>
+                <p style={{ color: fee === 0 ? '#176244' : '#B38600', fontSize: '24px', fontWeight: 'bold', margin: '10px 0 6px' }}>
+                  {fee === 0 ? "Exonerado de pago" : price}
+                </p>
                 {fee > 0 ? (
-                  <p className="registration-fee-note">Cargo institucional: {formatCurrency(getInstitutionalFee(category))} · Total: {formatCurrency(getRegistrationTotal(category))}</p>
+                  <p className="registration-fee-note" style={{ marginBottom: '18px' }}>
+                    {category.id === "speaker_external" ? "Pago tras aprobación de ponencia · " : ""}Cargo institucional: {formatCurrency(getInstitutionalFee(category))} · Total: {formatCurrency(getRegistrationTotal(category))}
+                  </p>
                 ) : (
-                  <p className="registration-fee-note" style={{ color: '#176244', fontWeight: 600 }}>Exonerado de pago · Comunidad EPEP</p>
+                  <p className="registration-fee-note" style={{ color: '#176244', fontWeight: 600, marginBottom: '18px' }}>Comunidad Académica EPEP · Sin costo</p>
                 )}
-                <button
-                  type="button"
-                  onClick={() => setModal({ kind: "registration", categoryId: category.id })}
-                  style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s', marginTop: 'auto' }}
-                  onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}
-                  onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#FFF'; e.currentTarget.style.color = '#B38600'; }}
-                >
-                  Más Información
-                </button>
+                {category.id === "speaker_external" ? (
+                  <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setModal({ kind: "paper" })}
+                      style={{ border: 'none', backgroundColor: '#B38600', color: '#FFF', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                      onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#997300'; }}
+                      onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; }}
+                    >
+                      <Upload size={16} /> Enviar investigación (Paso 1)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setModal({ kind: "registration", categoryId: category.id })}
+                      style={{ border: '1px solid #CBD5E1', backgroundColor: '#FFF', color: '#64748B', padding: '8px', width: '100%', fontSize: '12px', fontWeight: '600', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s' }}
+                      onMouseOver={(e) => { e.currentTarget.style.borderColor = '#B38600'; e.currentTarget.style.color = '#B38600'; }}
+                      onMouseOut={(e) => { e.currentTarget.style.borderColor = '#CBD5E1'; e.currentTarget.style.color = '#64748B'; }}
+                    >
+                      ¿Ponencia ya aprobada? Pagar inscripción (Paso 2)
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setModal({ kind: "registration", categoryId: category.id })}
+                    style={{ border: '1px solid #B38600', backgroundColor: '#FFF', color: '#B38600', padding: '12px', width: '100%', fontWeight: 'bold', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s', marginTop: 'auto' }}
+                    onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#B38600'; e.currentTarget.style.color = '#FFF'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#FFF'; e.currentTarget.style.color = '#B38600'; }}
+                  >
+                    Más Información
+                  </button>
+                )}
               </div>
             );
           })}

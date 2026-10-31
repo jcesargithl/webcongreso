@@ -53,24 +53,6 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
     } else setError("");
   }
 
-  async function verifyRegistration(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (busy) return;
-    setError("");
-    const form = new FormData(event.currentTarget);
-    setBusy(true);
-    try {
-      const response = await fetch("/api/registrations/verify", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.get("email"), doc_type: form.get("doc_type"), doc_number: form.get("doc_number") }),
-      });
-      const data = await response.json() as Verification & { error?: string };
-      if (!response.ok) { setError(data.error || "No pudimos verificar tu inscripción."); return; }
-      setVerification(data);
-    } catch { setError("No pudimos conectarnos. Intenta verificar tu inscripción nuevamente."); }
-    finally { setBusy(false); }
-  }
-
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
@@ -78,8 +60,7 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
     const form = new FormData(event.currentTarget);
     form.set("kind", modal.kind);
     if (modal.kind === "registration" && category) form.set("category_id", category.id);
-    if (isPaper) {
-      if (!verification) { setError("Verifica primero tu inscripción como ponente."); return; }
+    if (isPaper && verification) {
       form.set("verification_token", verification.token);
     }
     setBusy(true);
@@ -121,21 +102,24 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
             <span className="kicker">{isPaper ? "Envío de investigaciones" : "Inscripción al congreso"}</span>
             <h2 id="modal-title">{isPaper ? "Presenta tu investigación." : "Reserva tu lugar."}</h2>
             <p className="modal-intro">{isPaper
-              ? selected ? "Tu inscripción como ponente está verificada. Completa los datos de tu investigación."
-                : "Plazo ampliado para recepción de ponencias hasta el 06 de noviembre. Primero verifica tu inscripción como ponente con tu correo y documento registrado (evaluación científica: 7 al 9 de nov; notificación de aptas: 10 y 11 de nov)."
-              : category?.fee === 0 ? "Completa tus datos para registrarte como ponente interno. Esta categoría es gratuita."
+              ? "Recepción de ponencias abierta hasta el 06 de noviembre. No se requiere pago previo para enviar tu trabajo de investigación."
+              : category?.fee === 0 ? "Completa tus datos para registrarte como ponente interno. Esta categoría es de libre acceso para la comunidad EPEP."
                 : "Completa tus datos y adjunta la constancia de Págalo.pe para validar tu inscripción."}</p>
 
-            {isPaper && !selected ? (
-              <form onSubmit={verifyRegistration}>
-                <label>Correo de inscripción<input name="email" type="email" placeholder="Ej.: nombre@correo.com" autoComplete="email" maxLength={320} required /></label>
-                <label>Tipo de documento<select name="doc_type" required><option>DNI</option><option>CE</option><option>Pasaporte</option><option>Otro</option></select></label>
-                <label>Número de documento<input name="doc_number" placeholder="Documento usado en tu inscripción" maxLength={30} required /></label>
-                <button className="btn btn-primary btn-full" type="submit" disabled={busy}><Check size={16} />{busy ? "Verificando..." : "Verificar inscripción"}</button>
-                <a href="#inscripciones" className="form-link" onClick={onClose}>Aún no estoy inscrito como ponente</a>
-              </form>
-            ) : (
+            {isPaper ? (
               <form onSubmit={submit}>
+                <div style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '10px', padding: '14px 16px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5', marginBottom: '16px' }}>
+                  <strong style={{ display: 'block', fontSize: '14px', marginBottom: '4px', color: '#1E3A8A' }}>
+                    Recepción de ponencias sin pago previo (Hasta el 06 de noviembre)
+                  </strong>
+                  <p style={{ margin: '0 0 6px 0' }}>
+                    Los ponentes no deben realizar el pago de inscripción por adelantado. Presenta tu investigación aquí; el Comité Científico (Dr. Vidnay, Dra. Danitza, Dra. Katia, Dr. Estanislao) la evaluará del <strong>7 al 9 de noviembre</strong>.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    El dictamen de ponencias aptas se notificará el <strong>10 y 11 de noviembre</strong>. Únicamente tras la aprobación se procederá al pago de inscripción (S/ 100 por cada autor) con plazo hasta el 15 de noviembre.
+                  </p>
+                </div>
+
                 {selected ? (
                   <>
                     <div className="verification-notice"><Check size={18} /><span>Inscripción de ponente verificada</span></div>
@@ -144,27 +128,51 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
                     <label>Documento<input value={selected.doc_type + ": " + selected.doc_number} readOnly /></label>
                     <label>Categoría seleccionada<input value={selected.category} readOnly /></label>
                     <label>Modalidad<input value={selected.mode} readOnly /></label>
-                    <button type="button" className="form-link" onClick={() => { setVerification(null); setError(""); }}>Usar otra inscripción</button>
-                    <label>Título o eje de la ponencia<input name="topic" placeholder="Título de tu investigación o eje temático" maxLength={300} required /></label>
-                    <label>Resumen breve<textarea name="message" rows={4} placeholder="Describe el objetivo, la metodología y los resultados de tu investigación." maxLength={10000} /></label>
-                    <label>Investigación en PDF<input name="file" type="file" accept=".pdf,application/pdf" onChange={event => checkUpload(event, PAPER_MAX_BYTES, false)} required /><small className="form-hint">Archivo PDF de hasta 10 MB.</small></label>
+                    <button type="button" className="form-link" onClick={() => { setVerification(null); setError(""); }}>Ingresar otros datos de autor</button>
                   </>
-                ) : category ? (
+                ) : (
+                  <>
+                    <label>Nombre completo del autor principal<input name="name" placeholder="Nombres y apellidos completos" autoComplete="name" minLength={2} maxLength={160} required /></label>
+                    <label>Correo electrónico<input name="email" type="email" placeholder="Ej.: autor@correo.com (para notificaciones)" autoComplete="email" maxLength={320} required /></label>
+                    <label>Tipo de documento<select name="doc_type" required><option>DNI</option><option>CE</option><option>Pasaporte</option><option>Otro</option></select></label>
+                    <label>Número de documento<input name="doc_number" placeholder="Número de DNI, CE o Pasaporte" maxLength={30} required /></label>
+                    <label>Institución / Universidad de procedencia<input name="institution" placeholder="Universidad, instituto o entidad de procedencia" autoComplete="organization" maxLength={240} /></label>
+                    <label>Categoría de ponente
+                      <select name="category_id" required defaultValue="speaker_external">
+                        <option value="speaker_external">Ponente Externo (Nacional / Internacional · Modalidad Híbrida)</option>
+                        <option value="speaker_internal_teacher">Docente EPEP (Ponente Interno · Presencial)</option>
+                        <option value="speaker_internal_student">Estudiante EPEP (Ponente Interno · Presencial)</option>
+                      </select>
+                    </label>
+                  </>
+                )}
+
+                <label>Título o eje de la ponencia<input name="topic" placeholder="Título de tu investigación o eje temático" maxLength={300} required /></label>
+                <label>Resumen breve<textarea name="message" rows={4} placeholder="Describe el objetivo, la metodología y los resultados de tu investigación." maxLength={10000} /></label>
+                <label>Investigación en PDF<input name="file" type="file" accept=".pdf,application/pdf" onChange={event => checkUpload(event, PAPER_MAX_BYTES, false)} required /><small className="form-hint">Archivo PDF de hasta 10 MB.</small></label>
+
+                <button className="btn btn-primary btn-full" type="submit" disabled={busy}>
+                  <FileText size={16} />{busy ? "Enviando investigación..." : "Enviar investigación"}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={submit}>
+                {category ? (
                   <>
                     {category.id === "speaker_external" && (
                       <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '10px', padding: '14px 16px', color: '#92400E', fontSize: '13px', lineHeight: '1.5' }}>
-                        <strong style={{ display: 'block', fontSize: '14px', marginBottom: '4px' }}>📢 Flujo para Ponentes: Enviar investigación antes del pago</strong>
+                        <strong style={{ display: 'block', fontSize: '14px', marginBottom: '4px' }}>Pago de inscripción para ponencias aprobadas</strong>
                         <p style={{ margin: '0 0 8px 0' }}>
-                          Los ponentes externos <strong>no deben pagar por adelantado</strong>. Primero deben presentar su investigación (plazo ampliado hasta el <strong>06 de noviembre</strong>) a través del botón superior <em>«Enviar investigación»</em>.
+                          Los ponentes externos <strong>no deben pagar por adelantado</strong>. Si aún no enviaste tu investigación, hazlo antes del <strong>06 de noviembre</strong> mediante el botón <em>«Enviar investigación»</em>.
                         </p>
                         <p style={{ margin: 0 }}>
-                          <strong>¿Tu investigación ya fue declarada APTA por el Comité Científico?</strong> Si recibiste la notificación de aprobación (10 y 11 de nov), completa tus datos y adjunta tu comprobante a continuación (plazo de pago hasta el 15 de noviembre).
+                          <strong>¿Tu investigación ya fue declarada APTA por el Comité Científico?</strong> Si recibiste el dictamen aprobatorio (10 y 11 de nov), completa tus datos y adjunta tu comprobante a continuación (S/ 100 por cada autor, plazo hasta el 15 de noviembre).
                         </p>
                       </div>
                     )}
                     {category.id === "attendee_external" && (
                       <div style={{ backgroundColor: '#F0F9FF', border: '1px solid #BAE6FD', borderRadius: '10px', padding: '12px 14px', color: '#0369A1', fontSize: '13px' }}>
-                        <strong>🎓 Categoría para Egresados y Público General:</strong> Los egresados de la EPEP y otras instituciones participan bajo esta categoría con certificación oficial individual.
+                        <strong>Categoría para Egresados y Público General:</strong> Los egresados de la EPEP y otras instituciones participan bajo esta categoría con certificación oficial individual.
                       </div>
                     )}
                     <label>Nombre completo<input name="name" placeholder="Ingresa tus nombres y apellidos" autoComplete="name" minLength={2} maxLength={160} required /></label>
@@ -175,7 +183,7 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
                     <label>Categoría seleccionada<input value={categoryLabel(category)} readOnly /></label>
                     <label>Modalidad<input value={category.mode} readOnly /></label>
                     {category.fee === 0 ? (
-                      <div className="verification-notice"><Check size={18} /><span>Inscripción gratuita. No necesitas pago ni comprobante.</span></div>
+                      <div className="verification-notice"><Check size={18} /><span>Inscripción exonerada de pago para miembros de la comunidad EPEP. No se requiere comprobante ni depósito.</span></div>
                     ) : (
                       <fieldset className="payment-panel">
                         <legend><CreditCard size={18} />Pago por Págalo.pe</legend>
