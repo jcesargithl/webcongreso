@@ -135,7 +135,7 @@ export default function AdminRequestDetails(props: DetailProps) {
               : <p className={styles.muted}>No hay un archivo disponible para esta ponencia.</p>}
             {registration
               ? <button type="button" className={styles.relatedLink} onClick={() => props.onOpen(registration.id)}><ArrowDownLeft size={16} /><span>Ver inscripción vinculada</span><ChevronRight size={16} /></button>
-              : <p className={styles.muted}>Ponencia anterior sin inscripción vinculada.</p>}
+              : <p className={styles.muted}>Investigación recibida sin inscripción previa. Puede evaluarse antes del pago.</p>}
           </section>}
 
           {relatedPapers.length > 0 && <section className={styles.detailSection}>
@@ -149,7 +149,7 @@ export default function AdminRequestDetails(props: DetailProps) {
             <div className={styles.sectionHeading}><h3>Pago de inscripción</h3>
               <span className={[styles.badge, styles[registration?.payment_status || "unknown"]].join(" ")}>{paymentLabel(registration?.payment_status, true)}</span>
             </div>
-            {!registration ? <p className={styles.muted}>No hay una inscripción vinculada para consultar el pago.</p>
+            {!registration ? <p className={styles.muted}>El envío y la evaluación no requieren pago previo. Si corresponde, la inscripción se paga después de aceptar la ponencia.</p>
               : registration.payment_status === "exempt"
                 ? <div className={styles.exemptNote}><ShieldCheck size={20} /><p><strong>Inscripción gratuita</strong>El ponente interno no requiere pago ni comprobante.</p></div>
                 : <>
@@ -188,7 +188,9 @@ export default function AdminRequestDetails(props: DetailProps) {
 
           <section className={styles.detailSection}>
             <div className={styles.sectionHeading}><h3>Gestión de la solicitud</h3></div>
-            {!canApprove && request.status !== "approved" && <p className={styles.requirements}>La aprobación requiere una categoría válida y, cuando corresponda, un pago aprobado.</p>}
+            {!canApprove && request.status !== "approved" && <p className={styles.requirements}>{request.kind === "paper"
+              ? "La aprobación requiere una categoría de ponente válida y una inscripción vinculada compatible, si existe."
+              : "La aprobación requiere una categoría válida y, cuando corresponda, un pago aprobado."}</p>}
             <StatusForm key={request.id + ":" + request.status} request={request} canApprove={canApprove} busy={busy} onUpdate={onUpdate} />
             <div className={styles.secondaryActions}>
               <button type="button" className={styles.textButton} disabled={busy} onClick={() => void onUpdate(request.id, { action: "resend_notification" })}><Mail size={15} />Reenviar correo</button>

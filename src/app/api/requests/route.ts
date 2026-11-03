@@ -3,7 +3,7 @@ import { createRequest, listRequests, updateRequestStatus, reviewPayment, assign
 import { supabase } from "@/lib/supabase";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { getCategory, categoryLabel, getInstitutionalFee, getRegistrationTotal, CONGRESS_FILES_BUCKET, RECEIPT_MAX_BYTES, PAPER_MAX_BYTES } from "@/lib/congress";
-import { assertSpeakerEligibility, normalizeDocument, normalizeEmail, validatePayment, validatePdf, ValidationError } from "@/lib/registration-rules";
+import { assertPaperEligibility, assertSpeakerEligibility, normalizeDocument, normalizeEmail, validatePayment, validatePdf, ValidationError } from "@/lib/registration-rules";
 import { readVerificationToken } from "@/lib/paper-verification";
 import { errorResponse } from "@/lib/api-errors";
 import { queueRequestEmail, sendRequestEmail } from "@/lib/email";
@@ -134,10 +134,14 @@ export async function POST(request: Request) {
         if (documentType === "DNI" && !/^\d{8}$/.test(documentNumber)) {
           throw new ValidationError("El DNI debe tener 8 dígitos.");
         }
-        const { data: existingReg } = await supabase.from("congress_requests").select("id")
+        const { data: existingReg, error: registrationError } = await supabase.from("congress_requests").select("*")
           .eq("kind", "registration").eq("doc_type", documentType).eq("doc_number", documentNumber)
           .ilike("email", email.replace(/[\\%_]/g, "\\$&")).order("created_at", { ascending: false }).limit(1).maybeSingle();
-        if (existingReg) registrationId = existingReg.id;
+        if (registrationError) throw registrationError;
+        if (existingReg) {
+          assertPaperEligibility({ category_id: category.id, registration_id: existingReg.id }, existingReg);
+          registrationId = existingReg.id;
+        }
       }
 
       const topic = field(form, "topic");

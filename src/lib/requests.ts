@@ -1,7 +1,7 @@
 import "server-only";
 import { supabase } from "./supabase";
 import { CONGRESS_FILES_BUCKET, categoryLabel, getCategoryForRequest } from "./congress";
-import { assertSpeakerEligibility, ValidationError } from "./registration-rules";
+import { assertPaperEligibility, ValidationError } from "./registration-rules";
 
 export type RequestKind = "registration" | "paper";
 export type RequestMode = "Presencial" | "Virtual" | "Híbrido";
@@ -99,7 +99,7 @@ export async function updateRequestStatus(id: string, status: RequestStatus): Pr
     throw new ValidationError("Primero valida el pago y la categoría de esta inscripción.", 409);
   }
   if (status === "approved" && existing.kind === "paper" && existing.workflow_version === 2) {
-    assertSpeakerEligibility(existing.registration_id ? await getRequest(existing.registration_id) : null);
+    assertPaperEligibility(existing, existing.registration_id ? await getRequest(existing.registration_id) : null);
   }
   const { data, error } = await supabase.from("congress_requests").update({ status }).eq("id", id).select().single();
   if (error) throw error;

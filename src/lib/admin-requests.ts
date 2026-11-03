@@ -1,5 +1,6 @@
 import type { CongressRequest, PaymentStatus, RequestStatus } from "./requests";
 import { getCategoryForRequest } from "./congress";
+import { assertPaperEligibility } from "./registration-rules";
 
 export type RequestLookup = ReadonlyMap<string, CongressRequest>;
 export type AdminFilters = {
@@ -58,8 +59,10 @@ export function canApproveRequest(request: CongressRequest, lookup: RequestLooku
   const category = getCategoryForRequest(registration || request);
   if (!category) return false;
   if (request.kind === "paper") {
-    return Boolean(registration && category.speaker && registration.status !== "rejected"
-      && (category.fee === 0 || registration.payment_status === "approved"));
+    try {
+      assertPaperEligibility(request, registration || null);
+      return true;
+    } catch { return false; }
   }
   return category.fee === 0 || request.payment_status === "approved";
 }

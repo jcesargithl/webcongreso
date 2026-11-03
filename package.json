@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/registration-flow.test.mjs tests/admin-requests.test.mjs"
+    "test": "node --test tests/registration-flow.test.mjs tests/admin-requests.test.mjs tests/paper-workflow.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
@@ -18,6 +18,7 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.2",

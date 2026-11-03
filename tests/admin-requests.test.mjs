@@ -60,10 +60,14 @@ test("kind, category and status filters are applied together", () => {
   assert.deepEqual(filtered.map(row => row.id), ["paper-1"]);
 });
 
-test("approval eligibility requires a valid registration and approved external payment", () => {
+test("academic approval permits standalone papers and pending payment while registration approval still requires payment", () => {
   const submission = paper();
   assert.equal(canApproveRequest(submission, lookup([submission])), false);
-  assert.equal(canApproveRequest(submission, lookup([submission, registration({ payment_status: "pending" })])), false);
+  assert.equal(canApproveRequest(paper({ registration_id: null }), new Map()), true);
+  assert.equal(canApproveRequest(submission, lookup([submission, registration({ payment_status: "pending" })])), true);
+  assert.equal(canApproveRequest(submission, lookup([registration({ payment_status: "rejected" })])), false);
+  assert.equal(canApproveRequest(registration({ payment_status: "pending" }), new Map()), false);
+  assert.equal(canApproveRequest(paper({ category_id: "attendee_external", registration_id: null }), new Map()), false);
   assert.equal(canApproveRequest(submission, lookup([submission, registration()])), true);
   const internal = registration({ category_id: "speaker_internal_teacher", payment_status: "exempt", registration_fee: 0 });
   assert.equal(canApproveRequest(internal, lookup([internal])), true);

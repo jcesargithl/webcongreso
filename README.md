@@ -46,7 +46,7 @@ El ciclo operativo garantiza trazabilidad y rigor institucional en 5 fases:
 1. **Elección de Categoría y Modalidad**: El participante escoge su rol (Asistente o Ponente) según su perfil (Estudiante EPEP, Docente EPEP, Estudiante Externo o Público General).
 2. **Registro y Voucher Págalo.pe**: Para modalidades con costo, se ingresa la secuencia de 6 dígitos del comprobante del Banco de la Nación y se sube el comprobante en formato PDF (límite 2 MB). Las modalidades internas de la EPEP quedan exoneradas según normativa.
 3. **Auditoría Administrativa**: El equipo organizador revisa la autenticidad de los comprobantes desde el panel privado `/admin` mediante URLs firmadas con caducidad temporal (1 hora).
-4. **Envío de Ponencias Científicas**: Una vez verificado y aprobado el pago (o condición interna), el ponente accede a la plataforma de recepción mediante una firma criptográfica válida por 15 minutos, adjuntando su investigación en PDF (hasta 10 MB).
+4. **Envío de Ponencias Científicas**: El ponente puede enviar su investigación en PDF (hasta 10 MB) sin inscripción ni pago previo. El dictamen académico es independiente del pago; la inscripción de ponentes externos se completa después de la aceptación. Las inscripciones existentes se vinculan si corresponden a la misma categoría e identidad.
 5. **Notificación Transaccional**: El usuario recibe confirmaciones detalladas por correo en cada etapa (recepción, aprobación de pago, estado de revisión académica y observaciones).
 
 ---
@@ -89,7 +89,9 @@ La API del servidor **nunca confía en montos enviados desde el navegador**; la 
 
 ## ⚙️ Preparación de Base de Datos (Supabase)
 
-Antes de habilitar el formulario de registros, se debe aplicar la migración en el **SQL Editor** del proyecto Supabase:
+Para una instalación nueva, aplica las migraciones de `supabase/migrations/` en orden. En una base que ya está funcionando, ejecuta el archivo completo `supabase/migrations/202611030001_papers_before_payment.sql` en **Supabase > SQL Editor** para habilitar la recepción y evaluación sin pago previo. Este archivo conserva los registros y archivos existentes; no requiere reiniciar la base. La consulta final debe devolver `envio_sin_pago_previo_habilitado = true`. Después despliega también los cambios de la aplicación en Vercel.
+
+La migración inicial del esquema es:
 
 ```sql
 -- Ejecutar en Supabase SQL Editor:
@@ -100,7 +102,7 @@ supabase/migrations/202610140001_registration_payments_and_papers.sql
 - **Transaccional (`BEGIN ... COMMIT`)**: Si una sola instrucción falla, la base de datos se revierte intacta.
 - **Preservación histórica**: Conserva inscripciones anteriores y clasifica pagos legítimos existentes.
 - **Bucket Privado**: Configura automáticamente el bucket `congress-files` con políticas RLS para impedir acceso público no autorizado.
-- **Integridad Referencial**: Impide que se registren ponencias sin una inscripción apta y confirmada.
+- **Integridad Referencial**: Valida las inscripciones vinculadas, cuando existen, sin exigir pago ni inscripción previa para presentar o evaluar una ponencia.
 
 ---
 

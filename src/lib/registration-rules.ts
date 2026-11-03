@@ -30,6 +30,21 @@ export function assertSpeakerEligibility(registration: CongressRequest | null): 
   return category;
 }
 
+export function assertPaperEligibility(
+  paper: Pick<CongressRequest, "category_id" | "category" | "registration_id">,
+  registration: CongressRequest | null,
+): RegistrationCategory {
+  const category = getCategoryForRequest(paper);
+  if (!category?.speaker) throw new ValidationError("La investigación debe corresponder a una categoría de ponente válida.", 403);
+  if (paper.registration_id) {
+    const registeredCategory = assertSpeakerEligibility(registration);
+    if (registeredCategory.id !== category.id) {
+      throw new ValidationError("La categoría seleccionada no coincide con tu inscripción. Selecciona la categoría con la que te registraste.", 409);
+    }
+  }
+  return category;
+}
+
 export function validatePayment(input: { sequence: string; amount: string; date: string; documentNumber: string; method: string }, category: RegistrationCategory) {
   if (input.method !== "pagalo_pe") throw new ValidationError("Confirma que realizaste el pago mediante Págalo.pe.");
   if (!/^\d{6}$/.test(input.sequence)) throw new ValidationError("La secuencia del comprobante debe tener exactamente 6 dígitos.");

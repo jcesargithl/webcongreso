@@ -221,7 +221,7 @@ test("verification endpoint allows eligible speakers and blocks attendees or rej
   }
 });
 
-test("paper endpoint cannot bypass verification", async () => {
+test("paper submissions require valid author data when no verification token is supplied", async () => {
   const h = harness();
   const response = await h.load("../src/app/api/requests/route").POST(formRequest({ kind: "paper", topic: "Prueba", file: pdf() }));
   assert.equal(response.status, 403);
@@ -407,7 +407,7 @@ test("new free and paid registrations receive accurate confirmations", async () 
     assert.match(h.state.sentEmails[0].subject, subject);
     if (id === "speaker_internal_student") {
       assert.match(h.state.sentEmails[0].text, /gratuita/);
-      assert.match(h.state.sentEmails[0].text, /Ya puedes presentar tu investigación/);
+      assert.match(h.state.sentEmails[0].text, /Si aún no enviaste tu investigación/);
     } else assert.match(h.state.sentEmails[0].text, /Pago pendiente de validación/i);
   }
 });
@@ -632,4 +632,86 @@ test("corporate registration requires minimum 10 participants, applies 20% disco
   assert.equal(data.subtotal, 310);
   assert.equal(data.discount, 62);
   assert.equal(data.total, 248);
+});
+
+function directPaperFields(category = "speaker_external", overrides = {}) {
+  return { ...registrationFields(category), kind: "paper", topic: "Aprendizaje cooperativo", file: pdf(), ...overrides };
+}
+
+test("direct submissions accept all speaker categories without a registration, token or receipt", async () => {
+  for (const category of ["speaker_external", "speaker_internal_teacher", "speaker_internal_student"]) {
+    const h = harness();
+    const response = await h.load("../src/app/api/requests/route").POST(formRequest(directPaperFields(category)));
+    assert.equal(response.status, 201);
+    assert.equal(h.state.records.length, 1);
+    assert.equal(h.state.records[0].registration_id, null);
+    assert.equal(h.state.records[0].payment_status, "exempt");
+    assert.equal(h.state.records[0].status, "reviewing");
+    assert.equal(h.state.records[0].registration_fee, 0);
+    assert.equal(h.state.records[0].receipt_path, undefined);
+    assert.equal(h.state.uploads.length, 1);
+    assert.match(h.state.uploads[0], /^papers\//);
+  }
+});
+
+test("direct submissions link a matching speaker registration with payment still pending", async () => {
+  const existing = { ...registration("speaker_external", "pending"), email: "prueba@example.test", doc_number: "87654321", status: "reviewing" };
+  const h = harness([existing]);
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest(directPaperFields()));
+  assert.equal(response.status, 201);
+  assert.equal(h.state.records[1].registration_id, existing.id);
+  assert.equal(h.state.records[0].payment_status, "pending");
+});
+
+test("direct submissions reject incompatible or rejected registrations before uploading", async () => {
+  for (const patch of [
+    { category_id: "attendee_external" }, { category_id: "speaker_internal_teacher" },
+    { status: "rejected" }, { payment_status: "rejected" },
+  ]) {
+    const h = harness([{ ...registration("speaker_external", "pending"), email: "prueba@example.test", doc_number: "87654321", ...patch }]);
+    const response = await h.load("../src/app/api/requests/route").POST(formRequest(directPaperFields()));
+    assert.ok([403, 409].includes(response.status));
+    assert.equal(h.state.uploads.length, 0);
+    assert.equal(h.state.records.length, 1);
+  }
+});
+
+test("verification tokens also permit external papers while payment remains pending", async () => {
+  const h = harness([{ ...registration("speaker_external", "pending"), status: "reviewing" }]);
+  const verification = await (await h.load("../src/app/api/registrations/verify/route").POST(verificationRequest())).json();
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest({
+    kind: "paper", verification_token: verification.token, topic: "Aprendizaje cooperativo", file: pdf(),
+  }));
+  assert.equal(response.status, 201);
+  assert.equal(h.state.records[1].registration_id, REGISTRATION_ID);
+});
+
+test("administrators can academically approve a standalone paper or a paper with pending payment", async () => {
+  for (const linked of [false, true]) {
+    const submission = { ...paperRecord(), registration_id: linked ? REGISTRATION_ID : null, category_id: "speaker_external" };
+    const h = harness([...(linked ? [{ ...registration("speaker_external", "pending"), status: "reviewing" }] : []), submission]);
+    const response = await h.load("../src/app/api/requests/route").PATCH(patchRequest(submission.id, { status: "approved" }));
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).status, "approved");
+    if (linked) assert.equal(h.state.records[0].payment_status, "pending");
+  }
+});
+
+test("old database guard errors clean up the research PDF and never report a successful submission", async () => {
+  const h = harness();
+  h.state.failInsert = { code: "23514", message: "Incomplete paper submission" };
+  const response = await h.load("../src/app/api/requests/route").POST(formRequest(directPaperFields()));
+  assert.equal(response.status, 409);
+  assert.equal(h.state.records.length, 0);
+  assert.deepEqual(h.state.removed, h.state.uploads);
+});
+
+test("speaker notifications distinguish academic acceptance from later registration payment", () => {
+  const { buildRequestEmail } = harness().load("../src/lib/email-template");
+  const pending = buildRequestEmail({ ...registration("speaker_external", "pending"), status: "reviewing" });
+  assert.match(pending.text, /sin esperar la validación del pago/);
+  assert.doesNotMatch(pending.text, /Espera el correo de aprobación del pago/);
+  const accepted = buildRequestEmail({ ...paperRecord("approved"), category_id: "speaker_external", registration_id: null }, "status_updated");
+  assert.match(accepted.text, /Si aún no completaste tu inscripción y pago/);
+  assert.match(accepted.text, /Si ya pagaste, no necesitas realizar otro pago/);
 });

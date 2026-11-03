@@ -30,7 +30,9 @@ function contentFor(request: CongressRequest, event: EmailEvent): MessageContent
     if (request.status === "approved") return {
       title: "Tu ponencia ha sido aprobada", status: "Ponencia aceptada", tone: "success",
       description: "El comité académico ha aprobado tu investigación para participar como ponencia en el IV Congreso Internacional de Investigación Científica.",
-      next: "Consulta el programa del congreso. Para coordinar los detalles de tu presentación, comunícate con el comité organizador.",
+      next: getCategoryForRequest(request)?.fee
+        ? "Tu investigación ya fue aceptada. Si aún no completaste tu inscripción y pago como ponente externo, coordínalos con la Secretaría. Si ya pagaste, no necesitas realizar otro pago."
+        : "Consulta el programa del congreso. Para coordinar los detalles de tu presentación, comunícate con el comité organizador.",
       ...program,
     };
     if (request.status === "rejected") return {
@@ -74,7 +76,7 @@ function contentFor(request: CongressRequest, event: EmailEvent): MessageContent
           ? "Tu inscripción como ponente interno está confirmada. La participación de docentes y estudiantes EPEP en esta categoría es gratuita y no requiere comprobante de pago."
           : "La organización aprobó tu pago y tu inscripción al congreso está confirmada. Gracias por ser parte de este encuentro académico.",
         next: category?.speaker
-          ? "Ya puedes presentar tu investigación. Entra a la web, selecciona «Enviar investigación» y verifica tu inscripción con el mismo correo y documento. La aceptación de la ponencia dependerá de la evaluación académica."
+          ? "Si aún no enviaste tu investigación, entra a la web y selecciona «Enviar investigación» con el mismo correo y documento. La aceptación de la ponencia dependerá de la evaluación académica."
           : "Consulta el programa y las actividades del congreso. Conserva este correo como confirmación de tu inscripción.",
         ...(category?.speaker ? site : program),
       };
@@ -84,7 +86,7 @@ function contentFor(request: CongressRequest, event: EmailEvent): MessageContent
       status: "Pago pendiente de validación", tone: "pending",
       description: "Recibimos tus datos y el comprobante de Págalo.pe. La organización debe validar el pago antes de confirmar tu inscripción.",
       next: category?.speaker
-        ? "Espera el correo de aprobación del pago. Después podrás ingresar a «Enviar investigación» y presentar tu ponencia."
+        ? "Puedes enviar tu investigación sin esperar la validación del pago. La evaluación académica de la ponencia y la revisión del comprobante se gestionan por separado."
         : "Te notificaremos el resultado de la revisión del comprobante por este mismo correo.",
       ...site,
     };
