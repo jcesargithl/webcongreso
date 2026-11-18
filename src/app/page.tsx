@@ -258,8 +258,8 @@ export default function Home() {
               <div className="highlight-right">
                 <p>Participa en nuestras líneas de investigación centradas en innovación, inteligencia artificial y metodologías activas con expertos como <strong>Dr. José Supo, Mtra. Marycruz Presas, Dr. Vidnay Valero y destacados investigadores</strong>.</p>
                 <div className="highlight-images">
-                  <Image src="/speaker_2.jpg" width={120} height={120} alt="Dr. José Supo" />
-                  <Image src="/speaker_1.jpg" width={120} height={120} alt="Mtra. Marycruz Presas" />
+                  <Image src="/speakers/dr-jose-supo.jpg" width={120} height={120} alt="Dr. José Supo" style={{ objectFit: 'cover' }} />
+                  <Image src="/speakers/mtra-marycruz-presas-rodriguez.jpg" width={120} height={120} alt="Mtra. Marycruz Presas" style={{ objectFit: 'cover' }} />
                   <Image src="/theme_1_v2.jpg" width={120} height={120} alt="Eje 1" />
                   <Image src="/theme_2_v2.jpg" width={120} height={120} alt="Eje 2" />
                 </div>
@@ -274,7 +274,7 @@ export default function Home() {
               <div className="highlight-right">
                 <p>Mejora tus competencias a través de sesiones presenciales y virtuales, con salas interactivas para fomentar la colaboración y el debate científico.</p>
                 <div className="highlight-images tall">
-                  <Image src="/speaker_3.jpg" width={120} height={180} alt="PhD Piter Henry Escobar" />
+                  <Image src="/speakers/phd-piter-henry-escobar-callejas.jpg" width={120} height={180} alt="PhD Piter Henry Escobar" style={{ objectFit: 'cover' }} />
                   <Image src="/theme_3_v2.jpg" width={120} height={180} alt="Eje 3" />
                   <Image src="/theme_4_v2.jpg" width={120} height={180} alt="Eje 4" />
                 </div>

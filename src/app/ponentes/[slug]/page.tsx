@@ -11,7 +11,7 @@ export function generateStaticParams() {
 export default async function PonentePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const speaker = speakers.find(s => s.slug === slug);
-  
+
   if (!speaker) {
     return notFound();
   }
@@ -21,7 +21,7 @@ export default async function PonentePage({ params }: { params: Promise<{ slug: 
       <Link href="/#ponentes" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '30px', color: '#0F2756', textDecoration: 'none', fontWeight: 'bold', fontSize: '14px' }}>
         ← Volver a Ponentes del Congreso
       </Link>
-      
+
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '35px' }}>
         <div style={{ width: '220px', height: '220px', borderRadius: '50%', overflow: 'hidden', position: 'relative', marginBottom: '20px', boxShadow: '0 8px 24px rgba(15, 39, 86, 0.15)', border: '4px solid #FFF' }}>
           <Image src={speaker.img} alt={speaker.name} fill style={{ objectFit: 'cover' }} />

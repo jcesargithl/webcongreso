@@ -19,7 +19,7 @@ export const speakers: Speaker[] = [
     institution: "Sociedad Hispana de Investigadores Científicos",
     role: "Especialista en Metodología de la Investigación y Estadística Aplicada a la Educación.",
     desc: "Reconocido bioestadístico, metodólogo y conferencista internacional de amplia trayectoria en Iberoamérica. Especialista en diseño de investigaciones cuantitativas, análisis de datos y bioestadística aplicada a las ciencias sociales y la educación.",
-    img: "/speaker_2.jpg",
+    img: "/speakers/dr-jose-supo.jpg",
     topic: "Metodología de la Investigación y Estadística Aplicada a la Innovación Educativa"
   },
   {
@@ -30,7 +30,7 @@ export const speakers: Speaker[] = [
     institution: "Investigadora en Educación Superior (México)",
     role: "Docente investigadora en educación especial, la inclusión educativa y los procesos de evaluación de la educación superior.",
     desc: "Investigadora mexicana especializada en modelos inclusivos de aprendizaje, atención a la diversidad curricular y procesos contemporáneos de evaluación y acreditación de la calidad en la educación superior.",
-    img: "/speaker_1.jpg",
+    img: "/speakers/mtra-marycruz-presas-rodriguez.jpg",
     topic: "Inclusión Educativa, Educación Especial y Procesos de Evaluación en la Educación Superior"
   },
   {
@@ -41,7 +41,7 @@ export const speakers: Speaker[] = [
     institution: "Universidad Pública de El Alto (UPEA), Bolivia",
     role: "Docente investigador de la Universidad Pública de El Alto, Bolivia.",
     desc: "Doctor e investigador boliviano con destacada labor en innovación curricular, integración de tecnologías digitales en la docencia universitaria e impacto de la inteligencia artificial en la formación docente.",
-    img: "/speaker_3.jpg",
+    img: "/speakers/phd-piter-henry-escobar-callejas.jpg",
     topic: "Transformación Educativa, Inteligencia Artificial y Desafíos del Siglo XXI"
   },
   {
@@ -52,7 +52,7 @@ export const speakers: Speaker[] = [
     institution: "Universidad Nacional Amazónica de Madre de Dios",
     role: "Docente-Investigador RENACYT de la Universidad Nacional Amazónica de Madre de Dios, Perú.",
     desc: "Investigador calificado en RENACYT - CONCYTEC, especialista en epistemología de las ciencias sociales, producción científica indexada y metodologías de investigación en contextos amazónicos y andinos.",
-    img: "/speaker_1.jpg",
+    img: "/speakers/jesus-wiliam-huanca-arohuanca.jpg",
     topic: "Epistemología y Producción Científica en la Investigación Educativa"
   },
   {
@@ -63,7 +63,7 @@ export const speakers: Speaker[] = [
     institution: "Universidad Nacional del Altiplano (UNA Puno)",
     role: "Docente Investigador RENACYT de la Universidad Nacional del Altiplano.",
     desc: "Catedrático e investigador RENACYT de la Universidad Nacional del Altiplano. Miembro del Comité Científico evaluador del IV Congreso Internacional, especialista en educación superior, calidad académica y formación investigativa.",
-    img: "/speaker_3.jpg",
+    img: "/speakers/dr-vidnay-noel-valero-ancco.jpg",
     topic: "Investigación Científica y Desafíos de la Educación Superior en la Región Andina"
   },
   {
@@ -74,7 +74,7 @@ export const speakers: Speaker[] = [
     institution: "Investigador RENACYT - CONCYTEC",
     role: "Docente investigador RENACYT, investigador social y académico peruano reconocido por su labor educativa y su producción científica en ciencias sociales, derecho y educación.",
     desc: "Prolífico investigador peruano calificado en RENACYT, autor de numerosas publicaciones indexadas a nivel internacional, centrado en el estudio sociológico de la educación, derechos educativos y políticas formativas del siglo XXI.",
-    img: "/speaker_2.jpg",
+    img: "/speakers/franklin-americo-canaza-choque.jpg",
     topic: "Políticas Educativas, Sociedad y Producción Científica en el Perú"
   }
 ];
