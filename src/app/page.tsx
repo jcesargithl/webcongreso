@@ -189,13 +189,33 @@ export default function Home() {
 
           <div className="speakers-grid">
             {speakers.map((speaker, idx) => (
-              <Link href={`/ponentes/${speaker.slug}`} className="speaker-card" key={`${speaker.name}-${idx}`}>
+              <Link href={`/ponentes/${speaker.slug}`} className="speaker-card" key={`${speaker.name}-${idx}`} style={{ textDecoration: 'none' }}>
                 <div className="speaker-image">
                   <Image src={speaker.img} alt={speaker.name} fill className="object-cover" />
+                  <span style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    backgroundColor: speaker.type === "Conferencista Internacional" ? '#0F2756' : '#B38600',
+                    color: '#FFF',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    padding: '4px 10px',
+                    borderRadius: '20px',
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                    zIndex: 2,
+                  }}>
+                    {speaker.type === "Conferencista Internacional" ? `Internacional · ${speaker.country}` : `Nacional · ${speaker.country}`}
+                  </span>
                 </div>
                 <div className="speaker-name-badge">
                   {speaker.name}
                 </div>
+                <p style={{ marginTop: '22px', fontSize: '13px', color: '#555', lineHeight: '1.45', padding: '0 4px', textAlign: 'left', minHeight: '38px' }}>
+                  {speaker.role}
+                </p>
               </Link>
             ))}
           </div>
@@ -228,10 +248,10 @@ export default function Home() {
                 </div>
               </div>
               <div className="highlight-right">
-                <p>Participa en nuestras líneas de investigación centradas en innovación, inteligencia artificial y metodologías activas con expertos internacionales como <strong>Dr. Alejandro Silva y Dra. Elena Vargas</strong>.</p>
+                <p>Participa en nuestras líneas de investigación centradas en innovación, inteligencia artificial y metodologías activas con expertos como <strong>Dr. José Supo, Mtra. Marycruz Presas, Dr. Vidnay Valero y destacados investigadores</strong>.</p>
                 <div className="highlight-images">
-                  <Image src="/speaker_1.jpg" width={120} height={120} alt="Dr. Alejandro Silva" />
-                  <Image src="/speaker_2.jpg" width={120} height={120} alt="Dra. Elena Vargas" />
+                  <Image src="/speaker_2.jpg" width={120} height={120} alt="Dr. José Supo" />
+                  <Image src="/speaker_1.jpg" width={120} height={120} alt="Mtra. Marycruz Presas" />
                   <Image src="/theme_1_v2.jpg" width={120} height={120} alt="Eje 1" />
                   <Image src="/theme_2_v2.jpg" width={120} height={120} alt="Eje 2" />
                 </div>
@@ -246,7 +266,7 @@ export default function Home() {
               <div className="highlight-right">
                 <p>Mejora tus competencias a través de sesiones presenciales y virtuales, con salas interactivas para fomentar la colaboración y el debate científico.</p>
                 <div className="highlight-images tall">
-                  <Image src="/speaker_3.jpg" width={120} height={180} alt="Ph.D. Fernando Valle" />
+                  <Image src="/speaker_3.jpg" width={120} height={180} alt="PhD Piter Henry Escobar" />
                   <Image src="/theme_3_v2.jpg" width={120} height={180} alt="Eje 3" />
                   <Image src="/theme_4_v2.jpg" width={120} height={180} alt="Eje 4" />
                 </div>
