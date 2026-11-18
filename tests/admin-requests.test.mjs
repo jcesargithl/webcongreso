@@ -18,7 +18,7 @@ function load(filename) {
   );
   return compiledModule.exports;
 }
-const { buildRequestsCsv, canApproveRequest, defaultAdminFilters, filterAdminRequests, formatTimestamp, paginateRequests } = load("src/lib/admin-requests.ts");
+const { buildRequestsCsv, buildRequestsExcel, canApproveRequest, defaultAdminFilters, filterAdminRequests, formatTimestamp, paginateRequests } = load("src/lib/admin-requests.ts");
 
 function registration(overrides = {}) {
   return {
@@ -121,4 +121,73 @@ test("CSV includes all filtered records rather than just the current page", () =
 test("admin dates consistently use Peru time", () => {
   assert.match(formatTimestamp("2026-10-29T03:30:00Z", true), /28/);
   assert.equal(formatTimestamp("invalid"), "No registrada");
+});
+
+function unpackZip(bytes) {
+  const files = new Map();
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const decoder = new TextDecoder();
+  let offset = 0;
+  while (offset < bytes.length) {
+    const sig = view.getUint32(offset, true);
+    if (sig !== 0x04034b50) break;
+    const nameLen = view.getUint16(offset + 26, true);
+    const extraLen = view.getUint16(offset + 28, true);
+    const size = view.getUint32(offset + 22, true);
+    const name = decoder.decode(bytes.subarray(offset + 30, offset + 30 + nameLen));
+    const data = decoder.decode(bytes.subarray(offset + 30 + nameLen + extraLen, offset + 30 + nameLen + extraLen + size));
+    files.set(name, data);
+    offset += 30 + nameLen + extraLen + size;
+  }
+  return files;
+}
+
+test("Excel builder generates valid OpenXML (.xlsx) archive with all required XML files", () => {
+  const row = registration({
+    name: '=HYPERLINK("https://untrusted.invalid")',
+    institution: 'UNA "Puno"',
+    file_url: "https://private.invalid/paper",
+    receipt_url: "https://private.invalid/receipt",
+  });
+  const excelBytes = buildRequestsExcel([row], lookup([row]));
+  assert.ok(excelBytes instanceof Uint8Array);
+  assert.ok(excelBytes.length > 500);
+
+  // PKZIP signature
+  assert.equal(excelBytes[0], 0x50);
+  assert.equal(excelBytes[1], 0x4b);
+  assert.equal(excelBytes[2], 0x03);
+  assert.equal(excelBytes[3], 0x04);
+
+  const files = unpackZip(excelBytes);
+  assert.ok(files.has("[Content_Types].xml"));
+  assert.ok(files.has("_rels/.rels"));
+  assert.ok(files.has("xl/_rels/workbook.xml.rels"));
+  assert.ok(files.has("xl/workbook.xml"));
+  assert.ok(files.has("xl/styles.xml"));
+  assert.ok(files.has("xl/worksheets/sheet1.xml"));
+
+  const sheetXml = files.get("xl/worksheets/sheet1.xml");
+  assert.ok(sheetXml.includes('<pane ySplit="1"'));
+  assert.ok(sheetXml.includes('<autoFilter ref="A1:R2"/>'));
+  assert.ok(sheetXml.includes("&apos;=HYPERLINK"));
+  assert.ok(sheetXml.includes("01234567"));
+  assert.ok(sheetXml.includes("093245"));
+  assert.ok(sheetXml.includes("<v>100.00</v>"));
+  assert.doesNotMatch(sheetXml, /private[.]invalid/);
+});
+
+test("Excel export includes all filtered records and styles", () => {
+  const rows = Array.from({ length: 23 }, (_, index) => registration({ id: "reg-" + index, name: "Participante " + index }));
+  const filtered = filterAdminRequests(rows, lookup(rows), defaultAdminFilters, "name_asc");
+  const excelBytes = buildRequestsExcel(filtered, lookup(rows));
+  const files = unpackZip(excelBytes);
+  const sheetXml = files.get("xl/worksheets/sheet1.xml");
+
+  assert.ok(sheetXml.includes('<autoFilter ref="A1:R24"/>'));
+  assert.ok(sheetXml.includes("Participante 22"));
+  assert.ok(sheetXml.includes("Participante 0"));
+
+  const stylesXml = files.get("xl/styles.xml");
+  assert.ok(stylesXml.includes("FF0F2756"));
 });

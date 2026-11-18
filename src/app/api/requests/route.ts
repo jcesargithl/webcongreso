@@ -7,6 +7,7 @@ import { assertPaperEligibility, assertSpeakerEligibility, normalizeDocument, no
 import { readVerificationToken } from "@/lib/paper-verification";
 import { errorResponse } from "@/lib/api-errors";
 import { queueRequestEmail, sendRequestEmail } from "@/lib/email";
+import { buildRequestsCsv, buildRequestsExcel } from "@/lib/admin-requests";
 
 export const runtime = "nodejs";
 const statuses: RequestStatus[] = ["pending", "reviewing", "approved", "rejected"];
@@ -26,7 +27,32 @@ async function uploadPdf(file: File, prefix: "papers" | "receipts"): Promise<str
 export async function GET(request: Request) {
   try {
     if (!await verifyAdmin(request)) return Response.json({ error: "No autorizado" }, { status: 401 });
-    return Response.json(await listRequests(), { headers: { "Cache-Control": "no-store" } });
+    const requests = await listRequests();
+    const url = new URL(request.url);
+    const exportParam = url.searchParams.get("export");
+    if (exportParam === "excel" || exportParam === "xlsx") {
+      const lookup = new Map(requests.map(r => [r.id, r]));
+      const excelBytes = buildRequestsExcel(requests, lookup);
+      return new Response(Buffer.from(excelBytes), {
+        headers: {
+          "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "Content-Disposition": 'attachment; filename="congreso-solicitudes.xlsx"',
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+    if (exportParam === "csv") {
+      const lookup = new Map(requests.map(r => [r.id, r]));
+      const csv = buildRequestsCsv(requests, lookup);
+      return new Response(csv, {
+        headers: {
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": 'attachment; filename="congreso-solicitudes.csv"',
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+    return Response.json(requests, { headers: { "Cache-Control": "no-store" } });
   } catch (error) { return errorResponse(error); }
 }
 

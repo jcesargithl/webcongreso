@@ -130,3 +130,5 @@ export function buildRequestsCsv(rows: CongressRequest[], lookup: RequestLookup)
   });
   return "\uFEFF" + [headers, ...lines].map(line => line.map(csvCell).join(",")).join("\r\n");
 }
+
+export { buildRequestsExcel } from "./excel-export";

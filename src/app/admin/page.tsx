@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpDown, CheckCheck, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CreditCard, Download, FileText, LayoutDashboard, LoaderCircle, Lock, LogOut, RefreshCw, Search, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowUpDown, CheckCheck, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CreditCard, Download, FileSpreadsheet, FileText, LayoutDashboard, LoaderCircle, Lock, LogOut, RefreshCw, Search, Users, X } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 import type { CongressRequest } from "@/lib/requests";
 import { getCategoryForRequest, registrationCategories } from "@/lib/congress";
-import { buildRequestsCsv, defaultAdminFilters, filterAdminRequests, formatTimestamp, paginateRequests, paymentLabel, registrationFor, statusLabel, type AdminFilters, type AdminSort } from "@/lib/admin-requests";
+import { buildRequestsCsv, buildRequestsExcel, defaultAdminFilters, filterAdminRequests, formatTimestamp, paginateRequests, paymentLabel, registrationFor, statusLabel, type AdminFilters, type AdminSort } from "@/lib/admin-requests";
 import { supabaseClient } from "@/lib/supabase-client";
 import AdminRequestDetails, { AdminFeedback, type AdminNotice } from "@/components/admin-request-details";
 import styles from "./admin.module.css";
@@ -171,6 +171,22 @@ export default function AdminPage() {
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
+  function exportExcel() {
+    if (!visible.length) return;
+    const bytes = buildRequestsExcel(visible, lookup);
+    const blob = new Blob([bytes as BlobPart], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const dateParts = new Intl.DateTimeFormat("en", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: "America/Lima" }).formatToParts(new Date());
+    const datePart = (type: string) => dateParts.find(part => part.type === type)?.value;
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "congreso-solicitudes-" + [datePart("year"), datePart("month"), datePart("day")].join("-") + ".xlsx";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
   if (authLoading) return <main className="admin-shell"><div className={styles.loadingState}><LoaderCircle size={24} className={styles.spinning} /><p>Comprobando acceso…</p></div></main>;
   if (!session) return (
     <main className="admin-shell admin-login-shell">
@@ -208,7 +224,8 @@ export default function AdminPage() {
         <div><span className={styles.eyebrow}>Gestión del congreso</span><h1>Solicitudes</h1><p>Revisa inscripciones, valida pagos y gestiona las investigaciones.</p></div>
         <div className={styles.headerActions}>
           <span className={styles.sessionEmail}><span className={styles.sessionDot} />{session.user.email}</span>
-          <button type="button" className={styles.secondaryButton} onClick={exportCsv} disabled={loading || !visible.length} title={"Exportar " + visible.length + " resultados filtrados"}><Download size={16} />Exportar CSV</button>
+          <button type="button" className={styles.secondaryButton} onClick={exportExcel} disabled={loading || !visible.length} title={"Exportar " + visible.length + " resultados a Excel (.xlsx)"}><FileSpreadsheet size={16} />Exportar Excel</button>
+          <button type="button" className={styles.secondaryButton} onClick={exportCsv} disabled={loading || !visible.length} title={"Exportar " + visible.length + " resultados filtrados a CSV"}><Download size={16} />Exportar CSV</button>
           <button type="button" className={styles.iconButton} disabled={loading || Boolean(busyId)} onClick={() => void loadRequests()} aria-label="Actualizar solicitudes" title="Actualizar solicitudes"><RefreshCw size={18} className={loading ? styles.spinning : undefined} /></button>
         </div>
       </header>
