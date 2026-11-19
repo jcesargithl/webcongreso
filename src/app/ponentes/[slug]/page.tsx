@@ -24,7 +24,7 @@ export default async function PonentePage({ params }: { params: Promise<{ slug: 
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '35px' }}>
         <div style={{ width: '220px', height: '220px', borderRadius: '50%', overflow: 'hidden', position: 'relative', marginBottom: '20px', boxShadow: '0 8px 24px rgba(15, 39, 86, 0.15)', border: '4px solid #FFF' }}>
-          <Image src={speaker.img} alt={speaker.name} fill style={{ objectFit: 'cover' }} />
+          <Image src={speaker.img} alt={speaker.name} fill style={{ objectFit: 'cover', objectPosition: speaker.imgPosition ?? 'center top' }} />
         </div>
 
         <span style={{

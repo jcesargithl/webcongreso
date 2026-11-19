@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { speakers } from "@/lib/speakers";
 import { registrationCategories, formatCurrency, getInstitutionalFee, getRegistrationTotal } from "@/lib/congress";
 import { RequestModal, type ModalState } from "@/components/request-modal";
 import { CorporateModal } from "@/components/corporate-modal";
 import { AuthoritySlider } from "@/components/authority-slider";
+import { SpeakersSection } from "@/components/speakers-section";
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowUpRight,
@@ -183,52 +182,8 @@ export default function Home() {
       </section>
 
       {/* ─── PONENTES MAGISTRALES ─── */}
-      <section className="section" id="ponentes" style={{ backgroundColor: '#F0F0F0', padding: '60px clamp(20px, 5vw, 80px)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '32px', color: '#B38600', fontWeight: 400, marginBottom: '50px' }}>Ponentes Magistrales</h2>
+      <SpeakersSection />
 
-          <div className="speakers-grid">
-            {speakers.map((speaker, idx) => (
-              <Link href={`/ponentes/${speaker.slug}`} className="speaker-card" key={`${speaker.name}-${idx}`} style={{ textDecoration: 'none' }}>
-                <div className="speaker-image-wrapper">
-                  <div className="speaker-image">
-                    <Image src={speaker.img} alt={speaker.name} fill className="object-cover" />
-                    <span style={{
-                      position: 'absolute',
-                      top: '12px',
-                      left: '12px',
-                      backgroundColor: speaker.type === "Conferencista Internacional" ? '#0F2756' : '#B38600',
-                      color: '#FFF',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      padding: '4px 10px',
-                      borderRadius: '20px',
-                      letterSpacing: '0.04em',
-                      textTransform: 'uppercase',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
-                      zIndex: 2,
-                    }}>
-                      {speaker.type === "Conferencista Internacional" ? `Internacional · ${speaker.country}` : `Nacional · ${speaker.country}`}
-                    </span>
-                  </div>
-                  <div className="speaker-name-badge">
-                    {speaker.name}
-                  </div>
-                </div>
-
-                <div style={{ padding: '0 4px', textAlign: 'left' }}>
-                  <p style={{ margin: '0 0 6px 0', fontSize: '13px', color: '#475569', lineHeight: '1.45' }}>
-                    {speaker.role}
-                  </p>
-                  <span style={{ fontSize: '12px', color: '#B38600', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    Ver perfil académico &rarr;
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
       {/* ─── EVENT HIGHLIGHTS ─── */}
       <section className="section" id="destacados" style={{ backgroundColor: '#F0F0F0', padding: '0 clamp(20px, 5vw, 80px) 80px' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>

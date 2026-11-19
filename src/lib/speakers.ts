@@ -7,6 +7,8 @@ export type Speaker = {
   institution: string;
   desc: string;
   img: string;
+  /** CSS object-position para encuadrar el rostro cuando la foto no es vertical */
+  imgPosition?: string;
   topic: string;
 };
 
@@ -54,6 +56,18 @@ export const speakers: Speaker[] = [
     desc: "Docente e investigador universitario colombiano de la Universidad Autónoma de Bucaramanga (UNAB), especialista en educación matemática, pedagogía cuantitativa y desarrollo de competencias lógico-matemáticas en la educación superior.",
     img: "/speakers/yor-yimer-diaz-mendez.jpg",
     topic: "Didáctica de la Matemática y Estrategias Pedagógicas Innovadoras en la Educación Superior"
+  },
+  {
+    slug: "juyang-li",
+    name: "Juyang Li",
+    type: "Conferencista Internacional",
+    country: "España",
+    institution: "Universidad Complutense de Madrid (UCM), España",
+    role: "Lectora de lengua china en la Universidad Complutense de Madrid, España.",
+    desc: "Docente de lengua china en la Universidad Complutense de Madrid, dedicada a la enseñanza del chino como lengua extranjera y a la difusión de la cultura china en el ámbito universitario hispanohablante, promoviendo el diálogo intercultural entre China, España y América Latina.",
+    img: "/speakers/juyang-li.jpeg",
+    imgPosition: "68% 30%",
+    topic: "Enseñanza de la Lengua China y Diálogo Intercultural en la Educación Superior"
   },
   {
     slug: "jesus-wiliam-huanca-arohuanca",
