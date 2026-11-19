@@ -45,6 +45,17 @@ export const speakers: Speaker[] = [
     topic: "Transformación Educativa, Inteligencia Artificial y Desafíos del Siglo XXI"
   },
   {
+    slug: "yor-yimer-diaz-mendez",
+    name: "Yor Yimer Díaz Méndez",
+    type: "Conferencista Internacional",
+    country: "Colombia",
+    institution: "Universidad Autónoma de Bucaramanga (UNAB), Colombia",
+    role: "Docente universitario en el área de matemática de la Universidad Autónoma de Bucaramanga (UNAB), Colombia.",
+    desc: "Docente e investigador universitario colombiano de la Universidad Autónoma de Bucaramanga (UNAB), especialista en educación matemática, pedagogía cuantitativa y desarrollo de competencias lógico-matemáticas en la educación superior.",
+    img: "/speakers/yor-yimer-diaz-mendez.jpg",
+    topic: "Didáctica de la Matemática y Estrategias Pedagógicas Innovadoras en la Educación Superior"
+  },
+  {
     slug: "jesus-wiliam-huanca-arohuanca",
     name: "Jesús Wiliam Huanca-Arohuanca",
     type: "Conferencista Nacional",
