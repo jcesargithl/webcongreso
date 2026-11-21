@@ -6,6 +6,7 @@ import { RequestModal, type ModalState } from "@/components/request-modal";
 import { CorporateModal } from "@/components/corporate-modal";
 import { AuthoritySlider } from "@/components/authority-slider";
 import { SpeakersSection } from "@/components/speakers-section";
+import { FlyerCarousel } from "@/components/flyer-carousel";
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowUpRight,
@@ -183,6 +184,9 @@ export default function Home() {
 
       {/* ─── PONENTES MAGISTRALES ─── */}
       <SpeakersSection />
+
+      {/* ─── AFICHES DE CONFERENCISTAS ─── */}
+      <FlyerCarousel />
 
       {/* ─── EVENT HIGHLIGHTS ─── */}
       <section className="section" id="destacados" style={{ backgroundColor: '#F0F0F0', padding: '0 clamp(20px, 5vw, 80px) 80px' }}>
