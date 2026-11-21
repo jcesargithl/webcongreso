@@ -312,7 +312,7 @@ export default function AdminPage() {
                     <div className={styles.participantCell}>
                       <span className={[styles.avatar, request.kind === "paper" ? styles.paperAvatar : ""].join(" ")}>{request.name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase()}</span>
                       <div><button type="button" className={styles.rowButton} onClick={() => openRequest(request.id)} aria-label={"Ver detalles de " + request.name + ", " + (request.kind === "paper" ? "ponencia" : "inscripción")}>{request.name}</button>
-                        <span className={styles.participantEmail}>{request.email}</span><span className={styles.mobileKind}>{request.kind === "paper" ? "Ponencia" : "Inscripción"} · {request.doc_number || "Sin documento"}</span>
+                        <span className={styles.participantEmail}>{request.email}</span>{request.phone && <span className={styles.participantEmail}>Cel.: {request.phone}</span>}<span className={styles.mobileKind}>{request.kind === "paper" ? "Ponencia" : "Inscripción"} · {request.doc_number || "Sin documento"}</span>
                       </div>
                     </div>
                   </td>
