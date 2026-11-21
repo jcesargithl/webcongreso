@@ -290,13 +290,13 @@ export default function AdminPage() {
           <table className={styles.table}>
             <caption className={styles.srOnly}>Solicitudes del congreso. Selecciona un participante para abrir sus detalles.</caption>
             <thead><tr>
-              <th scope="col">Participante</th><th scope="col" className={styles.documentColumn}>Documento</th>
+              <th scope="col">Participante</th><th scope="col" className={styles.documentColumn}>Documento</th><th scope="col" className={styles.documentColumn}>Celular</th>
               <th scope="col" className={styles.kindColumn}>Tipo</th><th scope="col" className={styles.categoryColumn}>Categoría</th>
               <th scope="col">Pago</th><th scope="col">Estado</th><th scope="col" className={styles.dateColumn}>Registro</th>
               <th scope="col"><span className={styles.srOnly}>Detalles</span></th>
             </tr></thead>
             <tbody aria-busy={loading}>
-              {!paginated.rows.length && <tr><td colSpan={8}>
+              {!paginated.rows.length && <tr><td colSpan={9}>
                 <div className={styles.emptyState}>
                   {loading ? <LoaderCircle size={26} className={styles.spinning} /> : <Search size={28} />}
                   <h2>{loading ? "Cargando solicitudes…" : requests.length ? "No encontramos coincidencias" : "Todavía no hay solicitudes"}</h2>
@@ -312,11 +312,12 @@ export default function AdminPage() {
                     <div className={styles.participantCell}>
                       <span className={[styles.avatar, request.kind === "paper" ? styles.paperAvatar : ""].join(" ")}>{request.name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase()}</span>
                       <div><button type="button" className={styles.rowButton} onClick={() => openRequest(request.id)} aria-label={"Ver detalles de " + request.name + ", " + (request.kind === "paper" ? "ponencia" : "inscripción")}>{request.name}</button>
-                        <span className={styles.participantEmail}>{request.email}</span>{request.phone && <span className={styles.participantEmail}>Cel.: {request.phone}</span>}<span className={styles.mobileKind}>{request.kind === "paper" ? "Ponencia" : "Inscripción"} · {request.doc_number || "Sin documento"}</span>
+                        <span className={styles.participantEmail}>{request.email}</span><span className={styles.mobileKind}>{request.kind === "paper" ? "Ponencia" : "Inscripción"} · {request.doc_number || "Sin documento"}</span>
                       </div>
                     </div>
                   </td>
                   <td className={styles.documentColumn}><span className={styles.cellPrimary}>{request.doc_number || "Sin documento"}</span><span className={styles.cellSecondary}>{request.doc_type || "No registrado"}</span></td>
+                  <td className={styles.documentColumn}><span className={styles.cellPrimary}>{request.phone || "null"}</span></td>
                   <td className={styles.kindColumn}><span className={[styles.kindBadge, request.kind === "paper" ? styles.paperKind : styles.registrationKind].join(" ")}>{request.kind === "paper" ? <FileText size={12} /> : <Users size={12} />}{request.kind === "paper" ? "Ponencia" : "Inscripción"}</span></td>
                   <td className={styles.categoryColumn}><span className={styles.cellPrimary}>{category?.title || request.category || "Por identificar"}</span><span className={styles.cellSecondary}>{category?.role || request.mode}</span></td>
                   <td><span className={[styles.badge, styles[registration?.payment_status || "unknown"]].join(" ")}>{paymentLabel(registration?.payment_status, true)}</span></td>
