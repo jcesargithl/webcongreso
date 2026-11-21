@@ -182,14 +182,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── PONENTES MAGISTRALES ─── */}
-      <SpeakersSection />
-
       {/* ─── AFICHES DE CONFERENCISTAS ─── */}
       <FlyerCarousel />
 
       {/* ─── EVENT HIGHLIGHTS ─── */}
-      <section className="section" id="destacados" style={{ backgroundColor: '#F0F0F0', padding: '0 clamp(20px, 5vw, 80px) 80px' }}>
+      <section className="section" id="destacados" style={{ backgroundColor: '#F0F0F0', padding: '72px clamp(20px, 5vw, 80px) 80px' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '36px', color: '#B38600', fontWeight: 400, marginBottom: '60px' }}>Aspectos Destacados</h2>
 
@@ -516,6 +513,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ─── PONENTES MAGISTRALES ─── */}
+      <SpeakersSection />
       <section style={{ backgroundColor: '#EBEBEB', padding: '80px clamp(20px, 5vw, 80px)', textAlign: 'center' }} id="inscripciones">
         <h2 style={{ fontSize: '38px', color: '#0F2756', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.05em', marginBottom: '50px', textTransform: 'uppercase' }}>
           TARIFAS DE INSCRIPCIÓN

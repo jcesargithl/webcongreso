@@ -2585,44 +2585,116 @@ footer {
 .request-email-button { display: block; margin-top: 12px; font-size: 12px; }
 .request-email-button:disabled { opacity: 0.5; cursor: wait; }
 
-/* ─── Pasarela de afiches de conferencistas ─── */
-.flyers-section {
-  background: #F0F0F0;
-  padding: 8px 0 72px;
-  overflow: hidden;
+/* ─── Carrusel destacado de afiches de conferencistas ─── */
+.showcase-section {
+  position: relative; overflow: hidden;
+  padding: 72px 0 64px;
+  background: linear-gradient(180deg, #0A1B3D 0%, #0F2756 55%, #132F63 100%);
+  color: #FFFFFF;
 }
-.flyers-header { text-align: center; margin-bottom: 28px; padding: 0 20px; }
-.flyers-title {
-  font-size: clamp(22px, 3vw, 28px); color: #B38600; font-weight: 400;
-  margin: 12px 0 0;
+.showcase-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(520px 320px at 50% 58%, rgba(212, 175, 55, 0.22), transparent 70%),
+    radial-gradient(900px 300px at 50% 0%, rgba(255, 255, 255, 0.06), transparent 70%);
 }
-.flyers-viewport {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+.showcase-header { position: relative; text-align: center; padding: 0 20px; margin-bottom: 36px; }
+.showcase-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #F3C944; background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 6px 14px; border-radius: 99px;
 }
-.flyers-track {
-  display: flex; gap: 20px; width: max-content;
-  list-style: none; margin: 0; padding: 12px 0;
-  animation: flyers-scroll 60s linear infinite;
+.showcase-title {
+  font-size: clamp(28px, 4vw, 40px); font-weight: 400; color: #FFFFFF;
+  margin: 16px 0 10px;
 }
-.flyers-viewport:hover .flyers-track,
-.flyers-viewport:focus-within .flyers-track { animation-play-state: paused; }
-@keyframes flyers-scroll {
-  to { transform: translateX(calc(-50% - 10px)); }
+.showcase-title em { font-style: normal; color: #F3C944; }
+.showcase-subtitle { margin: 0 auto; max-width: 560px; color: rgba(255, 255, 255, 0.72); font-size: 15px; line-height: 1.6; }
+
+.showcase-stage {
+  --card-w: clamp(240px, 30vw, 400px);
+  position: relative;
+  height: calc(var(--card-w) * 1.25 + 28px);
+  perspective: 1600px;
+  touch-action: pan-y;
+  user-select: none;
 }
-.flyer-item { flex: 0 0 auto; }
-.flyer-card {
-  display: block; width: 200px; padding: 0; border: 0; cursor: zoom-in;
-  border-radius: 12px; overflow: hidden; background: #FFFFFF;
-  box-shadow: 0 2px 10px rgba(15, 39, 86, 0.08);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+.showcase-card {
+  position: absolute; top: 20px; left: 50%;
+  width: var(--card-w); padding: 0; border: 0; background: transparent;
+  border-radius: 16px; overflow: hidden; cursor: pointer;
+  transform:
+    translateX(calc(-50% + var(--offset) * var(--card-w) * 0.72))
+    scale(calc(1 - var(--distance) * 0.17))
+    rotateY(calc(var(--offset) * -14deg));
+  filter: brightness(calc(1 - var(--distance) * 0.28)) saturate(calc(1 - var(--distance) * 0.2));
+  opacity: 1;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  transition: transform 0.8s cubic-bezier(0.22, 0.8, 0.2, 1), filter 0.8s ease, opacity 0.6s ease, box-shadow 0.8s ease;
 }
-.flyer-card img { display: block; width: 100%; height: auto; }
-.flyer-card:hover, .flyer-card:focus-visible {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(15, 39, 86, 0.16);
+.showcase-card img { display: block; width: 100%; height: auto; pointer-events: none; }
+.showcase-card.is-active {
+  cursor: zoom-in;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(243, 201, 68, 0.45);
 }
-.flyer-card:focus-visible { outline: 2px solid #D4AF37; outline-offset: 3px; }
+.showcase-card.is-hidden { opacity: 0; pointer-events: none; }
+.showcase-card:focus-visible { outline: 3px solid #F3C944; outline-offset: 4px; }
+.showcase-expand {
+  position: absolute; right: 12px; bottom: 12px;
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+  color: #0F2756; background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.showcase-card.is-active:hover .showcase-expand,
+.showcase-card.is-active:focus-visible .showcase-expand { opacity: 1; transform: none; }
+
+.showcase-nav {
+  position: absolute; top: 50%; z-index: 20; transform: translateY(-50%);
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%;
+  color: #FFFFFF; background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22); cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.showcase-nav:hover { background: rgba(212, 175, 55, 0.3); border-color: rgba(243, 201, 68, 0.6); }
+.showcase-nav.prev { left: max(16px, calc(50% - var(--card-w) * 1.45)); }
+.showcase-nav.next { right: max(16px, calc(50% - var(--card-w) * 1.45)); }
+
+.showcase-dots { position: relative; display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
+.showcase-dot {
+  position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px;
+  background: rgba(255, 255, 255, 0.28); cursor: pointer; overflow: hidden;
+  transition: width 0.4s ease, background 0.3s ease;
+}
+.showcase-dot:hover { background: rgba(255, 255, 255, 0.5); }
+.showcase-dot.is-active { width: 36px; background: rgba(255, 255, 255, 0.25); }
+.showcase-dot-fill {
+  position: absolute; inset: 0; background: #F3C944;
+  transform-origin: left; transform: scaleX(1);
+}
+.showcase-dot-fill.is-running { animation: showcase-progress linear forwards; }
+@keyframes showcase-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (max-width: 600px) {
+  .showcase-section { padding: 56px 0 48px; }
+  .showcase-stage { --card-w: 70vw; }
+  .showcase-card {
+    transform:
+      translateX(calc(-50% + var(--offset) * var(--card-w) * 0.62))
+      scale(calc(1 - var(--distance) * 0.2));
+  }
+  .showcase-nav { top: auto; bottom: -6px; transform: none; width: 40px; height: 40px; }
+  .showcase-nav.prev { left: 16px; }
+  .showcase-nav.next { right: 16px; }
+  .showcase-dots { margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .showcase-card { transition: none; }
+}
 
 .flyer-lightbox {
   position: fixed; inset: 0; z-index: 10000;
@@ -2652,12 +2724,5 @@ footer {
 }
 
 @media (max-width: 600px) {
-  .flyer-card { width: 150px; }
-  .flyers-track { gap: 14px; animation-duration: 45s; }
-  @keyframes flyers-scroll { to { transform: translateX(calc(-50% - 7px)); } }
   .flyer-lightbox-nav { top: auto; bottom: 8px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .flyers-track { animation: none; }
-  .flyers-viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; padding: 0 16px; }
 }
