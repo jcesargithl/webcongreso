@@ -169,7 +169,7 @@ test("Excel builder generates valid OpenXML (.xlsx) archive with all required XM
 
   const sheetXml = files.get("xl/worksheets/sheet1.xml");
   assert.ok(sheetXml.includes('<pane ySplit="1"'));
-  assert.ok(sheetXml.includes('<autoFilter ref="A1:R2"/>'));
+  assert.ok(sheetXml.includes('<autoFilter ref="A1:S2"/>'));
   assert.ok(sheetXml.includes("&apos;=HYPERLINK"));
   assert.ok(sheetXml.includes("01234567"));
   assert.ok(sheetXml.includes("093245"));
@@ -184,7 +184,7 @@ test("Excel export includes all filtered records and styles", () => {
   const files = unpackZip(excelBytes);
   const sheetXml = files.get("xl/worksheets/sheet1.xml");
 
-  assert.ok(sheetXml.includes('<autoFilter ref="A1:R24"/>'));
+  assert.ok(sheetXml.includes('<autoFilter ref="A1:S24"/>'));
   assert.ok(sheetXml.includes("Participante 22"));
   assert.ok(sheetXml.includes("Participante 0"));
 

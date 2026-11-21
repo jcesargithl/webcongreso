@@ -3,7 +3,7 @@ import { createRequest, listRequests, updateRequestStatus, reviewPayment, assign
 import { supabase } from "@/lib/supabase";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { getCategory, categoryLabel, getInstitutionalFee, getRegistrationTotal, CONGRESS_FILES_BUCKET, RECEIPT_MAX_BYTES, PAPER_MAX_BYTES } from "@/lib/congress";
-import { assertPaperEligibility, assertSpeakerEligibility, normalizeDocument, normalizeEmail, validatePayment, validatePdf, ValidationError } from "@/lib/registration-rules";
+import { assertPaperEligibility, assertSpeakerEligibility, isValidPhone, normalizeDocument, normalizeEmail, normalizePhone, validatePayment, validatePdf, ValidationError } from "@/lib/registration-rules";
 import { readVerificationToken } from "@/lib/paper-verification";
 import { errorResponse } from "@/lib/api-errors";
 import { queueRequestEmail, sendRequestEmail } from "@/lib/email";
@@ -83,17 +83,19 @@ export async function POST(request: Request) {
       const documentType = field(form, "doc_type");
       const documentNumber = normalizeDocument(field(form, "doc_number"));
       const institution = field(form, "institution");
+      const phone = normalizePhone(field(form, "phone"));
       if (name.length < 2 || name.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320 ||
           !["DNI", "CE", "Pasaporte", "Otro"].includes(documentType) || !documentNumber || documentNumber.length > 30 || institution.length > 240) {
         throw new ValidationError("Revisa tu nombre, correo y documento de identidad.");
       }
+      if (!isValidPhone(phone)) throw new ValidationError("Ingresa un número de celular válido (7 a 15 dígitos).");
       if (documentType === "DNI" && !/^\d{8}$/.test(documentNumber)) throw new ValidationError("El DNI debe tener 8 dígitos.");
       const { data: duplicate, error: duplicateError } = await supabase.from("congress_requests").select("id")
         .eq("kind", "registration").eq("doc_type", documentType).eq("doc_number", documentNumber).limit(1).maybeSingle();
       if (duplicateError) throw duplicateError;
       if (duplicate) throw new ValidationError("Ya tienes una inscripción con este documento. Contacta a la Secretaría si necesitas actualizarla.", 409);
       input = {
-        kind, name, email, doc_type: documentType, doc_number: documentNumber, institution,
+        kind, name, email, phone, doc_type: documentType, doc_number: documentNumber, institution,
         category_id: category.id, category: categoryLabel(category), mode: category.mode,
         registration_fee: category.fee, institutional_fee: getInstitutionalFee(category),
         status: category.fee === 0 ? "approved" : "reviewing",
@@ -127,6 +129,7 @@ export async function POST(request: Request) {
       let documentType = "";
       let documentNumber = "";
       let institution = "";
+      let phone = "";
       let category: ReturnType<typeof getCategory>;
 
       if (verificationToken) {
@@ -142,12 +145,14 @@ export async function POST(request: Request) {
         documentType = registration.doc_type || "DNI";
         documentNumber = registration.doc_number || "";
         institution = registration.institution || "";
+        phone = normalizePhone(field(form, "phone")) || registration.phone || "";
       } else {
         name = field(form, "name");
         email = normalizeEmail(field(form, "email"));
         documentType = field(form, "doc_type");
         documentNumber = normalizeDocument(field(form, "doc_number"));
         institution = field(form, "institution");
+        phone = normalizePhone(field(form, "phone"));
         const categoryId = field(form, "category_id") || "speaker_external";
         category = getCategory(categoryId);
         if (!category || !category.speaker) {
@@ -157,6 +162,7 @@ export async function POST(request: Request) {
             !["DNI", "CE", "Pasaporte", "Otro"].includes(documentType) || !documentNumber || documentNumber.length > 30 || institution.length > 240) {
           throw new ValidationError("Revisa tu nombre, correo y documento de identidad.", 403);
         }
+        if (!isValidPhone(phone)) throw new ValidationError("Ingresa un número de celular válido (7 a 15 dígitos).");
         if (documentType === "DNI" && !/^\d{8}$/.test(documentNumber)) {
           throw new ValidationError("El DNI debe tener 8 dígitos.");
         }
@@ -179,7 +185,7 @@ export async function POST(request: Request) {
       uploaded.push(path);
       input = {
         kind, registration_id: registrationId, category_id: category.id, category: categoryLabel(category),
-        name, email, doc_type: documentType, doc_number: documentNumber,
+        name, email, phone: phone || null, doc_type: documentType, doc_number: documentNumber,
         institution, mode: category.mode, topic, message, file_path: path,
         registration_fee: 0, institutional_fee: 0, payment_status: "exempt", status: "reviewing",
       };

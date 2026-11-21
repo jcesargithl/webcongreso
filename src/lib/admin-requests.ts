@@ -83,7 +83,7 @@ export function filterAdminRequests(
     const category = getCategoryForRequest(registration || request);
     if (filters.category !== "all" && category?.id !== filters.category) return false;
     const text = normalizeSearch([
-      request.name, request.email, request.doc_number, request.doc_type, request.institution,
+      request.name, request.email, request.phone, request.doc_number, request.doc_type, request.institution,
       request.category, request.topic, request.payment_sequence, registration?.payment_sequence,
       category?.title, category?.role,
     ].join(" "));
@@ -114,14 +114,14 @@ function csvCell(value: unknown): string {
 
 export function buildRequestsCsv(rows: CongressRequest[], lookup: RequestLookup): string {
   const headers = [
-    "ID", "Tipo", "Nombre", "Correo", "Tipo de documento", "Documento", "Institución",
+    "ID", "Tipo", "Nombre", "Correo", "Celular", "Tipo de documento", "Documento", "Institución",
     "Categoría", "Modalidad", "Título de ponencia", "Estado de solicitud", "Estado de pago",
     "Tarifa", "Cargo institucional", "Monto declarado", "Secuencia", "Fecha de pago", "Fecha de registro",
   ];
   const lines = rows.map(request => {
     const registration = registrationFor(request, lookup);
     return [
-      request.id, request.kind === "paper" ? "Ponencia" : "Inscripción", request.name, request.email,
+      request.id, request.kind === "paper" ? "Ponencia" : "Inscripción", request.name, request.email, request.phone,
       request.doc_type, request.doc_number, request.institution, request.category, request.mode,
       request.topic, statusLabel(request.status, request.kind), paymentLabel(registration?.payment_status),
       registration?.registration_fee, registration?.institutional_fee, registration?.payment_amount,

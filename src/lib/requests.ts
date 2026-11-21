@@ -16,6 +16,7 @@ export type CongressRequest = {
   registration_id?: string | null;
   name: string;
   email: string;
+  phone?: string | null;
   doc_type?: string | null;
   doc_number?: string | null;
   mode: RequestMode;

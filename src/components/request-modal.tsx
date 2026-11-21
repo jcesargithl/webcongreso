@@ -134,6 +134,7 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
                   <>
                     <label>Nombre completo del autor principal<input name="name" placeholder="Nombres y apellidos completos" autoComplete="name" minLength={2} maxLength={160} required /></label>
                     <label>Correo electrónico<input name="email" type="email" placeholder="Ej.: autor@correo.com (para notificaciones)" autoComplete="email" maxLength={320} required /></label>
+                    <label>Número de celular / WhatsApp<input name="phone" type="tel" inputMode="tel" placeholder="Ej.: 982 311 128 o +51 982 311 128" autoComplete="tel" pattern="\+?[0-9][0-9\s\-]{6,24}" maxLength={25} required /></label>
                     <label>Tipo de documento<select name="doc_type" required><option>DNI</option><option>CE</option><option>Pasaporte</option><option>Otro</option></select></label>
                     <label>Número de documento<input name="doc_number" placeholder="Número de DNI, CE o Pasaporte" maxLength={30} required /></label>
                     <label>Institución / Universidad de procedencia<input name="institution" placeholder="Universidad, instituto o entidad de procedencia" autoComplete="organization" maxLength={240} /></label>
@@ -177,6 +178,7 @@ export function RequestModal({ modal, onClose }: { modal: Extract<NonNullable<Mo
                     )}
                     <label>Nombre completo<input name="name" placeholder="Ingresa tus nombres y apellidos" autoComplete="name" minLength={2} maxLength={160} required /></label>
                     <label>Correo electrónico<input name="email" type="email" placeholder="Ej.: nombre@correo.com" autoComplete="email" maxLength={320} required /></label>
+                    <label>Número de celular / WhatsApp<input name="phone" type="tel" inputMode="tel" placeholder="Ej.: 982 311 128 o +51 982 311 128" autoComplete="tel" pattern="\+?[0-9][0-9\s\-]{6,24}" maxLength={25} required /></label>
                     <label>Tipo de documento<select name="doc_type" required><option>DNI</option><option>CE</option><option>Pasaporte</option><option>Otro</option></select></label>
                     <label>Número de documento<input name="doc_number" placeholder="Ingresa tu número de documento" maxLength={30} required /></label>
                     <label>Institución<input name="institution" placeholder="Nombre de tu universidad o institución" autoComplete="organization" maxLength={240} /></label>

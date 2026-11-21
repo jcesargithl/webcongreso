@@ -110,6 +110,7 @@ export default function AdminRequestDetails(props: DetailProps) {
             <div className={styles.sectionHeading}><h3>Datos del participante</h3><a href={"mailto:" + request.email} className={styles.textButton}><Mail size={14} />Escribir correo</a></div>
             <dl className={styles.detailGrid}>
               <Field label="Correo electrónico">{request.email}</Field>
+              <Field label="Celular">{request.phone || "No registrado"}</Field>
               <Field label="Documento">{(request.doc_type || "Documento") + ": " + (request.doc_number || "No registrado")}</Field>
               <Field label="Institución">{request.institution}</Field>
               <Field label="Modalidad">{request.mode}</Field>

@@ -6,6 +6,7 @@ import { registrationCategories, formatCurrency, getInstitutionalFee, RECEIPT_MA
 
 export type CorporateParticipantInput = {
   name: string;
+  phone: string;
   doc_type: string;
   doc_number: string;
   category_id: string;
@@ -13,6 +14,11 @@ export type CorporateParticipantInput = {
 };
 
 const defaultCategories = registrationCategories.filter(c => c.fee > 0);
+
+function isValidPhone(value: string): boolean {
+  const digits = value.replace(/\D/g, "");
+  return /^\+?[0-9][0-9\s()-]*$/.test(value.trim()) && digits.length >= 7 && digits.length <= 15;
+}
 
 export function CorporateModal({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -31,6 +37,7 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
   const [participants, setParticipants] = useState<CorporateParticipantInput[]>(() =>
     Array.from({ length: 10 }, () => ({
       name: "",
+      phone: "",
       doc_type: "DNI",
       doc_number: "",
       category_id: defaultCategories[0]?.id || "student_external",
@@ -56,6 +63,7 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
       if (validCount > prev.length) {
         const added = Array.from({ length: validCount - prev.length }, () => ({
           name: "",
+          phone: "",
           doc_type: "DNI",
           doc_number: "",
           category_id: defaultCategories[0]?.id || "student_external",
@@ -118,6 +126,10 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
       setError("El correo del encargado no tiene un formato válido.");
       return;
     }
+    if (!isValidPhone(managerPhone)) {
+      setError("El celular del encargado no es válido (7 a 15 dígitos).");
+      return;
+    }
     if (count < 10) {
       setError("El pago corporativo requiere un mínimo de 10 participantes.");
       return;
@@ -127,7 +139,7 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
 
   // Validation step 2
   function isParticipantComplete(p: CorporateParticipantInput): boolean {
-    return Boolean(p.name.trim().length >= 2 && p.doc_number.trim().length >= 4);
+    return Boolean(p.name.trim().length >= 2 && p.doc_number.trim().length >= 4 && isValidPhone(p.phone));
   }
 
   function handleNextParticipant() {
@@ -139,6 +151,10 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
     }
     if (!p.doc_number.trim() || (p.doc_type === "DNI" && !/^\d{8}$/.test(p.doc_number.trim()))) {
       setError(`Integrante #${currentIdx + 1}: el DNI debe tener 8 dígitos.`);
+      return;
+    }
+    if (!isValidPhone(p.phone)) {
+      setError(`Integrante #${currentIdx + 1}: ingresa un número de celular válido.`);
       return;
     }
     if (currentIdx < count - 1) {
@@ -157,6 +173,11 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
       }
       if (!p.doc_number.trim() || (p.doc_type === "DNI" && !/^\d{8}$/.test(p.doc_number.trim()))) {
         setError(`Integrante #${i + 1} (${p.name}): el DNI debe tener 8 dígitos.`);
+        setCurrentIdx(i);
+        return;
+      }
+      if (!isValidPhone(p.phone)) {
+        setError(`Integrante #${i + 1} (${p.name}): ingresa un número de celular válido.`);
         setCurrentIdx(i);
         return;
       }
@@ -372,8 +393,12 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
                 </label>
 
                 <label>
-                  Teléfono / WhatsApp de contacto
+                  Número de celular / WhatsApp del encargado(a)
                   <input
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    maxLength={25}
                     value={managerPhone}
                     onChange={e => setManagerPhone(e.target.value)}
                     placeholder="Ej.: 982 311 128"
@@ -455,6 +480,19 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
                       value={currentP.name}
                       onChange={e => updateParticipant(currentIdx, { name: e.target.value })}
                       placeholder="Nombres completos del integrante"
+                      required
+                    />
+                  </label>
+
+                  <label>
+                    Número de celular / WhatsApp
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      value={currentP.phone}
+                      onChange={e => updateParticipant(currentIdx, { phone: e.target.value })}
+                      placeholder="Ej.: 982 311 128"
+                      maxLength={25}
                       required
                     />
                   </label>
@@ -564,6 +602,7 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
                         <th style={{ padding: '8px' }}>#</th>
                         <th style={{ padding: '8px' }}>Nombre</th>
                         <th style={{ padding: '8px' }}>Doc</th>
+                        <th style={{ padding: '8px' }}>Celular</th>
                         <th style={{ padding: '8px' }}>Categoría</th>
                       </tr>
                     </thead>
@@ -575,6 +614,7 @@ export function CorporateModal({ onClose }: { onClose: () => void }) {
                             <td style={{ padding: '6px 8px', color: '#64748B' }}>{idx + 1}</td>
                             <td style={{ padding: '6px 8px', fontWeight: 600 }}>{p.name}</td>
                             <td style={{ padding: '6px 8px' }}>{p.doc_type}: {p.doc_number}</td>
+                            <td style={{ padding: '6px 8px' }}>{p.phone}</td>
                             <td style={{ padding: '6px 8px' }}>{cat?.title}</td>
                           </tr>
                         );

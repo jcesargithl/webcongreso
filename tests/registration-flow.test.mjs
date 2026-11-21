@@ -105,7 +105,7 @@ function formRequest(fields) {
 }
 function pdf() { return new File(["%PDF-1.7\nTest fixture"], "test.pdf", { type: "application/pdf" }); }
 function registrationFields(categoryId) {
-  return { kind: "registration", category_id: categoryId, name: "Persona de prueba", email: "prueba@example.test", doc_type: "DNI", doc_number: "87654321", institution: "Institución de prueba" };
+  return { kind: "registration", category_id: categoryId, name: "Persona de prueba", email: "prueba@example.test", phone: "982 311 128", doc_type: "DNI", doc_number: "87654321", institution: "Institución de prueba" };
 }
 function paymentFields() {
   return { payment_method: "pagalo_pe", payment_sequence: "093245", payment_amount: "101.00", payment_date: "2026-10-14", payment_document_number: "87654321", receipt: pdf() };
@@ -132,6 +132,17 @@ test("external speakers can submit with pending payment while rejected registrat
   for (const id of ["student_internal_attendee", "student_external", "attendee_external"]) assert.throws(() => assertSpeakerEligibility(registration(id, "approved")), /asistente/);
   assert.throws(() => assertSpeakerEligibility({ ...registration("speaker_internal_teacher"), status: "rejected" }), /rechazada/);
   assert.throws(() => assertSpeakerEligibility({ ...registration(null), category: "Estudiante EPEP" }), /categoría identificada/);
+});
+
+test("mobile phone is required and validated for registrations and papers", async () => {
+  const { isValidPhone } = harness().load("../src/lib/registration-rules");
+  for (const ok of ["982311128", "982 311 128", "+51 982 311 128", "+57 300-123-4567"]) assert.ok(isValidPhone(ok), ok);
+  for (const bad of ["", "12345", "abc982311128", "9823111289823111", "982@311128"]) assert.ok(!isValidPhone(bad), bad);
+  for (const fields of [{ ...registrationFields("speaker_internal_teacher"), phone: "" }, { ...registrationFields("speaker_external"), kind: "paper", topic: "Prueba", file: pdf(), phone: "123" }]) {
+    const response = await harness().load("../src/app/api/requests/route").POST(formRequest(fields));
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /celular/);
+  }
 });
 
 test("receipt sequence preserves leading zero, amount must include institutional fee and date must exist", () => {
@@ -605,6 +616,7 @@ test("corporate registration requires minimum 10 participants, applies 20% disco
       name: "Participante " + (i + 1),
       doc_type: "DNI",
       doc_number: String(10000000 + i),
+      phone: "9" + String(10000000 + i),
       category_id: "student_external",
       mode: "Híbrido",
     }));

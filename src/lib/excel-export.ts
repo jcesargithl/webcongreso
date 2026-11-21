@@ -217,12 +217,12 @@ export function buildRequestsExcel(rows: CongressRequest[], lookup: RequestLooku
 </styleSheet>`;
 
   const headers = [
-    "ID", "Tipo", "Nombre", "Correo", "Tipo de documento", "Documento", "Institución",
+    "ID", "Tipo", "Nombre", "Correo", "Celular", "Tipo de documento", "Documento", "Institución",
     "Categoría", "Modalidad", "Título de ponencia", "Estado de solicitud", "Estado de pago",
     "Tarifa (S/.)", "Cargo inst. (S/.)", "Monto declarado (S/.)", "Secuencia", "Fecha de pago", "Fecha de registro",
   ];
 
-  const colWidths = [38, 14, 30, 30, 18, 16, 32, 32, 14, 38, 22, 22, 14, 16, 20, 16, 16, 22];
+  const colWidths = [38, 14, 30, 30, 18, 18, 16, 32, 32, 14, 38, 22, 22, 14, 16, 20, 16, 16, 22];
   const colsXml = `<cols>` + colWidths.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("") + `</cols>`;
 
   const headerCells = headers
@@ -269,34 +269,36 @@ export function buildRequestsExcel(rows: CongressRequest[], lookup: RequestLooku
     addText(3, request.name, textStyle);
     // Col 4: Correo
     addText(4, request.email, textStyle);
-    // Col 5: Tipo de documento
-    addText(5, request.doc_type, centerStyle);
-    // Col 6: Documento (Preserve leading zero as text)
-    addText(6, request.doc_number, centerStyle);
-    // Col 7: Institución
-    addText(7, request.institution, textStyle);
-    // Col 8: Categoría
-    addText(8, request.category, textStyle);
-    // Col 9: Modalidad
-    addText(9, request.mode, centerStyle);
-    // Col 10: Título de ponencia
-    addText(10, request.topic || "", textStyle);
-    // Col 11: Estado de solicitud
-    addText(11, statusLabel(request.status, request.kind), centerStyle);
-    // Col 12: Estado de pago
-    addText(12, paymentLabel(registration?.payment_status), centerStyle);
-    // Col 13: Tarifa (S/.)
-    addNumber(13, registration?.registration_fee);
-    // Col 14: Cargo inst. (S/.)
-    addNumber(14, registration?.institutional_fee);
-    // Col 15: Monto declarado (S/.)
-    addNumber(15, registration?.payment_amount);
-    // Col 16: Secuencia
-    addText(16, registration?.payment_sequence || "", centerStyle);
-    // Col 17: Fecha de pago
-    addText(17, registration?.payment_date || "", centerStyle);
-    // Col 18: Fecha de registro
-    addText(18, formatTimestamp(request.created_at), centerStyle);
+    // Col 5: Celular
+    addText(5, request.phone, centerStyle);
+    // Col 6: Tipo de documento
+    addText(6, request.doc_type, centerStyle);
+    // Col 7: Documento (Preserve leading zero as text)
+    addText(7, request.doc_number, centerStyle);
+    // Col 8: Institución
+    addText(8, request.institution, textStyle);
+    // Col 9: Categoría
+    addText(9, request.category, textStyle);
+    // Col 10: Modalidad
+    addText(10, request.mode, centerStyle);
+    // Col 11: Título de ponencia
+    addText(11, request.topic || "", textStyle);
+    // Col 12: Estado de solicitud
+    addText(12, statusLabel(request.status, request.kind), centerStyle);
+    // Col 13: Estado de pago
+    addText(13, paymentLabel(registration?.payment_status), centerStyle);
+    // Col 14: Tarifa (S/.)
+    addNumber(14, registration?.registration_fee);
+    // Col 15: Cargo inst. (S/.)
+    addNumber(15, registration?.institutional_fee);
+    // Col 16: Monto declarado (S/.)
+    addNumber(16, registration?.payment_amount);
+    // Col 17: Secuencia
+    addText(17, registration?.payment_sequence || "", centerStyle);
+    // Col 18: Fecha de pago
+    addText(18, registration?.payment_date || "", centerStyle);
+    // Col 19: Fecha de registro
+    addText(19, formatTimestamp(request.created_at), centerStyle);
 
     return `<row r="${rowNum}" ht="22" customHeight="1">${cells.join("")}</row>`;
   }).join("");
@@ -313,7 +315,7 @@ export function buildRequestsExcel(rows: CongressRequest[], lookup: RequestLooku
   </sheetViews>
   ${colsXml}
   ${sheetData}
-  <autoFilter ref="A1:R${maxRow}"/>
+  <autoFilter ref="A1:S${maxRow}"/>
 </worksheet>`;
 
   const files: ZipEntry[] = [

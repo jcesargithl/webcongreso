@@ -7,6 +7,7 @@ import { formatCurrency } from "./congress";
 
 export type CorporateParticipant = {
   name: string;
+  phone?: string;
   doc_type: string;
   doc_number: string;
   category: string;
@@ -82,6 +83,7 @@ export async function sendCorporateEmail(data: CorporateEmailData): Promise<bool
           <td style="padding:10px 8px;font-size:13px;color:#142e59;font-weight:bold;">${idx + 1}</td>
           <td style="padding:10px 8px;font-size:13px;color:#243c60;">${e(p.name)}</td>
           <td style="padding:10px 8px;font-size:13px;color:#46536a;">${e(p.doc_type)}: ${e(p.doc_number)}</td>
+          <td style="padding:10px 8px;font-size:13px;color:#46536a;">${e(p.phone || "")}</td>
           <td style="padding:10px 8px;font-size:13px;color:#46536a;">${e(p.category)}</td>
           <td style="padding:10px 8px;font-size:13px;color:#46536a;">${e(p.mode)}</td>
         </tr>
@@ -170,6 +172,7 @@ export async function sendCorporateEmail(data: CorporateEmailData): Promise<bool
                       <th align="left" style="padding:10px 8px;font-size:12px;color:#475569;">#</th>
                       <th align="left" style="padding:10px 8px;font-size:12px;color:#475569;">Nombre</th>
                       <th align="left" style="padding:10px 8px;font-size:12px;color:#475569;">Documento</th>
+                      <th align="left" style="padding:10px 8px;font-size:12px;color:#475569;">Celular</th>
                       <th align="left" style="padding:10px 8px;font-size:12px;color:#475569;">Categoría</th>
                       <th align="left" style="padding:10px 8px;font-size:12px;color:#475569;">Modalidad</th>
                     </tr>
@@ -224,7 +227,7 @@ export async function sendCorporateEmail(data: CorporateEmailData): Promise<bool
       `Total a Pagar: ${formatCurrency(total)}`,
       "",
       "Participantes:",
-      ...participants.map((p, idx) => `${idx + 1}. ${p.name} - ${p.doc_type}: ${p.doc_number} - ${p.category} (${p.mode})`),
+      ...participants.map((p, idx) => `${idx + 1}. ${p.name} - ${p.doc_type}: ${p.doc_number} - Cel: ${p.phone || "-"} - ${p.category} (${p.mode})`),
       "",
       "Grupo de WhatsApp del congreso:",
       CONGRESS_WHATSAPP_GROUP_URL,

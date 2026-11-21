@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { supabase } from "@/lib/supabase";
 import { getCategory, categoryLabel, getInstitutionalFee, CONGRESS_FILES_BUCKET, RECEIPT_MAX_BYTES } from "@/lib/congress";
-import { normalizeDocument, normalizeEmail, validatePdf, ValidationError } from "@/lib/registration-rules";
+import { isValidPhone, normalizeDocument, normalizeEmail, normalizePhone, validatePdf, ValidationError } from "@/lib/registration-rules";
 import { errorResponse } from "@/lib/api-errors";
 import { sendCorporateEmail } from "@/lib/corporate-email";
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     const managerName = field(form, "manager_name");
     const managerEmail = normalizeEmail(field(form, "manager_email"));
-    const managerPhone = field(form, "manager_phone");
+    const managerPhone = normalizePhone(field(form, "manager_phone"));
     const managerInstitution = field(form, "manager_institution");
 
     if (managerName.length < 2 || managerName.length > 160) {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(managerEmail)) {
       throw new ValidationError("Ingresa un correo electrónico válido para el encargado.");
     }
-    if (!managerPhone || managerPhone.length < 6 || managerPhone.length > 25) {
+    if (!isValidPhone(managerPhone)) {
       throw new ValidationError("Ingresa un teléfono o WhatsApp de contacto válido.");
     }
     if (managerInstitution.length < 2 || managerInstitution.length > 240) {
@@ -41,6 +41,7 @@ export async function POST(request: Request) {
     const rawParticipants = field(form, "participants_json");
     let parsedList: Array<{
       name: string;
+      phone?: string;
       doc_type: string;
       doc_number: string;
       category_id: string;
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
     // Validate participants
     const validatedParticipants: Array<{
       name: string;
+      phone: string;
       doc_type: string;
       doc_number: string;
       category_id: string;
@@ -77,6 +79,7 @@ export async function POST(request: Request) {
       const docType = typeof p.doc_type === "string" ? p.doc_type.trim() : "DNI";
       const docNumber = normalizeDocument(p.doc_number);
       const category = getCategory(p.category_id);
+      const phone = normalizePhone(typeof p.phone === "string" ? p.phone : "");
 
       if (name.length < 2 || name.length > 160) {
         throw new ValidationError(`Integrante #${i + 1}: ingresa un nombre y apellidos válidos.`);
@@ -86,6 +89,9 @@ export async function POST(request: Request) {
       }
       if (docType === "DNI" && !/^\d{8}$/.test(docNumber)) {
         throw new ValidationError(`Integrante #${i + 1} (${name}): el DNI debe tener 8 dígitos.`);
+      }
+      if (!isValidPhone(phone)) {
+        throw new ValidationError(`Integrante #${i + 1} (${name}): ingresa un número de celular válido.`);
       }
       if (!category) {
         throw new ValidationError(`Integrante #${i + 1}: selecciona una categoría de inscripción válida.`);
@@ -114,6 +120,7 @@ export async function POST(request: Request) {
 
       validatedParticipants.push({
         name,
+        phone,
         doc_type: docType,
         doc_number: docNumber,
         category_id: category.id,
@@ -154,6 +161,7 @@ export async function POST(request: Request) {
       kind: "registration",
       name: p.name,
       email: managerEmail, // Sent to manager
+      phone: p.phone,
       doc_type: p.doc_type,
       doc_number: p.doc_number,
       institution: managerInstitution,
@@ -186,6 +194,7 @@ export async function POST(request: Request) {
       },
       participants: validatedParticipants.map(p => ({
         name: p.name,
+        phone: p.phone,
         doc_type: p.doc_type,
         doc_number: p.doc_number,
         category: p.category_title,

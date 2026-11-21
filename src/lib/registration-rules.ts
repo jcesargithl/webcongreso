@@ -16,6 +16,16 @@ export function normalizeDocument(value: string): string {
   return value.trim().replace(/\s+/g, "").toUpperCase();
 }
 
+export function normalizePhone(value: string): string {
+  return value.trim().replace(/\s+/g, " ");
+}
+
+/** Celular: 7-15 dígitos, con prefijo internacional (+) opcional, espacios o guiones. */
+export function isValidPhone(value: string): boolean {
+  const digits = value.replace(/\D/g, "");
+  return /^\+?[0-9][0-9\s()-]*$/.test(value) && digits.length >= 7 && digits.length <= 15 && value.length <= 25;
+}
+
 export function assertSpeakerEligibility(registration: CongressRequest | null): RegistrationCategory {
   if (!registration || registration.kind !== "registration") {
     throw new ValidationError("No encontramos una inscripción con esos datos. Inscríbete primero como ponente.", 404);
