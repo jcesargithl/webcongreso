@@ -29,6 +29,7 @@ import {
   Lightbulb,
   Heart,
   Globe,
+  Navigation,
 } from "lucide-react";
 
 /* ────────────────────────────────────────────────
@@ -64,6 +65,10 @@ const themes: [string, string, string, React.ReactNode, string][] = [
 /* ────────────────────────────────────────────────
    MAIN PAGE
    ──────────────────────────────────────────────── */
+
+const VENUE_QUERY = "Ciudad Universitaria UNA Puno, Av. Floral 1153, Puno";
+const VENUE_MAP_EMBED_URL = "https://www.google.com/maps?q=" + encodeURIComponent(VENUE_QUERY) + "&output=embed";
+const VENUE_DIRECTIONS_URL = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(VENUE_QUERY);
 
 export default function Home() {
   const [modal, setModal] = useState<ModalState>(null);
@@ -102,6 +107,7 @@ export default function Home() {
             <a href="#programa" onClick={() => setMenuOpen(false)}>Programa</a>
             <a href="#ejes" onClick={() => setMenuOpen(false)}>Ejes</a>
             <a href="#inscripciones" onClick={() => setMenuOpen(false)}>Inscripciones</a>
+            <a href="#sede" onClick={() => setMenuOpen(false)}>Sede</a>
             <a href="#contacto" onClick={() => setMenuOpen(false)}>Contacto</a>
             <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); setModal({ kind: "paper" }); }}>Enviar investigación</a>
           </nav>
@@ -145,7 +151,7 @@ export default function Home() {
               <CalendarDays size={18} /> 25–27 Noviembre, 2026
             </span>
             <span className="hero-meta-item-clean">
-              <MapPin size={18} /> UNA Puno, Perú
+              <MapPin size={18} /> Auditorio EPEP · Ciudad Universitaria, UNA Puno
             </span>
             <span className="hero-meta-item-clean">
               <Users size={18} /> Modalidad Híbrida
@@ -749,6 +755,42 @@ export default function Home() {
           </div>
         </div>
 
+      </section>
+
+      {/* ─── SEDE DEL CONGRESO ─── */}
+      <section className="section venue-section" id="sede">
+        <div className="venue-info">
+          <span className="kicker">Sede del congreso</span>
+          <h2>¿Dónde se <em>realiza</em>?</h2>
+          <div className="venue-card">
+            <span className="venue-icon"><MapPin size={22} /></span>
+            <div>
+              <strong>Auditorio de la Escuela Profesional de Educación Primaria</strong>
+              <span>Ciudad Universitaria · Universidad Nacional del Altiplano, Puno – Perú</span>
+            </div>
+          </div>
+          <ul className="venue-details">
+            <li><CalendarDays size={16} /> 25, 26 y 27 de noviembre de 2026</li>
+            <li><Users size={16} /> Presencial en el auditorio y transmisión virtual (modalidad híbrida)</li>
+          </ul>
+          <a
+            className="btn btn-primary"
+            href={VENUE_DIRECTIONS_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Navigation size={16} /> Cómo llegar
+          </a>
+        </div>
+        <div className="venue-map">
+          <iframe
+            title="Mapa de la Ciudad Universitaria de la UNA Puno"
+            src={VENUE_MAP_EMBED_URL}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+        </div>
       </section>
 
       {/* ─── CONTACTO ─── */}

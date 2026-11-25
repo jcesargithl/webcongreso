@@ -2726,3 +2726,36 @@ footer {
 @media (max-width: 600px) {
   .flyer-lightbox-nav { top: auto; bottom: 8px; }
 }
+
+/* ─── Sede del congreso ─── */
+.venue-section {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(32px, 5vw, 64px); align-items: center;
+  max-width: 1200px; margin: 0 auto;
+}
+.venue-info h2 { font-size: clamp(34px, 4.5vw, 50px); color: var(--primary); margin: 12px 0 24px; }
+.venue-info h2 em { font-style: normal; color: #B38600; }
+.venue-card {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px; border-radius: 14px; background: var(--bg-card);
+  border: 1px solid var(--border); box-shadow: 0 6px 20px rgba(15, 39, 86, 0.06);
+}
+.venue-icon {
+  flex: 0 0 auto; display: grid; place-items: center; width: 44px; height: 44px;
+  border-radius: 12px; color: #B38600; background: var(--accent-dim);
+}
+.venue-card strong { display: block; color: var(--primary); font-size: 17px; line-height: 1.35; }
+.venue-card span { display: block; color: var(--text-secondary); font-size: 14px; margin-top: 6px; line-height: 1.5; }
+.venue-details { list-style: none; padding: 0; margin: 20px 0 28px; display: grid; gap: 10px; }
+.venue-details li { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 14px; }
+.venue-details svg { color: #B38600; flex: 0 0 auto; }
+.venue-map {
+  position: relative; aspect-ratio: 4 / 3; border-radius: 18px; overflow: hidden;
+  border: 1px solid var(--border); box-shadow: 0 18px 40px rgba(15, 39, 86, 0.12);
+  background: var(--bg-elevated);
+}
+.venue-map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (max-width: 860px) {
+  .venue-section { grid-template-columns: 1fr; }
+  .venue-map { aspect-ratio: 1 / 1; }
+}
